@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "payload migrate:fresh && next build",
+    "build": "next build",
     "dev": "dotenv -e .env -- bun run dev:services && next dev --turbopack",
     "dev:next": "next dev --turbopack",
     "dev:services": "docker compose up -d",
