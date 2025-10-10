@@ -1,40 +1,34 @@
-// storage-adapter-import-placeholder
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { postgresAdapter } from '@payloadcms/db-postgres'
-
-import sharp from 'sharp' // sharp-import
-import path from 'path'
 import { buildConfig } from 'payload'
-import { fileURLToPath } from 'url'
-
-import { Categories } from './collections/Categories'
-import { Comments } from './collections/Comments'
-import { Media } from './collections/Media'
-import { Pages } from './collections/Pages'
-import { Posts } from './collections/Posts'
-import { Users } from './collections/Users'
-import { Footer } from './Footer/config'
-import { Header } from './Header/config'
+import sharp from 'sharp'
+import { GlobalFooter, GlobalPrivacy, GlobalTerms } from './collections/global'
+import { Handbook } from './collections/handbook'
+import { Orders } from './collections/orders'
+import { Pages } from './collections/pages'
+import { Pools } from './collections/pools'
+import { Blog } from './collections/posts'
+import { Settings } from './collections/settings'
+import { Tags } from './collections/tags'
+import { Tasks } from './collections/tasks'
+import { PayloadUploads } from './collections/uploads/payload-uploads'
+import { PrivateUploads } from './collections/uploads/private-uploads'
+import { Users } from './collections/users'
+import { defaultLexical } from './fields/default-lexical'
+import { getEmailAdapter } from './lib/email-adapter'
+import { getServerSideURL } from './lib/payload'
 import { plugins } from './plugins'
-import { defaultLexical } from '@/fields/defaultLexical'
-import { getServerSideURL } from './utilities/getURL'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
   admin: {
-    components: {
-      // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below and the import `BeforeLogin` statement on line 15.
-      beforeLogin: ['@/components/BeforeLogin'],
-      // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below and the import `BeforeDashboard` statement on line 15.
-      beforeDashboard: ['@/components/BeforeDashboard'],
-    },
+    user: Users.slug,
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    user: Users.slug,
     livePreview: {
       breakpoints: [
         {
@@ -57,33 +51,49 @@ export default buildConfig({
         },
       ],
     },
+    components: {
+      graphics: {
+        Icon: {
+          path: '@/components/payload/admin-icon.tsx',
+        },
+        Logo: {
+          path: '@/components/payload/admin-logo.tsx',
+        },
+      },
+    },
   },
-  // This config helps us configure global or default features that the other editors can inherit
+  folders: {
+    browseByFolder: true,
+    collectionSpecific: false,
+  },
+  email: getEmailAdapter(),
+  collections: [
+    Tasks,
+    Orders,
+    Pools,
+    Tags,
+    Pages,
+    Users,
+    Blog,
+    Handbook,
+    Tags,
+    PayloadUploads,
+    PrivateUploads,
+  ],
   editor: defaultLexical,
+  secret: process.env.PAYLOAD_SECRET,
+  typescript: {
+    outputFile: path.resolve(dirname, 'payload-types.ts'),
+  },
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
+    idType: 'uuid',
   }),
-  collections: [Pages, Posts, Media, Categories, Users, Comments],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer],
-  plugins: [
-    ...plugins,
-    // storage-adapter-placeholder
-  ],
-  endpoints: [
-    {
-      path: '/health',
-      method: 'get',
-      handler: async (req) => {
-        return new Response('OK', { status: 200 });
-      }
-    }
-  ],
-  secret: process.env.PAYLOAD_SECRET,
   sharp,
-  typescript: {
-    outputFile: path.resolve(dirname, 'payload-types.ts'),
-  },
+  plugins,
+  globals: [GlobalFooter, GlobalTerms, GlobalPrivacy, Settings],
+  serverURL: process.env.NEXT_PUBLIC_SERVER_URL,
 })

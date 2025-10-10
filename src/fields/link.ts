@@ -1,6 +1,6 @@
-import type { Field } from 'payload'
+import deepMerge from '@/lib/payload/deep-merge'
 
-import deepMerge from '@/utilities/deepMerge'
+import type { Field } from 'payload'
 
 export type LinkAppearances = 'default' | 'outline'
 
@@ -39,15 +39,15 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
               layout: 'horizontal',
               width: '50%',
             },
-            defaultValue: 'reference',
+            defaultValue: 'custom',
             options: [
-              {
-                label: 'Internal link',
-                value: 'reference',
-              },
               {
                 label: 'Custom URL',
                 value: 'custom',
+              },
+              {
+                label: 'Internal link',
+                value: 'reference',
               },
             ],
           },
@@ -75,8 +75,7 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
         condition: (_, siblingData) => siblingData?.type === 'reference',
       },
       label: 'Document to link to',
-      maxDepth: 1,
-      relationTo: ['pages'],
+      relationTo: ['blog'],
       required: true,
     },
     {
@@ -87,6 +86,7 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
       },
       label: 'Custom URL',
       required: true,
+      defaultValue: 'https://ticketer.com',
     },
   ]
 

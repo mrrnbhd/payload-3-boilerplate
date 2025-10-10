@@ -1,6 +1,5 @@
 import type { CheckboxField, TextField } from 'payload'
-
-import { formatSlugHook } from './formatSlug'
+import { formatSlugHook } from './format-slug'
 
 type Overrides = {
   slugOverrides?: Partial<TextField>
@@ -23,8 +22,7 @@ export const slugField: Slug = (fieldToUse = 'title', overrides = {}) => {
     ...checkboxOverrides,
   }
 
-  // Expect ts error here because of typescript mismatching Partial<TextField> with TextField
-  // @ts-expect-error
+  // @ts-expect-error - ts mismatch Partial<TextField> with TextField
   const slugField: TextField = {
     name: 'slug',
     type: 'text',
@@ -40,7 +38,7 @@ export const slugField: Slug = (fieldToUse = 'title', overrides = {}) => {
       ...(slugOverrides?.admin || {}),
       components: {
         Field: {
-          path: '@/fields/slug/SlugComponent#SlugComponent',
+          path: '@/fields/slug/slug-component#SlugComponent',
           clientProps: {
             fieldToUse,
             checkboxFieldPath: checkBoxField.name,
