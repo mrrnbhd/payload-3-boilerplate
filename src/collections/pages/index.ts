@@ -8,7 +8,6 @@ import { pagesMetaTab } from './meta'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
-  trash: true,
   enableQueryPresets: true,
   folders: true,
   versions: {
