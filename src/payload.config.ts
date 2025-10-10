@@ -8,7 +8,6 @@ import { Handbook } from './collections/handbook'
 import { Orders } from './collections/orders'
 import { Pages } from './collections/pages'
 import { Pools } from './collections/pools'
-import { Blog } from './collections/posts'
 import { Settings } from './collections/settings'
 import { Tags } from './collections/tags'
 import { Tasks } from './collections/tasks'
@@ -74,7 +73,6 @@ export default buildConfig({
     Tags,
     Pages,
     Users,
-    Blog,
     Handbook,
     Tags,
     PayloadUploads,

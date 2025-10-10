@@ -78,14 +78,12 @@ export interface Config {
     pools: Pool;
     tags: Tag;
     pages: Page;
-    blog: Blog;
     handbook: Handbook;
     'payload-uploads': PayloadUpload;
     'private-uploads': PrivateUpload;
     forms: Form;
     'form-submissions': FormSubmission;
     'Audit-log': AuditLog;
-    'payload-jobs': PayloadJob;
     'payload-folders': FolderInterface;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -97,7 +95,7 @@ export interface Config {
       pageHelp: 'handbook';
     };
     'payload-folders': {
-      documentsAndFolders: 'payload-folders' | 'pages' | 'blog' | 'payload-uploads' | 'private-uploads';
+      documentsAndFolders: 'payload-folders' | 'pages' | 'payload-uploads' | 'private-uploads';
     };
   };
   collectionsSelect: {
@@ -112,14 +110,12 @@ export interface Config {
     pools: PoolsSelect<false> | PoolsSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
-    blog: BlogSelect<false> | BlogSelect<true>;
     handbook: HandbookSelect<false> | HandbookSelect<true>;
     'payload-uploads': PayloadUploadsSelect<false> | PayloadUploadsSelect<true>;
     'private-uploads': PrivateUploadsSelect<false> | PrivateUploadsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     'Audit-log': AuditLogSelect<false> | AuditLogSelect<true>;
-    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -146,13 +142,7 @@ export interface Config {
     collection: 'users';
   };
   jobs: {
-    tasks: {
-      schedulePublish: TaskSchedulePublish;
-      inline: {
-        input: unknown;
-        output: unknown;
-      };
-    };
+    tasks: unknown;
     workflows: unknown;
   };
 }
@@ -615,10 +605,6 @@ export interface FolderInterface {
           value: string | Page;
         }
       | {
-          relationTo?: 'blog';
-          value: string | Blog;
-        }
-      | {
           relationTo?: 'payload-uploads';
           value: string | PayloadUpload;
         }
@@ -632,54 +618,6 @@ export interface FolderInterface {
   };
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "blog".
- */
-export interface Blog {
-  id: string;
-  title: string;
-  heroImage?: (string | null) | PayloadUpload;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  relatedBlogPosts?: (string | Blog)[] | null;
-  meta?: {
-    title?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (string | null) | PayloadUpload;
-    description?: string | null;
-  };
-  publishedAt?: string | null;
-  authors?: (string | User)[] | null;
-  populatedAuthors?:
-    | {
-        id?: string | null;
-        name?: string | null;
-      }[]
-    | null;
-  slug?: string | null;
-  slugLock?: boolean | null;
-  folder?: (string | null) | FolderInterface;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * Private uploads that require authentication to access
@@ -959,98 +897,6 @@ export interface AuditLog {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-jobs".
- */
-export interface PayloadJob {
-  id: string;
-  /**
-   * Input data provided to the job
-   */
-  input?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  taskStatus?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  completedAt?: string | null;
-  totalTried?: number | null;
-  /**
-   * If hasError is true this job will not be retried
-   */
-  hasError?: boolean | null;
-  /**
-   * If hasError is true, this is the error that caused it
-   */
-  error?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  /**
-   * Task execution log
-   */
-  log?:
-    | {
-        executedAt: string;
-        completedAt: string;
-        taskSlug: 'inline' | 'schedulePublish';
-        taskID: string;
-        input?:
-          | {
-              [k: string]: unknown;
-            }
-          | unknown[]
-          | string
-          | number
-          | boolean
-          | null;
-        output?:
-          | {
-              [k: string]: unknown;
-            }
-          | unknown[]
-          | string
-          | number
-          | boolean
-          | null;
-        state: 'failed' | 'succeeded';
-        error?:
-          | {
-              [k: string]: unknown;
-            }
-          | unknown[]
-          | string
-          | number
-          | boolean
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  taskSlug?: ('inline' | 'schedulePublish') | null;
-  queue?: string | null;
-  waitUntil?: string | null;
-  processing?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -1101,10 +947,6 @@ export interface PayloadLockedDocument {
         value: string | Page;
       } | null)
     | ({
-        relationTo: 'blog';
-        value: string | Blog;
-      } | null)
-    | ({
         relationTo: 'handbook';
         value: string | Handbook;
       } | null)
@@ -1127,10 +969,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'Audit-log';
         value: string | AuditLog;
-      } | null)
-    | ({
-        relationTo: 'payload-jobs';
-        value: string | PayloadJob;
       } | null)
     | ({
         relationTo: 'payload-folders';
@@ -1218,7 +1056,7 @@ export interface PayloadQueryPreset {
     | number
     | boolean
     | null;
-  relatedCollection: 'pages' | 'blog' | 'payload-uploads' | 'private-uploads';
+  relatedCollection: 'pages' | 'payload-uploads' | 'private-uploads';
   /**
    * This is a temporary field used to determine if updating the preset would remove the user's access to it. When `true`, this record will be deleted after running the preset's `validate` function.
    */
@@ -1375,38 +1213,6 @@ export interface PagesSelect<T extends boolean = true> {
         description?: T;
       };
   pageHelp?: T;
-  folder?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  deletedAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "blog_select".
- */
-export interface BlogSelect<T extends boolean = true> {
-  title?: T;
-  heroImage?: T;
-  content?: T;
-  relatedBlogPosts?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        image?: T;
-        description?: T;
-      };
-  publishedAt?: T;
-  authors?: T;
-  populatedAuthors?:
-    | T
-    | {
-        id?: T;
-        name?: T;
-      };
-  slug?: T;
-  slugLock?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1739,37 +1545,6 @@ export interface AuditLogSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-jobs_select".
- */
-export interface PayloadJobsSelect<T extends boolean = true> {
-  input?: T;
-  taskStatus?: T;
-  completedAt?: T;
-  totalTried?: T;
-  hasError?: T;
-  error?: T;
-  log?:
-    | T
-    | {
-        executedAt?: T;
-        completedAt?: T;
-        taskSlug?: T;
-        taskID?: T;
-        input?: T;
-        output?: T;
-        state?: T;
-        error?: T;
-        id?: T;
-      };
-  taskSlug?: T;
-  queue?: T;
-  waitUntil?: T;
-  processing?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-folders_select".
  */
 export interface PayloadFoldersSelect<T extends boolean = true> {
@@ -1859,8 +1634,8 @@ export interface GlobalFooter {
           type?: ('custom' | 'reference') | null;
           newTab?: boolean | null;
           reference?: {
-            relationTo: 'blog';
-            value: string | Blog;
+            relationTo: 'pages';
+            value: string | Page;
           } | null;
           url?: string | null;
           label: string;
@@ -2003,23 +1778,6 @@ export interface SettingsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TaskSchedulePublish".
- */
-export interface TaskSchedulePublish {
-  input: {
-    type?: ('publish' | 'unpublish') | null;
-    locale?: string | null;
-    doc?: {
-      relationTo: 'blog';
-      value: string | Blog;
-    } | null;
-    global?: string | null;
-    user?: (string | null) | User;
-  };
-  output?: unknown;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
@@ -2050,20 +1808,7 @@ export interface DataBlock {
             | null;
           dynamicData?:
             | {
-                collections?:
-                  | (
-                      | 'Courses'
-                      | 'Tournaments'
-                      | 'Members'
-                      | 'Credits'
-                      | 'Invoices'
-                      | 'Payment Methods'
-                      | 'Folders'
-                      | 'Files'
-                      | 'Jobs'
-                      | 'Logs'
-                    )[]
-                  | null;
+                collections?: string[] | null;
                 documents?:
                   | (
                       | {
@@ -2073,18 +1818,6 @@ export interface DataBlock {
                       | {
                           relationTo: 'users';
                           value: string | User;
-                        }
-                      | {
-                          relationTo: 'payload-folders';
-                          value: string | FolderInterface;
-                        }
-                      | {
-                          relationTo: 'payload-jobs';
-                          value: string | PayloadJob;
-                        }
-                      | {
-                          relationTo: 'blog';
-                          value: string | Blog;
                         }
                       | {
                           relationTo: 'admin-invitations';

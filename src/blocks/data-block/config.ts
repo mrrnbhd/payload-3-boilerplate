@@ -1,4 +1,4 @@
-import type { Block, Data } from 'payload'
+import type { Block } from 'payload'
 
 export const DataBlock: Block = {
   slug: 'DataBlock',
@@ -9,6 +9,9 @@ export const DataBlock: Block = {
       name: 'Selection',
       type: 'group',
       virtual: true,
+      admin: {
+        hidden: true,
+      },
       fields: [
         {
           name: 'selections',
@@ -63,18 +66,7 @@ export const DataBlock: Block = {
                       name: 'collections',
                       type: 'select',
                       hasMany: true,
-                      options: [
-                        'Courses',
-                        'Tournaments',
-                        'Members',
-                        'Credits',
-                        'Invoices',
-                        'Payment Methods',
-                        'Folders',
-                        'Files',
-                        'Jobs',
-                        'Logs',
-                      ],
+                      options: [],
                     },
                     {
                       name: 'documents',
@@ -83,9 +75,6 @@ export const DataBlock: Block = {
                       relationTo: [
                         'accounts',
                         'users',
-                        'payload-folders',
-                        'payload-jobs',
-                        'blog',
                         'admin-invitations',
                         'payload-uploads',
                         'private-uploads',

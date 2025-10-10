@@ -12,8 +12,8 @@ import {
 } from '@payloadcms/richtext-lexical'
 import type { Config } from 'payload'
 import { CopyRightInlineBlock } from '@/blocks/copyright-inline-block/config'
-import { MediaBlock } from '@/blocks/media-block/config'
 import { DataBlock } from '@/blocks/data-block/config'
+import { MediaBlock } from '@/blocks/media-block/config'
 
 /**
  * Default Lexical editor configuration
@@ -50,7 +50,7 @@ export const defaultLexical: Config['editor'] = lexicalEditor({
         inlineBlocks: [CopyRightInlineBlock],
       }),
       LinkFeature({
-        enabledCollections: ['blog'],
+        enabledCollections: ['pages'],
         fields: ({ defaultFields }) => {
           const defaultFieldsWithoutUrl = defaultFields.filter((field) => {
             if ('name' in field && field.name === 'url') return false
