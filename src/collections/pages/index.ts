@@ -1,9 +1,10 @@
 import { getServerSideURL } from '@/lib/payload'
-import type { CollectionConfig, Data } from 'payload'
-import { pagesContentTab } from './content'
-import { pagesMetaTab } from './meta'
-import { pagesHelpTab } from './help'
+
+import type { CollectionConfig } from 'payload'
 import { slugField } from '@/fields/slug'
+import { pagesContentTab } from './content'
+import { pagesHelpTab } from './help'
+import { pagesMetaTab } from './meta'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',

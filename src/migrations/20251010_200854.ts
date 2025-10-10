@@ -7,8 +7,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum_admin_invitations_role" AS ENUM('admin', 'user');
   CREATE TYPE "public"."enum_pages_status" AS ENUM('draft', 'published');
   CREATE TYPE "public"."enum__pages_v_version_status" AS ENUM('draft', 'published');
-  CREATE TYPE "public"."enum_blog_status" AS ENUM('draft', 'published');
-  CREATE TYPE "public"."enum__blog_v_version_status" AS ENUM('draft', 'published');
   CREATE TYPE "public"."enum_forms_blocks_email_width" AS ENUM('full', '3/4', '2/3', '1/2', '1/3', '1/4');
   CREATE TYPE "public"."enum_forms_blocks_text_width" AS ENUM('full', '3/4', '2/3', '1/2', '1/3', '1/4');
   CREATE TYPE "public"."enum_forms_blocks_user_info_options" AS ENUM('name', 'email', 'phoneNumber', 'id');
@@ -16,13 +14,10 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum_forms_blocks_phone_width" AS ENUM('full', '3/4', '2/3', '1/2', '1/3', '1/4');
   CREATE TYPE "public"."enum_forms_confirmation_type" AS ENUM('message', 'redirect');
   CREATE TYPE "public"."enum_audit_log_type" AS ENUM('info', 'debug', 'warning', 'error', 'audit', 'security', 'unknown');
-  CREATE TYPE "public"."enum_payload_jobs_log_task_slug" AS ENUM('inline', 'schedulePublish');
-  CREATE TYPE "public"."enum_payload_jobs_log_state" AS ENUM('failed', 'succeeded');
-  CREATE TYPE "public"."enum_payload_jobs_task_slug" AS ENUM('inline', 'schedulePublish');
   CREATE TYPE "public"."enum_payload_query_presets_access_read_constraint" AS ENUM('everyone', 'onlyMe', 'specificUsers');
   CREATE TYPE "public"."enum_payload_query_presets_access_update_constraint" AS ENUM('everyone', 'onlyMe', 'specificUsers');
   CREATE TYPE "public"."enum_payload_query_presets_access_delete_constraint" AS ENUM('everyone', 'onlyMe', 'specificUsers');
-  CREATE TYPE "public"."enum_payload_query_presets_related_collection" AS ENUM('pages', 'blog', 'payload-uploads', 'private-uploads');
+  CREATE TYPE "public"."enum_payload_query_presets_related_collection" AS ENUM('pages', 'payload-uploads', 'private-uploads');
   CREATE TYPE "public"."enum_global_footer_nav_items_link_type" AS ENUM('custom', 'reference');
   CREATE TABLE "users" (
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -172,80 +167,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"latest" boolean,
   	"autosave" boolean
-  );
-  
-  CREATE TABLE "blog_populated_authors" (
-  	"_order" integer NOT NULL,
-  	"_parent_id" uuid NOT NULL,
-  	"id" varchar PRIMARY KEY NOT NULL,
-  	"name" varchar
-  );
-  
-  CREATE TABLE "blog" (
-  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-  	"title" varchar,
-  	"hero_image_id" uuid,
-  	"content" jsonb,
-  	"meta_title" varchar,
-  	"meta_image_id" uuid,
-  	"meta_description" varchar,
-  	"published_at" timestamp(3) with time zone,
-  	"slug" varchar,
-  	"slug_lock" boolean DEFAULT true,
-  	"folder_id" uuid,
-  	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
-  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
-  	"deleted_at" timestamp(3) with time zone,
-  	"_status" "enum_blog_status" DEFAULT 'draft'
-  );
-  
-  CREATE TABLE "blog_rels" (
-  	"id" serial PRIMARY KEY NOT NULL,
-  	"order" integer,
-  	"parent_id" uuid NOT NULL,
-  	"path" varchar NOT NULL,
-  	"blog_id" uuid,
-  	"users_id" uuid
-  );
-  
-  CREATE TABLE "_blog_v_version_populated_authors" (
-  	"_order" integer NOT NULL,
-  	"_parent_id" uuid NOT NULL,
-  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-  	"_uuid" varchar,
-  	"name" varchar
-  );
-  
-  CREATE TABLE "_blog_v" (
-  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-  	"parent_id" uuid,
-  	"version_title" varchar,
-  	"version_hero_image_id" uuid,
-  	"version_content" jsonb,
-  	"version_meta_title" varchar,
-  	"version_meta_image_id" uuid,
-  	"version_meta_description" varchar,
-  	"version_published_at" timestamp(3) with time zone,
-  	"version_slug" varchar,
-  	"version_slug_lock" boolean DEFAULT true,
-  	"version_folder_id" uuid,
-  	"version_updated_at" timestamp(3) with time zone,
-  	"version_created_at" timestamp(3) with time zone,
-  	"version_deleted_at" timestamp(3) with time zone,
-  	"version__status" "enum__blog_v_version_status" DEFAULT 'draft',
-  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
-  	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
-  	"latest" boolean,
-  	"autosave" boolean
-  );
-  
-  CREATE TABLE "_blog_v_rels" (
-  	"id" serial PRIMARY KEY NOT NULL,
-  	"order" integer,
-  	"parent_id" uuid NOT NULL,
-  	"path" varchar NOT NULL,
-  	"blog_id" uuid,
-  	"users_id" uuid
   );
   
   CREATE TABLE "handbook" (
@@ -558,35 +479,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"created_at" timestamp(3) with time zone NOT NULL
   );
   
-  CREATE TABLE "payload_jobs_log" (
-  	"_order" integer NOT NULL,
-  	"_parent_id" uuid NOT NULL,
-  	"id" varchar PRIMARY KEY NOT NULL,
-  	"executed_at" timestamp(3) with time zone NOT NULL,
-  	"completed_at" timestamp(3) with time zone NOT NULL,
-  	"task_slug" "enum_payload_jobs_log_task_slug" NOT NULL,
-  	"task_i_d" varchar NOT NULL,
-  	"input" jsonb,
-  	"output" jsonb,
-  	"state" "enum_payload_jobs_log_state" NOT NULL,
-  	"error" jsonb
-  );
-  
-  CREATE TABLE "payload_jobs" (
-  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-  	"input" jsonb,
-  	"completed_at" timestamp(3) with time zone,
-  	"total_tried" numeric DEFAULT 0,
-  	"has_error" boolean DEFAULT false,
-  	"error" jsonb,
-  	"task_slug" "enum_payload_jobs_task_slug",
-  	"queue" varchar DEFAULT 'default',
-  	"wait_until" timestamp(3) with time zone,
-  	"processing" boolean DEFAULT false,
-  	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
-  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
-  );
-  
   CREATE TABLE "payload_folders" (
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"name" varchar NOT NULL,
@@ -618,14 +510,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"pools_id" uuid,
   	"tags_id" uuid,
   	"pages_id" uuid,
-  	"blog_id" uuid,
   	"handbook_id" uuid,
   	"payload_uploads_id" uuid,
   	"private_uploads_id" uuid,
   	"forms_id" uuid,
   	"form_submissions_id" uuid,
   	"audit_log_id" uuid,
-  	"payload_jobs_id" uuid,
   	"payload_folders_id" uuid
   );
   
@@ -698,7 +588,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"order" integer,
   	"parent_id" uuid NOT NULL,
   	"path" varchar NOT NULL,
-  	"blog_id" uuid
+  	"pages_id" uuid
   );
   
   CREATE TABLE "global_terms" (
@@ -735,21 +625,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "_pages_v" ADD CONSTRAINT "_pages_v_version_hero_image_id_payload_uploads_id_fk" FOREIGN KEY ("version_hero_image_id") REFERENCES "public"."payload_uploads"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "_pages_v" ADD CONSTRAINT "_pages_v_version_meta_image_id_payload_uploads_id_fk" FOREIGN KEY ("version_meta_image_id") REFERENCES "public"."payload_uploads"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "_pages_v" ADD CONSTRAINT "_pages_v_version_folder_id_payload_folders_id_fk" FOREIGN KEY ("version_folder_id") REFERENCES "public"."payload_folders"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "blog_populated_authors" ADD CONSTRAINT "blog_populated_authors_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."blog"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "blog" ADD CONSTRAINT "blog_hero_image_id_payload_uploads_id_fk" FOREIGN KEY ("hero_image_id") REFERENCES "public"."payload_uploads"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "blog" ADD CONSTRAINT "blog_meta_image_id_payload_uploads_id_fk" FOREIGN KEY ("meta_image_id") REFERENCES "public"."payload_uploads"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "blog" ADD CONSTRAINT "blog_folder_id_payload_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."payload_folders"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "blog_rels" ADD CONSTRAINT "blog_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."blog"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "blog_rels" ADD CONSTRAINT "blog_rels_blog_fk" FOREIGN KEY ("blog_id") REFERENCES "public"."blog"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "blog_rels" ADD CONSTRAINT "blog_rels_users_fk" FOREIGN KEY ("users_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "_blog_v_version_populated_authors" ADD CONSTRAINT "_blog_v_version_populated_authors_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_blog_v"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "_blog_v" ADD CONSTRAINT "_blog_v_parent_id_blog_id_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."blog"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "_blog_v" ADD CONSTRAINT "_blog_v_version_hero_image_id_payload_uploads_id_fk" FOREIGN KEY ("version_hero_image_id") REFERENCES "public"."payload_uploads"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "_blog_v" ADD CONSTRAINT "_blog_v_version_meta_image_id_payload_uploads_id_fk" FOREIGN KEY ("version_meta_image_id") REFERENCES "public"."payload_uploads"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "_blog_v" ADD CONSTRAINT "_blog_v_version_folder_id_payload_folders_id_fk" FOREIGN KEY ("version_folder_id") REFERENCES "public"."payload_folders"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "_blog_v_rels" ADD CONSTRAINT "_blog_v_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."_blog_v"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "_blog_v_rels" ADD CONSTRAINT "_blog_v_rels_blog_fk" FOREIGN KEY ("blog_id") REFERENCES "public"."blog"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "_blog_v_rels" ADD CONSTRAINT "_blog_v_rels_users_fk" FOREIGN KEY ("users_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "handbook" ADD CONSTRAINT "handbook_tags_id_tags_id_fk" FOREIGN KEY ("tags_id") REFERENCES "public"."tags"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "payload_uploads" ADD CONSTRAINT "payload_uploads_folder_id_payload_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."payload_folders"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "private_uploads" ADD CONSTRAINT "private_uploads_folder_id_payload_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."payload_folders"("id") ON DELETE set null ON UPDATE no action;
@@ -772,7 +647,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "form_submissions_submission_data" ADD CONSTRAINT "form_submissions_submission_data_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."form_submissions"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "form_submissions" ADD CONSTRAINT "form_submissions_form_id_forms_id_fk" FOREIGN KEY ("form_id") REFERENCES "public"."forms"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "audit_log" ADD CONSTRAINT "audit_log_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "payload_jobs_log" ADD CONSTRAINT "payload_jobs_log_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."payload_jobs"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_folders" ADD CONSTRAINT "payload_folders_folder_id_payload_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."payload_folders"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."payload_locked_documents"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_users_fk" FOREIGN KEY ("users_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
@@ -786,14 +660,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_pools_fk" FOREIGN KEY ("pools_id") REFERENCES "public"."pools"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_tags_fk" FOREIGN KEY ("tags_id") REFERENCES "public"."tags"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_pages_fk" FOREIGN KEY ("pages_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_blog_fk" FOREIGN KEY ("blog_id") REFERENCES "public"."blog"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_handbook_fk" FOREIGN KEY ("handbook_id") REFERENCES "public"."handbook"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_payload_uploads_fk" FOREIGN KEY ("payload_uploads_id") REFERENCES "public"."payload_uploads"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_private_uploads_fk" FOREIGN KEY ("private_uploads_id") REFERENCES "public"."private_uploads"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_forms_fk" FOREIGN KEY ("forms_id") REFERENCES "public"."forms"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_form_submissions_fk" FOREIGN KEY ("form_submissions_id") REFERENCES "public"."form_submissions"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_audit_log_fk" FOREIGN KEY ("audit_log_id") REFERENCES "public"."audit_log"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_payload_jobs_fk" FOREIGN KEY ("payload_jobs_id") REFERENCES "public"."payload_jobs"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_payload_folders_fk" FOREIGN KEY ("payload_folders_id") REFERENCES "public"."payload_folders"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_preferences_rels" ADD CONSTRAINT "payload_preferences_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."payload_preferences"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_preferences_rels" ADD CONSTRAINT "payload_preferences_rels_users_fk" FOREIGN KEY ("users_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
@@ -801,7 +673,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "payload_query_presets_rels" ADD CONSTRAINT "payload_query_presets_rels_users_fk" FOREIGN KEY ("users_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "global_footer_nav_items" ADD CONSTRAINT "global_footer_nav_items_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."global_footer"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "global_footer_rels" ADD CONSTRAINT "global_footer_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."global_footer"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "global_footer_rels" ADD CONSTRAINT "global_footer_rels_blog_fk" FOREIGN KEY ("blog_id") REFERENCES "public"."blog"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "global_footer_rels" ADD CONSTRAINT "global_footer_rels_pages_fk" FOREIGN KEY ("pages_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
   CREATE UNIQUE INDEX "users_email_idx" ON "users" USING btree ("email");
   CREATE INDEX "users_created_at_idx" ON "users" USING btree ("created_at");
   CREATE INDEX "users_updated_at_idx" ON "users" USING btree ("updated_at");
@@ -860,41 +732,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "_pages_v_updated_at_idx" ON "_pages_v" USING btree ("updated_at");
   CREATE INDEX "_pages_v_latest_idx" ON "_pages_v" USING btree ("latest");
   CREATE INDEX "_pages_v_autosave_idx" ON "_pages_v" USING btree ("autosave");
-  CREATE INDEX "blog_populated_authors_order_idx" ON "blog_populated_authors" USING btree ("_order");
-  CREATE INDEX "blog_populated_authors_parent_id_idx" ON "blog_populated_authors" USING btree ("_parent_id");
-  CREATE INDEX "blog_hero_image_idx" ON "blog" USING btree ("hero_image_id");
-  CREATE INDEX "blog_meta_meta_image_idx" ON "blog" USING btree ("meta_image_id");
-  CREATE INDEX "blog_slug_idx" ON "blog" USING btree ("slug");
-  CREATE INDEX "blog_folder_idx" ON "blog" USING btree ("folder_id");
-  CREATE INDEX "blog_updated_at_idx" ON "blog" USING btree ("updated_at");
-  CREATE INDEX "blog_created_at_idx" ON "blog" USING btree ("created_at");
-  CREATE INDEX "blog_deleted_at_idx" ON "blog" USING btree ("deleted_at");
-  CREATE INDEX "blog__status_idx" ON "blog" USING btree ("_status");
-  CREATE INDEX "blog_rels_order_idx" ON "blog_rels" USING btree ("order");
-  CREATE INDEX "blog_rels_parent_idx" ON "blog_rels" USING btree ("parent_id");
-  CREATE INDEX "blog_rels_path_idx" ON "blog_rels" USING btree ("path");
-  CREATE INDEX "blog_rels_blog_id_idx" ON "blog_rels" USING btree ("blog_id");
-  CREATE INDEX "blog_rels_users_id_idx" ON "blog_rels" USING btree ("users_id");
-  CREATE INDEX "_blog_v_version_populated_authors_order_idx" ON "_blog_v_version_populated_authors" USING btree ("_order");
-  CREATE INDEX "_blog_v_version_populated_authors_parent_id_idx" ON "_blog_v_version_populated_authors" USING btree ("_parent_id");
-  CREATE INDEX "_blog_v_parent_idx" ON "_blog_v" USING btree ("parent_id");
-  CREATE INDEX "_blog_v_version_version_hero_image_idx" ON "_blog_v" USING btree ("version_hero_image_id");
-  CREATE INDEX "_blog_v_version_meta_version_meta_image_idx" ON "_blog_v" USING btree ("version_meta_image_id");
-  CREATE INDEX "_blog_v_version_version_slug_idx" ON "_blog_v" USING btree ("version_slug");
-  CREATE INDEX "_blog_v_version_version_folder_idx" ON "_blog_v" USING btree ("version_folder_id");
-  CREATE INDEX "_blog_v_version_version_updated_at_idx" ON "_blog_v" USING btree ("version_updated_at");
-  CREATE INDEX "_blog_v_version_version_created_at_idx" ON "_blog_v" USING btree ("version_created_at");
-  CREATE INDEX "_blog_v_version_version_deleted_at_idx" ON "_blog_v" USING btree ("version_deleted_at");
-  CREATE INDEX "_blog_v_version_version__status_idx" ON "_blog_v" USING btree ("version__status");
-  CREATE INDEX "_blog_v_created_at_idx" ON "_blog_v" USING btree ("created_at");
-  CREATE INDEX "_blog_v_updated_at_idx" ON "_blog_v" USING btree ("updated_at");
-  CREATE INDEX "_blog_v_latest_idx" ON "_blog_v" USING btree ("latest");
-  CREATE INDEX "_blog_v_autosave_idx" ON "_blog_v" USING btree ("autosave");
-  CREATE INDEX "_blog_v_rels_order_idx" ON "_blog_v_rels" USING btree ("order");
-  CREATE INDEX "_blog_v_rels_parent_idx" ON "_blog_v_rels" USING btree ("parent_id");
-  CREATE INDEX "_blog_v_rels_path_idx" ON "_blog_v_rels" USING btree ("path");
-  CREATE INDEX "_blog_v_rels_blog_id_idx" ON "_blog_v_rels" USING btree ("blog_id");
-  CREATE INDEX "_blog_v_rels_users_id_idx" ON "_blog_v_rels" USING btree ("users_id");
   CREATE INDEX "handbook_tags_idx" ON "handbook" USING btree ("tags_id");
   CREATE INDEX "handbook_updated_at_idx" ON "handbook" USING btree ("updated_at");
   CREATE INDEX "handbook_created_at_idx" ON "handbook" USING btree ("created_at");
@@ -967,17 +804,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "form_submissions_updated_at_idx" ON "form_submissions" USING btree ("updated_at");
   CREATE INDEX "form_submissions_created_at_idx" ON "form_submissions" USING btree ("created_at");
   CREATE INDEX "audit_log_user_idx" ON "audit_log" USING btree ("user_id");
-  CREATE INDEX "payload_jobs_log_order_idx" ON "payload_jobs_log" USING btree ("_order");
-  CREATE INDEX "payload_jobs_log_parent_id_idx" ON "payload_jobs_log" USING btree ("_parent_id");
-  CREATE INDEX "payload_jobs_completed_at_idx" ON "payload_jobs" USING btree ("completed_at");
-  CREATE INDEX "payload_jobs_total_tried_idx" ON "payload_jobs" USING btree ("total_tried");
-  CREATE INDEX "payload_jobs_has_error_idx" ON "payload_jobs" USING btree ("has_error");
-  CREATE INDEX "payload_jobs_task_slug_idx" ON "payload_jobs" USING btree ("task_slug");
-  CREATE INDEX "payload_jobs_queue_idx" ON "payload_jobs" USING btree ("queue");
-  CREATE INDEX "payload_jobs_wait_until_idx" ON "payload_jobs" USING btree ("wait_until");
-  CREATE INDEX "payload_jobs_processing_idx" ON "payload_jobs" USING btree ("processing");
-  CREATE INDEX "payload_jobs_updated_at_idx" ON "payload_jobs" USING btree ("updated_at");
-  CREATE INDEX "payload_jobs_created_at_idx" ON "payload_jobs" USING btree ("created_at");
   CREATE INDEX "payload_folders_name_idx" ON "payload_folders" USING btree ("name");
   CREATE INDEX "payload_folders_folder_idx" ON "payload_folders" USING btree ("folder_id");
   CREATE INDEX "payload_folders_updated_at_idx" ON "payload_folders" USING btree ("updated_at");
@@ -999,14 +825,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "payload_locked_documents_rels_pools_id_idx" ON "payload_locked_documents_rels" USING btree ("pools_id");
   CREATE INDEX "payload_locked_documents_rels_tags_id_idx" ON "payload_locked_documents_rels" USING btree ("tags_id");
   CREATE INDEX "payload_locked_documents_rels_pages_id_idx" ON "payload_locked_documents_rels" USING btree ("pages_id");
-  CREATE INDEX "payload_locked_documents_rels_blog_id_idx" ON "payload_locked_documents_rels" USING btree ("blog_id");
   CREATE INDEX "payload_locked_documents_rels_handbook_id_idx" ON "payload_locked_documents_rels" USING btree ("handbook_id");
   CREATE INDEX "payload_locked_documents_rels_payload_uploads_id_idx" ON "payload_locked_documents_rels" USING btree ("payload_uploads_id");
   CREATE INDEX "payload_locked_documents_rels_private_uploads_id_idx" ON "payload_locked_documents_rels" USING btree ("private_uploads_id");
   CREATE INDEX "payload_locked_documents_rels_forms_id_idx" ON "payload_locked_documents_rels" USING btree ("forms_id");
   CREATE INDEX "payload_locked_documents_rels_form_submissions_id_idx" ON "payload_locked_documents_rels" USING btree ("form_submissions_id");
   CREATE INDEX "payload_locked_documents_rels_audit_log_id_idx" ON "payload_locked_documents_rels" USING btree ("audit_log_id");
-  CREATE INDEX "payload_locked_documents_rels_payload_jobs_id_idx" ON "payload_locked_documents_rels" USING btree ("payload_jobs_id");
   CREATE INDEX "payload_locked_documents_rels_payload_folders_id_idx" ON "payload_locked_documents_rels" USING btree ("payload_folders_id");
   CREATE INDEX "payload_preferences_key_idx" ON "payload_preferences" USING btree ("key");
   CREATE INDEX "payload_preferences_updated_at_idx" ON "payload_preferences" USING btree ("updated_at");
@@ -1028,7 +852,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "global_footer_rels_order_idx" ON "global_footer_rels" USING btree ("order");
   CREATE INDEX "global_footer_rels_parent_idx" ON "global_footer_rels" USING btree ("parent_id");
   CREATE INDEX "global_footer_rels_path_idx" ON "global_footer_rels" USING btree ("path");
-  CREATE INDEX "global_footer_rels_blog_id_idx" ON "global_footer_rels" USING btree ("blog_id");`)
+  CREATE INDEX "global_footer_rels_pages_id_idx" ON "global_footer_rels" USING btree ("pages_id");`)
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
@@ -1045,12 +869,6 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "tags" CASCADE;
   DROP TABLE "pages" CASCADE;
   DROP TABLE "_pages_v" CASCADE;
-  DROP TABLE "blog_populated_authors" CASCADE;
-  DROP TABLE "blog" CASCADE;
-  DROP TABLE "blog_rels" CASCADE;
-  DROP TABLE "_blog_v_version_populated_authors" CASCADE;
-  DROP TABLE "_blog_v" CASCADE;
-  DROP TABLE "_blog_v_rels" CASCADE;
   DROP TABLE "handbook" CASCADE;
   DROP TABLE "payload_uploads" CASCADE;
   DROP TABLE "private_uploads" CASCADE;
@@ -1073,8 +891,6 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "form_submissions_submission_data" CASCADE;
   DROP TABLE "form_submissions" CASCADE;
   DROP TABLE "audit_log" CASCADE;
-  DROP TABLE "payload_jobs_log" CASCADE;
-  DROP TABLE "payload_jobs" CASCADE;
   DROP TABLE "payload_folders" CASCADE;
   DROP TABLE "payload_locked_documents" CASCADE;
   DROP TABLE "payload_locked_documents_rels" CASCADE;
@@ -1094,8 +910,6 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum_admin_invitations_role";
   DROP TYPE "public"."enum_pages_status";
   DROP TYPE "public"."enum__pages_v_version_status";
-  DROP TYPE "public"."enum_blog_status";
-  DROP TYPE "public"."enum__blog_v_version_status";
   DROP TYPE "public"."enum_forms_blocks_email_width";
   DROP TYPE "public"."enum_forms_blocks_text_width";
   DROP TYPE "public"."enum_forms_blocks_user_info_options";
@@ -1103,9 +917,6 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum_forms_blocks_phone_width";
   DROP TYPE "public"."enum_forms_confirmation_type";
   DROP TYPE "public"."enum_audit_log_type";
-  DROP TYPE "public"."enum_payload_jobs_log_task_slug";
-  DROP TYPE "public"."enum_payload_jobs_log_state";
-  DROP TYPE "public"."enum_payload_jobs_task_slug";
   DROP TYPE "public"."enum_payload_query_presets_access_read_constraint";
   DROP TYPE "public"."enum_payload_query_presets_access_update_constraint";
   DROP TYPE "public"."enum_payload_query_presets_access_delete_constraint";
