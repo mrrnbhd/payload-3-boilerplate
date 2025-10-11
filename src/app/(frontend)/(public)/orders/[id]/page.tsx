@@ -1,37 +1,35 @@
 import { notFound } from 'next/navigation'
 
-import { DataTable } from '@/components/data-table'
-
 import { RefreshRouteOnSave } from '@/hooks/refresh-route-on-save'
 import config from '@payload-config'
 import { getPayload } from 'payload'
-import type { Page } from '@/payload-types'
+import type { Order } from '@/payload-types'
 
-interface PageParams {
+interface OrderParams {
   params: Promise<{
-    title?: string
+    id?: string
   }>
 }
 
-export default async function Pages({ params: paramsPromise }: PageParams) {
-  const { title = 'index' } = await paramsPromise
+export default async function Orders({ params: paramsPromise }: OrderParams) {
+  const { id = 'index' } = await paramsPromise
 
   const payload = await getPayload({ config })
 
-  const page = await payload.find({
-    collection: 'pages',
+  const order = await payload.find({
+    collection: 'orders',
     draft: true,
     trash: true,
     depth: 3,
     limit: 1,
     where: {
-      title: {
-        equals: title,
+      id: {
+        equals: id,
       },
     },
   })
 
-  const data = page?.docs?.[0] as null | Page
+  const data = order?.docs?.[0] as null | Order
 
   if (data === null) {
     return notFound()
@@ -40,7 +38,9 @@ export default async function Pages({ params: paramsPromise }: PageParams) {
   return (
     <div className="m-5">
       <RefreshRouteOnSave />
-      <DataTable />
+      <div>
+        <p>Automation Panel Placeholder</p>
+      </div>
     </div>
   )
 }
@@ -48,19 +48,19 @@ export default async function Pages({ params: paramsPromise }: PageParams) {
 export async function generateStaticParams() {
   const payload = await getPayload({ config })
 
-  const pagesRes = await payload.find({
-    collection: 'pages',
+  const ordersRes = await payload.find({
+    collection: 'orders',
     depth: 0,
     draft: true,
     limit: 100,
   })
 
-  const pages = pagesRes?.docs
+  const orders = ordersRes?.docs
 
-  return pages.map(({ title }) =>
-    title !== 'index'
+  return orders.map(({ id }) =>
+    id !== 'index'
       ? {
-          title,
+          id,
         }
       : {}
   )

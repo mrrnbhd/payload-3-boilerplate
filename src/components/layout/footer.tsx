@@ -7,6 +7,7 @@ import { CLASSNAMES } from '@/lib/constants'
 import { getCachedGlobal } from '@/lib/payload/get-globals'
 
 import type { GlobalFooter } from '@/payload-types'
+import { TicketerLogoIcon } from '../icons'
 import RichText from '../payload/rich-text'
 import Highlightborder from '../ui/highlight-border'
 import { P } from '../ui/typography'
@@ -26,7 +27,7 @@ export default async function Footer() {
       <div className={CLASSNAMES.layoutPadding}>
         <Container className="py-16 sm:pt-24">
           <div className="flex items-center justify-between gap-8">
-            <ticketerLogoIcon className="h-7 w-auto text-muted-foreground" />
+            <TicketerLogoIcon className="h-7 w-auto text-muted-foreground" />
             <ThemeSelector />
           </div>
 

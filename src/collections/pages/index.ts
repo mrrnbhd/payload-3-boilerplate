@@ -21,7 +21,7 @@ export const Pages: CollectionConfig = {
     useAsTitle: 'title',
     livePreview: {
       url: ({ data }) => {
-        return `${getServerSideURL()}/pages/${data.title}?draft=true`
+        return `${getServerSideURL()}/pages/${data.slug}?draft=true`
       },
     },
   },

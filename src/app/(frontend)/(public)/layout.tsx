@@ -1,6 +1,7 @@
 import '../globals.css'
 
 import type { Metadata } from 'next'
+import { headers } from 'next/headers'
 
 import Footer from '@/components/layout/footer'
 import Header from '@/components/layout/header'
@@ -30,7 +31,15 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
+  const headersList = await headers()
+  const url = headersList.get('referer') || headersList.get('x-url') || ''
+  const pathname = new URL(url, getServerSideURL()).pathname
+
+  const isOrdersRoute = pathname.startsWith('/orders/')
+
+  return isOrdersRoute ? (
+    <div>{children}</div>
+  ) : (
     <>
       <Header />
       <div className="flex-1">{children}</div>
