@@ -29,6 +29,6 @@ export function getEmailAdapter() {
     apiKey: process.env.USESEND_API_KEY || '',
     useSendUrl: process.env.USESEND_URL || '',
     defaultFromName: 'Ticketer',
-    defaultFromAddress: 'ticketer@email.com',
+    defaultFromAddress: 'ticketer@ticketer-email.up.railway.app',
   })
 }
