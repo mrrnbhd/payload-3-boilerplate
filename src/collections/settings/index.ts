@@ -13,20 +13,19 @@ export const Settings: GlobalConfig = {
           label: '🗲 Features',
           fields: [],
         },
-                                {
+        {
           label: '🌫 Themes',
           fields: [],
         },
-                {
+        {
           label: '⚙ Integrations',
           fields: [],
         },
 
         {
-              label: '🕮 Help',
-              fields: [],
-        }
-
+          label: '🕮 Help',
+          fields: [],
+        },
       ],
     },
     {

@@ -59,185 +59,187 @@ export type SupportedTimezones =
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
   | 'Pacific/Auckland'
-  | 'Pacific/Fiji';
+  | 'Pacific/Fiji'
 
 export interface Config {
   auth: {
-    users: UserAuthOperations;
-  };
-  blocks: {};
+    users: UserAuthOperations
+  }
+  blocks: {}
   collections: {
-    users: User;
-    sessions: Session;
-    accounts: Account;
-    verifications: Verification;
-    passkeys: Passkey;
-    'admin-invitations': AdminInvitation;
-    Tasks: Task;
-    orders: Order;
-    pools: Pool;
-    tags: Tag;
-    pages: Page;
-    handbook: Handbook;
-    'payload-uploads': PayloadUpload;
-    'private-uploads': PrivateUpload;
-    forms: Form;
-    'form-submissions': FormSubmission;
-    'Audit-log': AuditLog;
-    'payload-folders': FolderInterface;
-    'payload-locked-documents': PayloadLockedDocument;
-    'payload-preferences': PayloadPreference;
-    'payload-migrations': PayloadMigration;
-    'payload-query-presets': PayloadQueryPreset;
-  };
+    users: User
+    sessions: Session
+    accounts: Account
+    verifications: Verification
+    passkeys: Passkey
+    'admin-invitations': AdminInvitation
+    Tasks: Task
+    orders: Order
+    pools: Pool
+    tags: Tag
+    pages: Page
+    handbook: Handbook
+    'payload-uploads': PayloadUpload
+    'private-uploads': PrivateUpload
+    forms: Form
+    'form-submissions': FormSubmission
+    'Audit-log': AuditLog
+    'payload-folders': FolderInterface
+    'payload-locked-documents': PayloadLockedDocument
+    'payload-preferences': PayloadPreference
+    'payload-migrations': PayloadMigration
+    'payload-query-presets': PayloadQueryPreset
+  }
   collectionsJoins: {
     pages: {
-      pageHelp: 'handbook';
-    };
+      pageHelp: 'handbook'
+    }
     'payload-folders': {
-      documentsAndFolders: 'payload-folders' | 'pages' | 'payload-uploads' | 'private-uploads';
-    };
-  };
+      documentsAndFolders: 'payload-folders' | 'pages' | 'payload-uploads' | 'private-uploads'
+    }
+  }
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
-    sessions: SessionsSelect<false> | SessionsSelect<true>;
-    accounts: AccountsSelect<false> | AccountsSelect<true>;
-    verifications: VerificationsSelect<false> | VerificationsSelect<true>;
-    passkeys: PasskeysSelect<false> | PasskeysSelect<true>;
-    'admin-invitations': AdminInvitationsSelect<false> | AdminInvitationsSelect<true>;
-    Tasks: TasksSelect<false> | TasksSelect<true>;
-    orders: OrdersSelect<false> | OrdersSelect<true>;
-    pools: PoolsSelect<false> | PoolsSelect<true>;
-    tags: TagsSelect<false> | TagsSelect<true>;
-    pages: PagesSelect<false> | PagesSelect<true>;
-    handbook: HandbookSelect<false> | HandbookSelect<true>;
-    'payload-uploads': PayloadUploadsSelect<false> | PayloadUploadsSelect<true>;
-    'private-uploads': PrivateUploadsSelect<false> | PrivateUploadsSelect<true>;
-    forms: FormsSelect<false> | FormsSelect<true>;
-    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
-    'Audit-log': AuditLogSelect<false> | AuditLogSelect<true>;
-    'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
-    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
-    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
-    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
-    'payload-query-presets': PayloadQueryPresetsSelect<false> | PayloadQueryPresetsSelect<true>;
-  };
+    users: UsersSelect<false> | UsersSelect<true>
+    sessions: SessionsSelect<false> | SessionsSelect<true>
+    accounts: AccountsSelect<false> | AccountsSelect<true>
+    verifications: VerificationsSelect<false> | VerificationsSelect<true>
+    passkeys: PasskeysSelect<false> | PasskeysSelect<true>
+    'admin-invitations': AdminInvitationsSelect<false> | AdminInvitationsSelect<true>
+    Tasks: TasksSelect<false> | TasksSelect<true>
+    orders: OrdersSelect<false> | OrdersSelect<true>
+    pools: PoolsSelect<false> | PoolsSelect<true>
+    tags: TagsSelect<false> | TagsSelect<true>
+    pages: PagesSelect<false> | PagesSelect<true>
+    handbook: HandbookSelect<false> | HandbookSelect<true>
+    'payload-uploads': PayloadUploadsSelect<false> | PayloadUploadsSelect<true>
+    'private-uploads': PrivateUploadsSelect<false> | PrivateUploadsSelect<true>
+    forms: FormsSelect<false> | FormsSelect<true>
+    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>
+    'Audit-log': AuditLogSelect<false> | AuditLogSelect<true>
+    'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>
+    'payload-locked-documents':
+      | PayloadLockedDocumentsSelect<false>
+      | PayloadLockedDocumentsSelect<true>
+    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>
+    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>
+    'payload-query-presets': PayloadQueryPresetsSelect<false> | PayloadQueryPresetsSelect<true>
+  }
   db: {
-    defaultIDType: string;
-  };
+    defaultIDType: string
+  }
   globals: {
-    'global-footer': GlobalFooter;
-    'global-terms': GlobalTerm;
-    'global-privacy': GlobalPrivacy;
-    settings: Setting;
-  };
+    'global-footer': GlobalFooter
+    'global-terms': GlobalTerm
+    'global-privacy': GlobalPrivacy
+    settings: Setting
+  }
   globalsSelect: {
-    'global-footer': GlobalFooterSelect<false> | GlobalFooterSelect<true>;
-    'global-terms': GlobalTermsSelect<false> | GlobalTermsSelect<true>;
-    'global-privacy': GlobalPrivacySelect<false> | GlobalPrivacySelect<true>;
-    settings: SettingsSelect<false> | SettingsSelect<true>;
-  };
-  locale: null;
+    'global-footer': GlobalFooterSelect<false> | GlobalFooterSelect<true>
+    'global-terms': GlobalTermsSelect<false> | GlobalTermsSelect<true>
+    'global-privacy': GlobalPrivacySelect<false> | GlobalPrivacySelect<true>
+    settings: SettingsSelect<false> | SettingsSelect<true>
+  }
+  locale: null
   user: User & {
-    collection: 'users';
-  };
+    collection: 'users'
+  }
   jobs: {
-    tasks: unknown;
-    workflows: unknown;
-  };
+    tasks: unknown
+    workflows: unknown
+  }
 }
 export interface UserAuthOperations {
   forgotPassword:
     | {
-        email: string;
+        email: string
       }
     | {
-        username: string;
-      };
+        username: string
+      }
   login:
     | {
-        email: string;
-        password: string;
+        email: string
+        password: string
       }
     | {
-        password: string;
-        username: string;
-      };
+        password: string
+        username: string
+      }
   registerFirstUser: {
-    password: string;
-    username?: string;
-    email: string;
-  };
+    password: string
+    username?: string
+    email: string
+  }
   unlock:
     | {
-        email: string;
+        email: string
       }
     | {
-        username: string;
-      };
+        username: string
+      }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
-  userRole?: ('Operator' | 'Admin') | null;
+  id: string
+  userRole?: ('Operator' | 'Admin') | null
   /**
    * Users chosen display name
    */
-  name?: string | null;
+  name?: string | null
   /**
    * The email of the user
    */
-  email: string;
+  email: string
   /**
    * Whether the email of the user has been verified
    */
-  emailVerified: boolean;
+  emailVerified: boolean
   /**
    * The image of the user
    */
-  image?: string | null;
-  createdAt: string;
-  updatedAt: string;
+  image?: string | null
+  createdAt: string
+  updatedAt: string
   /**
    * The username of the user
    */
-  username?: string | null;
+  username?: string | null
   /**
    * The display username of the user
    */
-  displayUsername?: string | null;
+  displayUsername?: string | null
   /**
    * The normalized email of the user
    */
-  normalizedEmail?: string | null;
+  normalizedEmail?: string | null
   /**
    * The phone number of the user
    */
-  phoneNumber?: string | null;
+  phoneNumber?: string | null
   /**
    * Whether the phone number of the user has been verified
    */
-  phoneNumberVerified?: boolean | null;
+  phoneNumberVerified?: boolean | null
   /**
    * The role of the user
    */
-  role?: ('admin' | 'user') | null;
+  role?: ('admin' | 'user') | null
   /**
    * Whether the user is banned from the platform
    */
-  banned?: boolean | null;
+  banned?: boolean | null
   /**
    * The reason for the ban
    */
-  banReason?: string | null;
+  banReason?: string | null
   /**
    * The date and time when the ban will expire
    */
-  banExpires?: string | null;
-  verified?: boolean | null;
+  banExpires?: string | null
+  verified?: boolean | null
 }
 /**
  * Sessions are active sessions for users. They are used to authenticate users with a session token
@@ -246,33 +248,33 @@ export interface User {
  * via the `definition` "sessions".
  */
 export interface Session {
-  id: string;
+  id: string
   /**
    * The date and time when the session will expire
    */
-  expiresAt: string;
+  expiresAt: string
   /**
    * The unique session token
    */
-  token: string;
-  createdAt: string;
-  updatedAt: string;
+  token: string
+  createdAt: string
+  updatedAt: string
   /**
    * The IP address of the device
    */
-  ipAddress?: string | null;
+  ipAddress?: string | null
   /**
    * The user agent information of the device
    */
-  userAgent?: string | null;
+  userAgent?: string | null
   /**
    * The user that the session belongs to
    */
-  user: string | User;
+  user: string | User
   /**
    * The admin who is impersonating this session
    */
-  impersonatedBy?: (string | null) | User;
+  impersonatedBy?: (string | null) | User
 }
 /**
  * Accounts are used to store user accounts for authentication providers
@@ -281,49 +283,49 @@ export interface Session {
  * via the `definition` "accounts".
  */
 export interface Account {
-  id: string;
+  id: string
   /**
    * The id of the account as provided by the SSO or equal to userId for credential accounts
    */
-  accountId: string;
+  accountId: string
   /**
    * The id of the provider as provided by the SSO
    */
-  providerId: string;
+  providerId: string
   /**
    * The user that the account belongs to
    */
-  user: string | User;
+  user: string | User
   /**
    * The access token of the account. Returned by the provider
    */
-  accessToken?: string | null;
+  accessToken?: string | null
   /**
    * The refresh token of the account. Returned by the provider
    */
-  refreshToken?: string | null;
+  refreshToken?: string | null
   /**
    * The id token for the account. Returned by the provider
    */
-  idToken?: string | null;
+  idToken?: string | null
   /**
    * The date and time when the access token will expire
    */
-  accessTokenExpiresAt?: string | null;
+  accessTokenExpiresAt?: string | null
   /**
    * The date and time when the refresh token will expire
    */
-  refreshTokenExpiresAt?: string | null;
+  refreshTokenExpiresAt?: string | null
   /**
    * The scope of the account. Returned by the provider
    */
-  scope?: string | null;
+  scope?: string | null
   /**
    * The hashed password of the account. Mainly used for email and password authentication
    */
-  password?: string | null;
-  createdAt: string;
-  updatedAt: string;
+  password?: string | null
+  createdAt: string
+  updatedAt: string
 }
 /**
  * Verifications are used to verify authentication requests
@@ -332,21 +334,21 @@ export interface Account {
  * via the `definition` "verifications".
  */
 export interface Verification {
-  id: string;
+  id: string
   /**
    * The identifier of the verification request
    */
-  identifier: string;
+  identifier: string
   /**
    * The value to be verified
    */
-  value: string;
+  value: string
   /**
    * The date and time when the verification request will expire
    */
-  expiresAt: string;
-  createdAt: string;
-  updatedAt: string;
+  expiresAt: string
+  createdAt: string
+  updatedAt: string
 }
 /**
  * Passkeys are used to authenticate users
@@ -355,138 +357,138 @@ export interface Verification {
  * via the `definition` "passkeys".
  */
 export interface Passkey {
-  id: string;
+  id: string
   /**
    * The name of the passkey
    */
-  name?: string | null;
+  name?: string | null
   /**
    * The public key of the passkey
    */
-  publicKey: string;
+  publicKey: string
   /**
    * The user that the passkey belongs to
    */
-  user: string | User;
+  user: string | User
   /**
    * The unique identifier of the registered credential
    */
-  credentialID: string;
+  credentialID: string
   /**
    * The counter of the passkey
    */
-  counter: number;
+  counter: number
   /**
    * The type of device used to register the passkey
    */
-  deviceType: string;
+  deviceType: string
   /**
    * Whether the passkey is backed up
    */
-  backedUp: boolean;
+  backedUp: boolean
   /**
    * The transports used to register the passkey
    */
-  transports: string;
-  createdAt: string;
-  aaguid?: string | null;
-  updatedAt: string;
+  transports: string
+  createdAt: string
+  aaguid?: string | null
+  updatedAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "admin-invitations".
  */
 export interface AdminInvitation {
-  id: string;
-  role: 'admin' | 'user';
-  token: string;
-  url?: string | null;
-  updatedAt: string;
-  createdAt: string;
+  id: string
+  role: 'admin' | 'user'
+  token: string
+  url?: string | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "Tasks".
  */
 export interface Task {
-  id: string;
-  title?: string | null;
-  updatedAt: string;
-  createdAt: string;
+  id: string
+  title?: string | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "orders".
  */
 export interface Order {
-  id: string;
-  title?: string | null;
-  updatedAt: string;
-  createdAt: string;
+  id: string
+  title?: string | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pools".
  */
 export interface Pool {
-  id: string;
-  title?: string | null;
-  updatedAt: string;
-  createdAt: string;
+  id: string
+  title?: string | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "tags".
  */
 export interface Tag {
-  id: string;
-  title?: string | null;
-  updatedAt: string;
-  createdAt: string;
+  id: string
+  title?: string | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
 export interface Page {
-  id: string;
-  title?: string | null;
-  slug?: string | null;
-  slugLock?: boolean | null;
-  tags?: (string | null) | User;
-  heroImage?: (string | null) | PayloadUpload;
+  id: string
+  title?: string | null
+  slug?: string | null
+  slugLock?: boolean | null
+  tags?: (string | null) | User
+  heroImage?: (string | null) | PayloadUpload
   content: {
     root: {
-      type: string;
+      type: string
       children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
+        type: any
+        version: number
+        [k: string]: unknown
+      }[]
+      direction: ('ltr' | 'rtl') | null
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+      indent: number
+      version: number
+    }
+    [k: string]: unknown
+  }
   meta?: {
-    title?: string | null;
+    title?: string | null
     /**
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    image?: (string | null) | PayloadUpload;
-    description?: string | null;
-  };
+    image?: (string | null) | PayloadUpload
+    description?: string | null
+  }
   pageHelp?: {
-    docs?: (string | Handbook)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  folder?: (string | null) | FolderInterface;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
+    docs?: (string | Handbook)[]
+    hasNextPage?: boolean
+    totalDocs?: number
+  }
+  folder?: (string | null) | FolderInterface
+  updatedAt: string
+  createdAt: string
+  _status?: ('draft' | 'published') | null
 }
 /**
  * All media uploaded from the admin panel.
@@ -495,128 +497,128 @@ export interface Page {
  * via the `definition` "payload-uploads".
  */
 export interface PayloadUpload {
-  id: string;
-  alt: string;
+  id: string
+  alt: string
   caption?: {
     root: {
-      type: string;
+      type: string
       children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  prefix?: string | null;
-  folder?: (string | null) | FolderInterface;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
+        type: any
+        version: number
+        [k: string]: unknown
+      }[]
+      direction: ('ltr' | 'rtl') | null
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+      indent: number
+      version: number
+    }
+    [k: string]: unknown
+  } | null
+  prefix?: string | null
+  folder?: (string | null) | FolderInterface
+  updatedAt: string
+  createdAt: string
+  deletedAt?: string | null
+  url?: string | null
+  thumbnailURL?: string | null
+  filename?: string | null
+  mimeType?: string | null
+  filesize?: number | null
+  width?: number | null
+  height?: number | null
+  focalX?: number | null
+  focalY?: number | null
   sizes?: {
     thumbnail?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
     square?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
     small?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
     medium?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
     large?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
     xlarge?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
     og?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
+  }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-folders".
  */
 export interface FolderInterface {
-  id: string;
-  name: string;
-  folder?: (string | null) | FolderInterface;
+  id: string
+  name: string
+  folder?: (string | null) | FolderInterface
   documentsAndFolders?: {
     docs?: (
       | {
-          relationTo?: 'payload-folders';
-          value: string | FolderInterface;
+          relationTo?: 'payload-folders'
+          value: string | FolderInterface
         }
       | {
-          relationTo?: 'pages';
-          value: string | Page;
+          relationTo?: 'pages'
+          value: string | Page
         }
       | {
-          relationTo?: 'payload-uploads';
-          value: string | PayloadUpload;
+          relationTo?: 'payload-uploads'
+          value: string | PayloadUpload
         }
       | {
-          relationTo?: 'private-uploads';
-          value: string | PrivateUpload;
+          relationTo?: 'private-uploads'
+          value: string | PrivateUpload
         }
-    )[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  updatedAt: string;
-  createdAt: string;
+    )[]
+    hasNextPage?: boolean
+    totalDocs?: number
+  }
+  updatedAt: string
+  createdAt: string
 }
 /**
  * Private uploads that require authentication to access
@@ -625,1100 +627,1100 @@ export interface FolderInterface {
  * via the `definition` "private-uploads".
  */
 export interface PrivateUpload {
-  id: string;
-  title: string;
+  id: string
+  title: string
   /**
    * Specific users who have access to this upload. If not assigned, it will respect the access level of the upload.
    */
-  assignedTo?: (string | User)[] | null;
-  prefix?: string | null;
-  folder?: (string | null) | FolderInterface;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
+  assignedTo?: (string | User)[] | null
+  prefix?: string | null
+  folder?: (string | null) | FolderInterface
+  updatedAt: string
+  createdAt: string
+  deletedAt?: string | null
+  url?: string | null
+  thumbnailURL?: string | null
+  filename?: string | null
+  mimeType?: string | null
+  filesize?: number | null
+  width?: number | null
+  height?: number | null
+  focalX?: number | null
+  focalY?: number | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "handbook".
  */
 export interface Handbook {
-  id: string;
-  title?: string | null;
-  tags?: (string | null) | Tag;
-  updatedAt: string;
-  createdAt: string;
+  id: string
+  title?: string | null
+  tags?: (string | null) | Tag
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "forms".
  */
 export interface Form {
-  id: string;
-  title: string;
+  id: string
+  title: string
   fields?:
     | (
         | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            defaultValue?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'checkbox';
+            name: string
+            label?: string | null
+            width?: number | null
+            required?: boolean | null
+            defaultValue?: boolean | null
+            id?: string | null
+            blockName?: string | null
+            blockType: 'checkbox'
           }
         | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'country';
+            name: string
+            label?: string | null
+            width?: number | null
+            required?: boolean | null
+            id?: string | null
+            blockName?: string | null
+            blockType: 'country'
           }
         | {
-            name: string;
-            label?: string | null;
-            description?: string | null;
-            placeholder?: string | null;
-            defaultValue?: string | null;
-            width?: ('full' | '3/4' | '2/3' | '1/2' | '1/3' | '1/4') | null;
-            required?: boolean | null;
-            hidden?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'email';
+            name: string
+            label?: string | null
+            description?: string | null
+            placeholder?: string | null
+            defaultValue?: string | null
+            width?: ('full' | '3/4' | '2/3' | '1/2' | '1/3' | '1/4') | null
+            required?: boolean | null
+            hidden?: boolean | null
+            id?: string | null
+            blockName?: string | null
+            blockType: 'email'
           }
         | {
             message?: {
               root: {
-                type: string;
+                type: string
                 children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            } | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'message';
+                  type: any
+                  version: number
+                  [k: string]: unknown
+                }[]
+                direction: ('ltr' | 'rtl') | null
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+                indent: number
+                version: number
+              }
+              [k: string]: unknown
+            } | null
+            id?: string | null
+            blockName?: string | null
+            blockType: 'message'
           }
         | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'number';
+            name: string
+            label?: string | null
+            width?: number | null
+            defaultValue?: number | null
+            required?: boolean | null
+            id?: string | null
+            blockName?: string | null
+            blockType: 'number'
           }
         | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            placeholder?: string | null;
+            name: string
+            label?: string | null
+            width?: number | null
+            defaultValue?: string | null
+            placeholder?: string | null
             options?:
               | {
-                  label: string;
-                  value: string;
-                  id?: string | null;
+                  label: string
+                  value: string
+                  id?: string | null
                 }[]
-              | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'select';
+              | null
+            required?: boolean | null
+            id?: string | null
+            blockName?: string | null
+            blockType: 'select'
           }
         | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'state';
+            name: string
+            label?: string | null
+            width?: number | null
+            required?: boolean | null
+            id?: string | null
+            blockName?: string | null
+            blockType: 'state'
           }
         | {
-            name: string;
-            label?: string | null;
-            description?: string | null;
-            placeholder?: string | null;
-            defaultValue?: string | null;
-            width?: ('full' | '3/4' | '2/3' | '1/2' | '1/3' | '1/4') | null;
-            required?: boolean | null;
-            hidden?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'text';
+            name: string
+            label?: string | null
+            description?: string | null
+            placeholder?: string | null
+            defaultValue?: string | null
+            width?: ('full' | '3/4' | '2/3' | '1/2' | '1/3' | '1/4') | null
+            required?: boolean | null
+            hidden?: boolean | null
+            id?: string | null
+            blockName?: string | null
+            blockType: 'text'
           }
         | {
-            name: string;
-            label?: string | null;
-            description?: string | null;
-            placeholder?: string | null;
-            required?: boolean | null;
-            hidden?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'textarea';
+            name: string
+            label?: string | null
+            description?: string | null
+            placeholder?: string | null
+            required?: boolean | null
+            hidden?: boolean | null
+            id?: string | null
+            blockName?: string | null
+            blockType: 'textarea'
           }
         | {
-            width?: ('full' | '3/4' | '2/3' | '1/2' | '1/3' | '1/4') | null;
-            options: ('name' | 'email' | 'phoneNumber' | 'id')[];
-            editable?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'userInfo';
+            width?: ('full' | '3/4' | '2/3' | '1/2' | '1/3' | '1/4') | null
+            options: ('name' | 'email' | 'phoneNumber' | 'id')[]
+            editable?: boolean | null
+            id?: string | null
+            blockName?: string | null
+            blockType: 'userInfo'
           }
         | {
-            name: string;
-            label?: string | null;
-            description?: string | null;
-            placeholder?: string | null;
-            defaultValue?: string | null;
-            width?: ('full' | '3/4' | '2/3' | '1/2' | '1/3' | '1/4') | null;
-            required?: boolean | null;
-            hidden?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'phone';
+            name: string
+            label?: string | null
+            description?: string | null
+            placeholder?: string | null
+            defaultValue?: string | null
+            width?: ('full' | '3/4' | '2/3' | '1/2' | '1/3' | '1/4') | null
+            required?: boolean | null
+            hidden?: boolean | null
+            id?: string | null
+            blockName?: string | null
+            blockType: 'phone'
           }
       )[]
-    | null;
-  submitButtonLabel?: string | null;
+    | null
+  submitButtonLabel?: string | null
   /**
    * Choose whether to display an on-page message or redirect to a different page after they submit the form.
    */
-  confirmationType?: ('message' | 'redirect') | null;
+  confirmationType?: ('message' | 'redirect') | null
   confirmationMessage?: {
     root: {
-      type: string;
+      type: string
       children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+        type: any
+        version: number
+        [k: string]: unknown
+      }[]
+      direction: ('ltr' | 'rtl') | null
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+      indent: number
+      version: number
+    }
+    [k: string]: unknown
+  } | null
   redirect?: {
-    url: string;
-  };
+    url: string
+  }
   /**
    * Send custom emails when the form submits. Use comma separated lists to send the same email to multiple recipients. To reference a value from this form, wrap that field's name with double curly brackets, i.e. {{firstName}}. You can use a wildcard {{*}} to output all data and {{*:table}} to format it as an HTML table in the email.
    */
   emails?:
     | {
-        emailTo?: string | null;
-        cc?: string | null;
-        bcc?: string | null;
-        replyTo?: string | null;
-        emailFrom?: string | null;
-        subject: string;
+        emailTo?: string | null
+        cc?: string | null
+        bcc?: string | null
+        replyTo?: string | null
+        emailFrom?: string | null
+        subject: string
         /**
          * Enter the message that should be sent in this email.
          */
         message?: {
           root: {
-            type: string;
+            type: string
             children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        id?: string | null;
+              type: any
+              version: number
+              [k: string]: unknown
+            }[]
+            direction: ('ltr' | 'rtl') | null
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+            indent: number
+            version: number
+          }
+          [k: string]: unknown
+        } | null
+        id?: string | null
       }[]
-    | null;
-  slug?: string | null;
-  slugLock?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
+    | null
+  slug?: string | null
+  slugLock?: boolean | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
-  id: string;
-  form: string | Form;
+  id: string
+  form: string | Form
   submissionData?:
     | {
-        field: string;
-        value: string;
-        id?: string | null;
+        field: string
+        value: string
+        id?: string | null
       }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
+    | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "Audit-log".
  */
 export interface AuditLog {
-  id: string;
-  operation: string;
-  collection: string;
-  documentId?: string | null;
-  user: string | User;
-  userAgent?: string | null;
-  hook?: string | null;
-  type: 'info' | 'debug' | 'warning' | 'error' | 'audit' | 'security' | 'unknown';
-  createdAt: string;
+  id: string
+  operation: string
+  collection: string
+  documentId?: string | null
+  user: string | User
+  userAgent?: string | null
+  hook?: string | null
+  type: 'info' | 'debug' | 'warning' | 'error' | 'audit' | 'security' | 'unknown'
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: string
   document?:
     | ({
-        relationTo: 'users';
-        value: string | User;
+        relationTo: 'users'
+        value: string | User
       } | null)
     | ({
-        relationTo: 'sessions';
-        value: string | Session;
+        relationTo: 'sessions'
+        value: string | Session
       } | null)
     | ({
-        relationTo: 'accounts';
-        value: string | Account;
+        relationTo: 'accounts'
+        value: string | Account
       } | null)
     | ({
-        relationTo: 'verifications';
-        value: string | Verification;
+        relationTo: 'verifications'
+        value: string | Verification
       } | null)
     | ({
-        relationTo: 'passkeys';
-        value: string | Passkey;
+        relationTo: 'passkeys'
+        value: string | Passkey
       } | null)
     | ({
-        relationTo: 'admin-invitations';
-        value: string | AdminInvitation;
+        relationTo: 'admin-invitations'
+        value: string | AdminInvitation
       } | null)
     | ({
-        relationTo: 'Tasks';
-        value: string | Task;
+        relationTo: 'Tasks'
+        value: string | Task
       } | null)
     | ({
-        relationTo: 'orders';
-        value: string | Order;
+        relationTo: 'orders'
+        value: string | Order
       } | null)
     | ({
-        relationTo: 'pools';
-        value: string | Pool;
+        relationTo: 'pools'
+        value: string | Pool
       } | null)
     | ({
-        relationTo: 'tags';
-        value: string | Tag;
+        relationTo: 'tags'
+        value: string | Tag
       } | null)
     | ({
-        relationTo: 'pages';
-        value: string | Page;
+        relationTo: 'pages'
+        value: string | Page
       } | null)
     | ({
-        relationTo: 'handbook';
-        value: string | Handbook;
+        relationTo: 'handbook'
+        value: string | Handbook
       } | null)
     | ({
-        relationTo: 'payload-uploads';
-        value: string | PayloadUpload;
+        relationTo: 'payload-uploads'
+        value: string | PayloadUpload
       } | null)
     | ({
-        relationTo: 'private-uploads';
-        value: string | PrivateUpload;
+        relationTo: 'private-uploads'
+        value: string | PrivateUpload
       } | null)
     | ({
-        relationTo: 'forms';
-        value: string | Form;
+        relationTo: 'forms'
+        value: string | Form
       } | null)
     | ({
-        relationTo: 'form-submissions';
-        value: string | FormSubmission;
+        relationTo: 'form-submissions'
+        value: string | FormSubmission
       } | null)
     | ({
-        relationTo: 'Audit-log';
-        value: string | AuditLog;
+        relationTo: 'Audit-log'
+        value: string | AuditLog
       } | null)
     | ({
-        relationTo: 'payload-folders';
-        value: string | FolderInterface;
-      } | null);
-  globalSlug?: string | null;
+        relationTo: 'payload-folders'
+        value: string | FolderInterface
+      } | null)
+  globalSlug?: string | null
   user: {
-    relationTo: 'users';
-    value: string | User;
-  };
-  updatedAt: string;
-  createdAt: string;
+    relationTo: 'users'
+    value: string | User
+  }
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: string
   user: {
-    relationTo: 'users';
-    value: string | User;
-  };
-  key?: string | null;
+    relationTo: 'users'
+    value: string | User
+  }
+  key?: string | null
   value?:
     | {
-        [k: string]: unknown;
+        [k: string]: unknown
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
+    | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
-  name?: string | null;
-  batch?: number | null;
-  updatedAt: string;
-  createdAt: string;
+  id: string
+  name?: string | null
+  batch?: number | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-query-presets".
  */
 export interface PayloadQueryPreset {
-  id: string;
-  title: string;
-  isShared?: boolean | null;
+  id: string
+  title: string
+  isShared?: boolean | null
   access?: {
     read?: {
-      constraint?: ('everyone' | 'onlyMe' | 'specificUsers') | null;
-      users?: (string | User)[] | null;
-    };
+      constraint?: ('everyone' | 'onlyMe' | 'specificUsers') | null
+      users?: (string | User)[] | null
+    }
     update?: {
-      constraint?: ('everyone' | 'onlyMe' | 'specificUsers') | null;
-      users?: (string | User)[] | null;
-    };
+      constraint?: ('everyone' | 'onlyMe' | 'specificUsers') | null
+      users?: (string | User)[] | null
+    }
     delete?: {
-      constraint?: ('everyone' | 'onlyMe' | 'specificUsers') | null;
-      users?: (string | User)[] | null;
-    };
-  };
+      constraint?: ('everyone' | 'onlyMe' | 'specificUsers') | null
+      users?: (string | User)[] | null
+    }
+  }
   where?:
     | {
-        [k: string]: unknown;
+        [k: string]: unknown
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null;
+    | null
   columns?:
     | {
-        [k: string]: unknown;
+        [k: string]: unknown
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null;
-  relatedCollection: 'pages' | 'payload-uploads' | 'private-uploads';
+    | null
+  relatedCollection: 'pages' | 'payload-uploads' | 'private-uploads'
   /**
    * This is a temporary field used to determine if updating the preset would remove the user's access to it. When `true`, this record will be deleted after running the preset's `validate` function.
    */
-  isTemp?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
+  isTemp?: boolean | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
-  userRole?: T;
-  name?: T;
-  email?: T;
-  emailVerified?: T;
-  image?: T;
-  createdAt?: T;
-  updatedAt?: T;
-  username?: T;
-  displayUsername?: T;
-  normalizedEmail?: T;
-  phoneNumber?: T;
-  phoneNumberVerified?: T;
-  role?: T;
-  banned?: T;
-  banReason?: T;
-  banExpires?: T;
-  verified?: T;
+  userRole?: T
+  name?: T
+  email?: T
+  emailVerified?: T
+  image?: T
+  createdAt?: T
+  updatedAt?: T
+  username?: T
+  displayUsername?: T
+  normalizedEmail?: T
+  phoneNumber?: T
+  phoneNumberVerified?: T
+  role?: T
+  banned?: T
+  banReason?: T
+  banExpires?: T
+  verified?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "sessions_select".
  */
 export interface SessionsSelect<T extends boolean = true> {
-  expiresAt?: T;
-  token?: T;
-  createdAt?: T;
-  updatedAt?: T;
-  ipAddress?: T;
-  userAgent?: T;
-  user?: T;
-  impersonatedBy?: T;
+  expiresAt?: T
+  token?: T
+  createdAt?: T
+  updatedAt?: T
+  ipAddress?: T
+  userAgent?: T
+  user?: T
+  impersonatedBy?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "accounts_select".
  */
 export interface AccountsSelect<T extends boolean = true> {
-  accountId?: T;
-  providerId?: T;
-  user?: T;
-  accessToken?: T;
-  refreshToken?: T;
-  idToken?: T;
-  accessTokenExpiresAt?: T;
-  refreshTokenExpiresAt?: T;
-  scope?: T;
-  password?: T;
-  createdAt?: T;
-  updatedAt?: T;
+  accountId?: T
+  providerId?: T
+  user?: T
+  accessToken?: T
+  refreshToken?: T
+  idToken?: T
+  accessTokenExpiresAt?: T
+  refreshTokenExpiresAt?: T
+  scope?: T
+  password?: T
+  createdAt?: T
+  updatedAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "verifications_select".
  */
 export interface VerificationsSelect<T extends boolean = true> {
-  identifier?: T;
-  value?: T;
-  expiresAt?: T;
-  createdAt?: T;
-  updatedAt?: T;
+  identifier?: T
+  value?: T
+  expiresAt?: T
+  createdAt?: T
+  updatedAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "passkeys_select".
  */
 export interface PasskeysSelect<T extends boolean = true> {
-  name?: T;
-  publicKey?: T;
-  user?: T;
-  credentialID?: T;
-  counter?: T;
-  deviceType?: T;
-  backedUp?: T;
-  transports?: T;
-  createdAt?: T;
-  aaguid?: T;
-  updatedAt?: T;
+  name?: T
+  publicKey?: T
+  user?: T
+  credentialID?: T
+  counter?: T
+  deviceType?: T
+  backedUp?: T
+  transports?: T
+  createdAt?: T
+  aaguid?: T
+  updatedAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "admin-invitations_select".
  */
 export interface AdminInvitationsSelect<T extends boolean = true> {
-  role?: T;
-  token?: T;
-  url?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  role?: T
+  token?: T
+  url?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "Tasks_select".
  */
 export interface TasksSelect<T extends boolean = true> {
-  title?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  title?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "orders_select".
  */
 export interface OrdersSelect<T extends boolean = true> {
-  title?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  title?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pools_select".
  */
 export interface PoolsSelect<T extends boolean = true> {
-  title?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  title?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "tags_select".
  */
 export interface TagsSelect<T extends boolean = true> {
-  title?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  title?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages_select".
  */
 export interface PagesSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  slugLock?: T;
-  tags?: T;
-  heroImage?: T;
-  content?: T;
+  title?: T
+  slug?: T
+  slugLock?: T
+  tags?: T
+  heroImage?: T
+  content?: T
   meta?:
     | T
     | {
-        title?: T;
-        image?: T;
-        description?: T;
-      };
-  pageHelp?: T;
-  folder?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
+        title?: T
+        image?: T
+        description?: T
+      }
+  pageHelp?: T
+  folder?: T
+  updatedAt?: T
+  createdAt?: T
+  _status?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "handbook_select".
  */
 export interface HandbookSelect<T extends boolean = true> {
-  title?: T;
-  tags?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  title?: T
+  tags?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-uploads_select".
  */
 export interface PayloadUploadsSelect<T extends boolean = true> {
-  alt?: T;
-  caption?: T;
-  prefix?: T;
-  folder?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  deletedAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
+  alt?: T
+  caption?: T
+  prefix?: T
+  folder?: T
+  updatedAt?: T
+  createdAt?: T
+  deletedAt?: T
+  url?: T
+  thumbnailURL?: T
+  filename?: T
+  mimeType?: T
+  filesize?: T
+  width?: T
+  height?: T
+  focalX?: T
+  focalY?: T
   sizes?:
     | T
     | {
         thumbnail?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
         square?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
         small?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
         medium?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
         large?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
         xlarge?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
         og?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-      };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
+      }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "private-uploads_select".
  */
 export interface PrivateUploadsSelect<T extends boolean = true> {
-  title?: T;
-  assignedTo?: T;
-  prefix?: T;
-  folder?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  deletedAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
+  title?: T
+  assignedTo?: T
+  prefix?: T
+  folder?: T
+  updatedAt?: T
+  createdAt?: T
+  deletedAt?: T
+  url?: T
+  thumbnailURL?: T
+  filename?: T
+  mimeType?: T
+  filesize?: T
+  width?: T
+  height?: T
+  focalX?: T
+  focalY?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "forms_select".
  */
 export interface FormsSelect<T extends boolean = true> {
-  title?: T;
+  title?: T
   fields?:
     | T
     | {
         checkbox?:
           | T
           | {
-              name?: T;
-              label?: T;
-              width?: T;
-              required?: T;
-              defaultValue?: T;
-              id?: T;
-              blockName?: T;
-            };
+              name?: T
+              label?: T
+              width?: T
+              required?: T
+              defaultValue?: T
+              id?: T
+              blockName?: T
+            }
         country?:
           | T
           | {
-              name?: T;
-              label?: T;
-              width?: T;
-              required?: T;
-              id?: T;
-              blockName?: T;
-            };
+              name?: T
+              label?: T
+              width?: T
+              required?: T
+              id?: T
+              blockName?: T
+            }
         email?:
           | T
           | {
-              name?: T;
-              label?: T;
-              description?: T;
-              placeholder?: T;
-              defaultValue?: T;
-              width?: T;
-              required?: T;
-              hidden?: T;
-              id?: T;
-              blockName?: T;
-            };
+              name?: T
+              label?: T
+              description?: T
+              placeholder?: T
+              defaultValue?: T
+              width?: T
+              required?: T
+              hidden?: T
+              id?: T
+              blockName?: T
+            }
         message?:
           | T
           | {
-              message?: T;
-              id?: T;
-              blockName?: T;
-            };
+              message?: T
+              id?: T
+              blockName?: T
+            }
         number?:
           | T
           | {
-              name?: T;
-              label?: T;
-              width?: T;
-              defaultValue?: T;
-              required?: T;
-              id?: T;
-              blockName?: T;
-            };
+              name?: T
+              label?: T
+              width?: T
+              defaultValue?: T
+              required?: T
+              id?: T
+              blockName?: T
+            }
         select?:
           | T
           | {
-              name?: T;
-              label?: T;
-              width?: T;
-              defaultValue?: T;
-              placeholder?: T;
+              name?: T
+              label?: T
+              width?: T
+              defaultValue?: T
+              placeholder?: T
               options?:
                 | T
                 | {
-                    label?: T;
-                    value?: T;
-                    id?: T;
-                  };
-              required?: T;
-              id?: T;
-              blockName?: T;
-            };
+                    label?: T
+                    value?: T
+                    id?: T
+                  }
+              required?: T
+              id?: T
+              blockName?: T
+            }
         state?:
           | T
           | {
-              name?: T;
-              label?: T;
-              width?: T;
-              required?: T;
-              id?: T;
-              blockName?: T;
-            };
+              name?: T
+              label?: T
+              width?: T
+              required?: T
+              id?: T
+              blockName?: T
+            }
         text?:
           | T
           | {
-              name?: T;
-              label?: T;
-              description?: T;
-              placeholder?: T;
-              defaultValue?: T;
-              width?: T;
-              required?: T;
-              hidden?: T;
-              id?: T;
-              blockName?: T;
-            };
+              name?: T
+              label?: T
+              description?: T
+              placeholder?: T
+              defaultValue?: T
+              width?: T
+              required?: T
+              hidden?: T
+              id?: T
+              blockName?: T
+            }
         textarea?:
           | T
           | {
-              name?: T;
-              label?: T;
-              description?: T;
-              placeholder?: T;
-              required?: T;
-              hidden?: T;
-              id?: T;
-              blockName?: T;
-            };
+              name?: T
+              label?: T
+              description?: T
+              placeholder?: T
+              required?: T
+              hidden?: T
+              id?: T
+              blockName?: T
+            }
         userInfo?:
           | T
           | {
-              width?: T;
-              options?: T;
-              editable?: T;
-              id?: T;
-              blockName?: T;
-            };
+              width?: T
+              options?: T
+              editable?: T
+              id?: T
+              blockName?: T
+            }
         phone?:
           | T
           | {
-              name?: T;
-              label?: T;
-              description?: T;
-              placeholder?: T;
-              defaultValue?: T;
-              width?: T;
-              required?: T;
-              hidden?: T;
-              id?: T;
-              blockName?: T;
-            };
-      };
-  submitButtonLabel?: T;
-  confirmationType?: T;
-  confirmationMessage?: T;
+              name?: T
+              label?: T
+              description?: T
+              placeholder?: T
+              defaultValue?: T
+              width?: T
+              required?: T
+              hidden?: T
+              id?: T
+              blockName?: T
+            }
+      }
+  submitButtonLabel?: T
+  confirmationType?: T
+  confirmationMessage?: T
   redirect?:
     | T
     | {
-        url?: T;
-      };
+        url?: T
+      }
   emails?:
     | T
     | {
-        emailTo?: T;
-        cc?: T;
-        bcc?: T;
-        replyTo?: T;
-        emailFrom?: T;
-        subject?: T;
-        message?: T;
-        id?: T;
-      };
-  slug?: T;
-  slugLock?: T;
-  updatedAt?: T;
-  createdAt?: T;
+        emailTo?: T
+        cc?: T
+        bcc?: T
+        replyTo?: T
+        emailFrom?: T
+        subject?: T
+        message?: T
+        id?: T
+      }
+  slug?: T
+  slugLock?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions_select".
  */
 export interface FormSubmissionsSelect<T extends boolean = true> {
-  form?: T;
+  form?: T
   submissionData?:
     | T
     | {
-        field?: T;
-        value?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
+        field?: T
+        value?: T
+        id?: T
+      }
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "Audit-log_select".
  */
 export interface AuditLogSelect<T extends boolean = true> {
-  operation?: T;
-  collection?: T;
-  documentId?: T;
-  user?: T;
-  userAgent?: T;
-  hook?: T;
-  type?: T;
-  createdAt?: T;
+  operation?: T
+  collection?: T
+  documentId?: T
+  user?: T
+  userAgent?: T
+  hook?: T
+  type?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-folders_select".
  */
 export interface PayloadFoldersSelect<T extends boolean = true> {
-  name?: T;
-  folder?: T;
-  documentsAndFolders?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  name?: T
+  folder?: T
+  documentsAndFolders?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents_select".
  */
 export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
-  document?: T;
-  globalSlug?: T;
-  user?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  document?: T
+  globalSlug?: T
+  user?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences_select".
  */
 export interface PayloadPreferencesSelect<T extends boolean = true> {
-  user?: T;
-  key?: T;
-  value?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  user?: T
+  key?: T
+  value?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations_select".
  */
 export interface PayloadMigrationsSelect<T extends boolean = true> {
-  name?: T;
-  batch?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  name?: T
+  batch?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-query-presets_select".
  */
 export interface PayloadQueryPresetsSelect<T extends boolean = true> {
-  title?: T;
-  isShared?: T;
+  title?: T
+  isShared?: T
   access?:
     | T
     | {
         read?:
           | T
           | {
-              constraint?: T;
-              users?: T;
-            };
+              constraint?: T
+              users?: T
+            }
         update?:
           | T
           | {
-              constraint?: T;
-              users?: T;
-            };
+              constraint?: T
+              users?: T
+            }
         delete?:
           | T
           | {
-              constraint?: T;
-              users?: T;
-            };
-      };
-  where?: T;
-  columns?: T;
-  relatedCollection?: T;
-  isTemp?: T;
-  updatedAt?: T;
-  createdAt?: T;
+              constraint?: T
+              users?: T
+            }
+      }
+  where?: T
+  columns?: T
+  relatedCollection?: T
+  isTemp?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "global-footer".
  */
 export interface GlobalFooter {
-  id: string;
+  id: string
   navItems?:
     | {
         link: {
-          type?: ('custom' | 'reference') | null;
-          newTab?: boolean | null;
+          type?: ('custom' | 'reference') | null
+          newTab?: boolean | null
           reference?: {
-            relationTo: 'pages';
-            value: string | Page;
-          } | null;
-          url?: string | null;
-          label: string;
-        };
-        id?: string | null;
+            relationTo: 'pages'
+            value: string | Page
+          } | null
+          url?: string | null
+          label: string
+        }
+        id?: string | null
       }[]
-    | null;
+    | null
   /**
    * The text that appears in the footer, such as copyright, etc.
    */
   footerText: {
     root: {
-      type: string;
+      type: string
       children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
+        type: any
+        version: number
+        [k: string]: unknown
+      }[]
+      direction: ('ltr' | 'rtl') | null
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+      indent: number
+      version: number
+    }
+    [k: string]: unknown
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "global-terms".
  */
 export interface GlobalTerm {
-  id: string;
+  id: string
   content: {
     root: {
-      type: string;
+      type: string
       children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
+        type: any
+        version: number
+        [k: string]: unknown
+      }[]
+      direction: ('ltr' | 'rtl') | null
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+      indent: number
+      version: number
+    }
+    [k: string]: unknown
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "global-privacy".
  */
 export interface GlobalPrivacy {
-  id: string;
+  id: string
   content: {
     root: {
-      type: string;
+      type: string
       children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
+        type: any
+        version: number
+        [k: string]: unknown
+      }[]
+      direction: ('ltr' | 'rtl') | null
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+      indent: number
+      version: number
+    }
+    [k: string]: unknown
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "settings".
  */
 export interface Setting {
-  id: string;
-  title?: string | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
+  id: string
+  title?: string | null
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1731,62 +1733,62 @@ export interface GlobalFooterSelect<T extends boolean = true> {
         link?:
           | T
           | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-            };
-        id?: T;
-      };
-  footerText?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+              type?: T
+              newTab?: T
+              reference?: T
+              url?: T
+              label?: T
+            }
+        id?: T
+      }
+  footerText?: T
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "global-terms_select".
  */
 export interface GlobalTermsSelect<T extends boolean = true> {
-  content?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+  content?: T
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "global-privacy_select".
  */
 export interface GlobalPrivacySelect<T extends boolean = true> {
-  content?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+  content?: T
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "settings_select".
  */
 export interface SettingsSelect<T extends boolean = true> {
-  title?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+  title?: T
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
-  media: string | PayloadUpload;
+  media: string | PayloadUpload
   /**
    * When enabled, the image will be zoomed to full screen when clicked.
    */
-  zoom?: boolean | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'mediaBlock';
+  zoom?: boolean | null
+  id?: string | null
+  blockName?: string | null
+  blockType: 'mediaBlock'
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1796,52 +1798,52 @@ export interface DataBlock {
   Selection?: {
     selections?:
       | {
-          selectionType?: ('Static' | 'Dynamic' | 'Input' | 'UI') | null;
+          selectionType?: ('Static' | 'Dynamic' | 'Input' | 'UI') | null
           staticData?:
             | {
-                dataType?: ('Text' | 'Number' | 'Email' | 'Phone' | 'Date Time' | 'Location') | null;
-                textData?: string | null;
-                id?: string | null;
+                dataType?: ('Text' | 'Number' | 'Email' | 'Phone' | 'Date Time' | 'Location') | null
+                textData?: string | null
+                id?: string | null
               }[]
-            | null;
+            | null
           dynamicData?:
             | {
-                collections?: string[] | null;
+                collections?: string[] | null
                 documents?:
                   | (
                       | {
-                          relationTo: 'accounts';
-                          value: string | Account;
+                          relationTo: 'accounts'
+                          value: string | Account
                         }
                       | {
-                          relationTo: 'users';
-                          value: string | User;
+                          relationTo: 'users'
+                          value: string | User
                         }
                       | {
-                          relationTo: 'admin-invitations';
-                          value: string | AdminInvitation;
+                          relationTo: 'admin-invitations'
+                          value: string | AdminInvitation
                         }
                       | {
-                          relationTo: 'payload-uploads';
-                          value: string | PayloadUpload;
+                          relationTo: 'payload-uploads'
+                          value: string | PayloadUpload
                         }
                       | {
-                          relationTo: 'private-uploads';
-                          value: string | PrivateUpload;
+                          relationTo: 'private-uploads'
+                          value: string | PrivateUpload
                         }
                     )[]
-                  | null;
-                fields?: string[] | null;
-                id?: string | null;
+                  | null
+                fields?: string[] | null
+                id?: string | null
               }[]
-            | null;
-          id?: string | null;
+            | null
+          id?: string | null
         }[]
-      | null;
-  };
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'DataBlock';
+      | null
+  }
+  id?: string | null
+  blockName?: string | null
+  blockType: 'DataBlock'
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1851,32 +1853,32 @@ export interface CopyRightInlineBlock {
   /**
    * The year to start the copyright from. e.g. 2021
    */
-  fromYear?: number | null;
+  fromYear?: number | null
   /**
    * Whether to use the current year or a fixed year
    */
-  toYearType?: ('current' | 'fixed') | null;
-  toYearFixed?: number | null;
+  toYearType?: ('current' | 'fixed') | null
+  toYearFixed?: number | null
   /**
    * Text to display after the years. e.g. 'ticketer. All rights reserved.'
    */
-  text?: string | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'copyRightInlineBlock';
+  text?: string | null
+  id?: string | null
+  blockName?: string | null
+  blockType: 'copyRightInlineBlock'
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "GalleryBlock".
  */
 export interface GalleryBlock {
-  perRowMobile?: number | null;
-  perRowTablet?: number | null;
-  perRowDesktop?: number | null;
-  images: (string | PayloadUpload)[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'galleryBlock';
+  perRowMobile?: number | null
+  perRowTablet?: number | null
+  perRowDesktop?: number | null
+  images: (string | PayloadUpload)[]
+  id?: string | null
+  blockName?: string | null
+  blockType: 'galleryBlock'
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1885,37 +1887,36 @@ export interface GalleryBlock {
 export interface ContentBlock {
   columns?:
     | {
-        size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
+        size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null
         richText?: {
           root: {
-            type: string;
+            type: string
             children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        id?: string | null;
+              type: any
+              version: number
+              [k: string]: unknown
+            }[]
+            direction: ('ltr' | 'rtl') | null
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+            indent: number
+            version: number
+          }
+          [k: string]: unknown
+        } | null
+        id?: string | null
       }[]
-    | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'contentBlock';
+    | null
+  id?: string | null
+  blockName?: string | null
+  blockType: 'contentBlock'
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "auth".
  */
 export interface Auth {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
-
 
 declare module 'payload' {
   export interface GeneratedTypes extends Config {}
