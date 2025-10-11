@@ -3,13 +3,13 @@ import { getServerSideURL } from '@/lib/payload'
 import { seoPlugin as seoPluginConfig } from '@payloadcms/plugin-seo'
 import type { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import type { Plugin } from 'payload'
-import type { Blog } from '@/payload-types'
+import type { Page } from '@/payload-types'
 
-const generateTitle: GenerateTitle<Blog> = ({ doc }) => {
+const generateTitle: GenerateTitle<Page> = ({ doc }) => {
   return doc?.meta?.title ? `${doc.meta?.title} | Ticketer` : 'Ticketer'
 }
 
-const generateURL: GenerateURL<Blog> = ({ doc }) => {
+const generateURL: GenerateURL<Page> = ({ doc }) => {
   const url = getServerSideURL()
 
   return doc?.slug ? `${url}/${doc.slug}` : url
