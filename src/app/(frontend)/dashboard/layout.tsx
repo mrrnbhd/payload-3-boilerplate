@@ -12,10 +12,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(getServerSideURL()),
   openGraph: mergeOpenGraph(),
   title: {
-    template: '%s | ticketer Dashboard',
+    template: '%s | Ticketer Dashboard',
     default: 'Dashboard',
   },
-  description: 'ticketer Dashboard',
+  description: 'Ticketer Dashboard',
   robots: {
     index: true,
     follow: true,
