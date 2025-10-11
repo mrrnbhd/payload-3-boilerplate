@@ -1,5 +1,5 @@
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
-import { resendAdapter } from '@payloadcms/email-resend'
+import { sendAdapter } from '@rubixstudios/payload-usesend'
 
 export function getEmailAdapter() {
   const isLocal = process.env.NEXT_PUBLIC_SERVER_URL?.includes('localhost')
@@ -25,9 +25,10 @@ export function getEmailAdapter() {
   }
 
   // Use Resend for production
-  return resendAdapter({
-    defaultFromAddress: 'contact@ticketer.com',
+  return sendAdapter({
+    apiKey: process.env.USESEND_API_KEY || '',
+    useSendUrl: process.env.USESEND_URL || '',
     defaultFromName: 'Ticketer',
-    apiKey: process.env.RESEND_API_KEY,
+    defaultFromAddress: 'ticketer@email.com',
   })
 }
