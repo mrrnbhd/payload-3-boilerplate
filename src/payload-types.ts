@@ -184,7 +184,7 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: string;
-  userRole?: ('Operator' | 'Admin') | null;
+  userRole?: ('Bot' | 'User' | 'Admin') | null;
   /**
    * Users chosen display name
    */
