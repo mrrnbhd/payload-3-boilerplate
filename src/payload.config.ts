@@ -5,6 +5,7 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { GlobalFooter, GlobalPrivacy, GlobalTerms } from './collections/global'
 import { Handbook } from './collections/handbook'
+import { Jobs } from './collections/jobs'
 import { Orders } from './collections/orders'
 import { Pages } from './collections/pages'
 import { Pools } from './collections/pools'
@@ -68,15 +69,15 @@ export default buildConfig({
   email: getEmailAdapter(),
   collections: [
     Tasks,
+    Jobs,
     Orders,
     Pools,
-    Tags,
     Pages,
     Users,
-    Handbook,
     Tags,
     PayloadUploads,
     PrivateUploads,
+    Handbook,
   ],
   editor: defaultLexical,
   secret: process.env.PAYLOAD_SECRET,

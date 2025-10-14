@@ -139,7 +139,9 @@ const formPlugin: Plugin = formBuilderPlugin({
   beforeEmail,
   formOverrides: {
     ...adminConfig,
-    admin: {},
+    admin: {
+      group: 'Workflows',
+    },
     slug: 'forms',
     fields: fieldsTransformer,
     custom: {
@@ -151,7 +153,9 @@ const formPlugin: Plugin = formBuilderPlugin({
   },
   formSubmissionOverrides: {
     ...adminConfig,
-    admin: {},
+    admin: {
+      group: 'Workflows',
+    },
     labels: {
       singular: 'Form Submission',
       plural: 'Submissions',

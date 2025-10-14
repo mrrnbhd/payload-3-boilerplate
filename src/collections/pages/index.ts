@@ -18,6 +18,7 @@ export const Pages: CollectionConfig = {
     },
   },
   admin: {
+    group: 'Workflows',
     useAsTitle: 'title',
     livePreview: {
       url: ({ data }) => {

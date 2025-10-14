@@ -1,9 +1,9 @@
-import type { CollectionConfig, GlobalConfig } from 'payload'
+import type { GlobalConfig } from 'payload'
 
 export const Settings: GlobalConfig = {
   slug: 'settings',
   admin: {
-    group: 'Library',
+    group: 'Workflows',
   },
   fields: [
     {

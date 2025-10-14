@@ -73,14 +73,15 @@ export interface Config {
     verifications: Verification;
     passkeys: Passkey;
     'admin-invitations': AdminInvitation;
-    Tasks: Task;
+    tasks: Task;
+    jobs: Job;
     orders: Order;
     pools: Pool;
-    tags: Tag;
     pages: Page;
-    handbook: Handbook;
+    tags: Tag;
     'payload-uploads': PayloadUpload;
     'private-uploads': PrivateUpload;
+    handbook: Handbook;
     forms: Form;
     'form-submissions': FormSubmission;
     'Audit-log': AuditLog;
@@ -105,14 +106,15 @@ export interface Config {
     verifications: VerificationsSelect<false> | VerificationsSelect<true>;
     passkeys: PasskeysSelect<false> | PasskeysSelect<true>;
     'admin-invitations': AdminInvitationsSelect<false> | AdminInvitationsSelect<true>;
-    Tasks: TasksSelect<false> | TasksSelect<true>;
+    tasks: TasksSelect<false> | TasksSelect<true>;
+    jobs: JobsSelect<false> | JobsSelect<true>;
     orders: OrdersSelect<false> | OrdersSelect<true>;
     pools: PoolsSelect<false> | PoolsSelect<true>;
-    tags: TagsSelect<false> | TagsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
-    handbook: HandbookSelect<false> | HandbookSelect<true>;
+    tags: TagsSelect<false> | TagsSelect<true>;
     'payload-uploads': PayloadUploadsSelect<false> | PayloadUploadsSelect<true>;
     'private-uploads': PrivateUploadsSelect<false> | PrivateUploadsSelect<true>;
+    handbook: HandbookSelect<false> | HandbookSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     'Audit-log': AuditLogSelect<false> | AuditLogSelect<true>;
@@ -406,11 +408,218 @@ export interface AdminInvitation {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "Tasks".
+ * via the `definition` "tasks".
  */
 export interface Task {
   id: string;
+  name?: string | null;
+  type?: ('Fulfill Orders' | 'Custom Task') | null;
+  tags?: (string | null) | Tag;
+  taskAssignee?:
+    | ({
+        relationTo: 'users';
+        value: string | User;
+      } | null)
+    | ({
+        relationTo: 'pools';
+        value: string | Pool;
+      } | null);
+  taskStatus?: ('Pending' | 'In Progress' | 'Complete' | 'Blocked' | 'Backlogged') | null;
+  'Task Notes'?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  healthStatus?: string | null;
+  userHandbook?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags".
+ */
+export interface Tag {
+  id: string;
   title?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pools".
+ */
+export interface Pool {
+  id: string;
+  poolName: string;
+  poolStatus: 'active' | 'maintenance' | 'disabled';
+  connectionConfig?:
+    | {
+        provider?: string | null;
+        lastHealthCheck?: string | null;
+        host: string;
+        port?: number | null;
+        authType?: ('none' | 'usernamePassword' | 'ipWhitelist') | null;
+        credentials?: {
+          username?: string | null;
+          password?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  healthStatus?: string | null;
+  userHandbook?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jobs".
+ */
+export interface Job {
+  id: string;
+  jobName?: string | null;
+  jobStatus?: ('Pending' | 'In Progress' | 'Complete' | 'Blocked' | 'Backlogged') | null;
+  jobAssignee?:
+    | ({
+        relationTo: 'users';
+        value: string | User;
+      } | null)
+    | ({
+        relationTo: 'pools';
+        value: string | Pool;
+      } | null);
+  jobTags?: (string | null) | Tag;
+  When?: {
+    trigger?: ('A Payload Collection is Changed' | 'A TradeDesk Webhook is Received') | null;
+    targetCollections?: ('Orders' | 'Pools' | 'Users' | 'Tags' | 'Jobs') | null;
+    targetDocuments?:
+      | ({
+          relationTo: 'orders';
+          value: string | Order;
+        } | null)
+      | ({
+          relationTo: 'pools';
+          value: string | Pool;
+        } | null)
+      | ({
+          relationTo: 'users';
+          value: string | User;
+        } | null)
+      | ({
+          relationTo: 'tags';
+          value: string | Tag;
+        } | null)
+      | ({
+          relationTo: 'jobs';
+          value: string | Job;
+        } | null);
+    targetFields?: string | null;
+  };
+  if?:
+    | {
+        filter?:
+          | (
+              | 'Is Equal to'
+              | 'Is Not Equal to'
+              | 'Is Less Than'
+              | 'Is Less Than or Equal to'
+              | 'Is Greater Than'
+              | 'Is Greater Than or Equal to'
+              | 'Is Like'
+              | 'Is Not Like'
+              | 'Is In'
+              | 'Is Not In'
+              | 'Exists'
+            )
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  then?:
+    | {
+        taskAssignee?:
+          | ({
+              relationTo: 'users';
+              value: string | User;
+            } | null)
+          | ({
+              relationTo: 'pools';
+              value: string | Pool;
+            } | null);
+        taskStatus?: ('Pending' | 'In Progress' | 'Complete' | 'Blocked' | 'Backlogged') | null;
+        'Task Notes'?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  healthStatus?: string | null;
+  userHandbook?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -420,24 +629,115 @@ export interface Task {
  */
 export interface Order {
   id: string;
-  title?: string | null;
-  dataLog?:
+  orderStatus?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Blocked' | 'Cancelled' | 'Archived') | null;
+  orderValue?: number | null;
+  orderNumber?: number | null;
+  orderLink?: string | null;
+  orderTags?: (string | null) | Tag;
+  eventTickets?:
     | {
-        dataSource?: ('SpotHero' | 'ParkWhiz' | 'ParkMobile' | 'ACE Parking') | null;
-        dataType?: ('Entire Page' | 'Pass Details' | 'QR Code' | 'Event Details') | null;
-        data?:
+        marketplace?: ('Stubhub' | 'SeatGeek' | 'GoTickets') | null;
+        eventOrPerformerName?: string | null;
+        venueName?: string | null;
+        parkingTickets?:
           | {
-              [k: string]: unknown;
-            }
-          | unknown[]
-          | string
-          | number
-          | boolean
+              source?: ('SpotHero' | 'ParkWhiz' | 'ParkMobile' | 'AceParking') | null;
+              link?: string | null;
+              type?: 'Eticket' | null;
+              status?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Blocked' | 'Cancelled') | null;
+              parkingSpotLocation?: string | null;
+              projectedPurchasePrice?: number | null;
+              id?: string | null;
+            }[]
           | null;
-        attachments?: (string | PayloadUpload)[] | null;
         id?: string | null;
       }[]
     | null;
+  orderHistory?:
+    | {
+        source?: ('SpotHero' | 'ParkWhiz' | 'ParkMobile' | 'AceParking') | null;
+        link?: string | null;
+        type?: 'Eticket' | null;
+        status?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Blocked' | 'Cancelled') | null;
+        parkingSpotLocation?: string | null;
+        projectedPurchasePrice?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  orderNotes?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  userHandbook?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: string;
+  title?: string | null;
+  slug?: string | null;
+  slugLock?: boolean | null;
+  tags?: (string | null) | User;
+  heroImage?: (string | null) | PayloadUpload;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | PayloadUpload;
+    description?: string | null;
+  };
+  pageHelp?: {
+    docs?: (string | Handbook)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  folder?: (string | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -573,71 +873,6 @@ export interface FolderInterface {
   createdAt: string;
 }
 /**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pages".
- */
-export interface Page {
-  id: string;
-  title?: string | null;
-  slug?: string | null;
-  slugLock?: boolean | null;
-  tags?: (string | null) | User;
-  heroImage?: (string | null) | PayloadUpload;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  meta?: {
-    title?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (string | null) | PayloadUpload;
-    description?: string | null;
-  };
-  pageHelp?: {
-    docs?: (string | Handbook)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  folder?: (string | null) | FolderInterface;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "handbook".
- */
-export interface Handbook {
-  id: string;
-  title?: string | null;
-  tags?: (string | null) | Tag;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tags".
- */
-export interface Tag {
-  id: string;
-  title?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * Private uploads that require authentication to access
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -667,11 +902,12 @@ export interface PrivateUpload {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pools".
+ * via the `definition` "handbook".
  */
-export interface Pool {
+export interface Handbook {
   id: string;
   title?: string | null;
+  tags?: (string | null) | Tag;
   updatedAt: string;
   createdAt: string;
 }
@@ -944,8 +1180,12 @@ export interface PayloadLockedDocument {
         value: string | AdminInvitation;
       } | null)
     | ({
-        relationTo: 'Tasks';
+        relationTo: 'tasks';
         value: string | Task;
+      } | null)
+    | ({
+        relationTo: 'jobs';
+        value: string | Job;
       } | null)
     | ({
         relationTo: 'orders';
@@ -956,16 +1196,12 @@ export interface PayloadLockedDocument {
         value: string | Pool;
       } | null)
     | ({
-        relationTo: 'tags';
-        value: string | Tag;
-      } | null)
-    | ({
         relationTo: 'pages';
         value: string | Page;
       } | null)
     | ({
-        relationTo: 'handbook';
-        value: string | Handbook;
+        relationTo: 'tags';
+        value: string | Tag;
       } | null)
     | ({
         relationTo: 'payload-uploads';
@@ -974,6 +1210,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'private-uploads';
         value: string | PrivateUpload;
+      } | null)
+    | ({
+        relationTo: 'handbook';
+        value: string | Handbook;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1177,10 +1417,53 @@ export interface AdminInvitationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "Tasks_select".
+ * via the `definition` "tasks_select".
  */
 export interface TasksSelect<T extends boolean = true> {
-  title?: T;
+  name?: T;
+  type?: T;
+  tags?: T;
+  taskAssignee?: T;
+  taskStatus?: T;
+  'Task Notes'?: T;
+  healthStatus?: T;
+  userHandbook?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jobs_select".
+ */
+export interface JobsSelect<T extends boolean = true> {
+  jobName?: T;
+  jobStatus?: T;
+  jobAssignee?: T;
+  jobTags?: T;
+  When?:
+    | T
+    | {
+        trigger?: T;
+        targetCollections?: T;
+        targetDocuments?: T;
+        targetFields?: T;
+      };
+  if?:
+    | T
+    | {
+        filter?: T;
+        id?: T;
+      };
+  then?:
+    | T
+    | {
+        taskAssignee?: T;
+        taskStatus?: T;
+        'Task Notes'?: T;
+        id?: T;
+      };
+  healthStatus?: T;
+  userHandbook?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1189,16 +1472,43 @@ export interface TasksSelect<T extends boolean = true> {
  * via the `definition` "orders_select".
  */
 export interface OrdersSelect<T extends boolean = true> {
-  title?: T;
-  dataLog?:
+  orderStatus?: T;
+  orderValue?: T;
+  orderNumber?: T;
+  orderLink?: T;
+  orderTags?: T;
+  eventTickets?:
     | T
     | {
-        dataSource?: T;
-        dataType?: T;
-        data?: T;
-        attachments?: T;
+        marketplace?: T;
+        eventOrPerformerName?: T;
+        venueName?: T;
+        parkingTickets?:
+          | T
+          | {
+              source?: T;
+              link?: T;
+              type?: T;
+              status?: T;
+              parkingSpotLocation?: T;
+              projectedPurchasePrice?: T;
+              id?: T;
+            };
         id?: T;
       };
+  orderHistory?:
+    | T
+    | {
+        source?: T;
+        link?: T;
+        type?: T;
+        status?: T;
+        parkingSpotLocation?: T;
+        projectedPurchasePrice?: T;
+        id?: T;
+      };
+  orderNotes?: T;
+  userHandbook?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1208,16 +1518,26 @@ export interface OrdersSelect<T extends boolean = true> {
  * via the `definition` "pools_select".
  */
 export interface PoolsSelect<T extends boolean = true> {
-  title?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tags_select".
- */
-export interface TagsSelect<T extends boolean = true> {
-  title?: T;
+  poolName?: T;
+  poolStatus?: T;
+  connectionConfig?:
+    | T
+    | {
+        provider?: T;
+        lastHealthCheck?: T;
+        host?: T;
+        port?: T;
+        authType?: T;
+        credentials?:
+          | T
+          | {
+              username?: T;
+              password?: T;
+            };
+        id?: T;
+      };
+  healthStatus?: T;
+  userHandbook?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1247,11 +1567,10 @@ export interface PagesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "handbook_select".
+ * via the `definition` "tags_select".
  */
-export interface HandbookSelect<T extends boolean = true> {
+export interface TagsSelect<T extends boolean = true> {
   title?: T;
-  tags?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1372,6 +1691,16 @@ export interface PrivateUploadsSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "handbook_select".
+ */
+export interface HandbookSelect<T extends boolean = true> {
+  title?: T;
+  tags?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
