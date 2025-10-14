@@ -19,7 +19,7 @@ export const Jobs: CollectionConfig = {
     {
       type: 'select',
       name: 'jobStatus',
-      options: ['Draft', 'Active', 'Inactive', 'Blocked'],
+      options: ['Draft', 'Active', 'Running', 'Disabled', 'Blocked'],
       admin: {
         position: 'sidebar',
       },
@@ -36,18 +36,20 @@ export const Jobs: CollectionConfig = {
       type: 'row',
       fields: [
         {
+          type: 'select',
+          name: 'jobType',
+          label: 'Job Type',
+          options: ['Fulfill Orders', 'Custom Task'],
+        },
+        {
           type: 'relationship',
           name: 'jobAssignee',
-          relationTo: ['users'],
-          admin: {},
+          relationTo: 'users',
         },
         {
           type: 'relationship',
           name: 'jobProxies',
           relationTo: 'pools',
-          admin: {
-            position: 'sidebar',
-          },
         },
       ],
     },

@@ -413,18 +413,10 @@ export interface AdminInvitation {
 export interface Task {
   id: string;
   name?: string | null;
-  taskStatus?: ('Pending' | 'In Progress' | 'Complete' | 'Blocked' | 'Backlogged') | null;
-  type?: ('Fulfill Orders' | 'Custom Task') | null;
+  taskStatus?: ('Pending' | 'In Progress' | 'Running' | 'Complete' | 'Blocked' | 'Backlogged') | null;
   tags?: (string | null) | Tag;
-  taskAssignee?:
-    | ({
-        relationTo: 'users';
-        value: string | User;
-      } | null)
-    | ({
-        relationTo: 'pools';
-        value: string | Pool;
-      } | null);
+  taskType?: ('Fulfill Orders' | 'Custom Task') | null;
+  taskAssignee?: (string | null) | User;
   taskProxies?: (string | null) | Pool;
   'Task Notes'?: {
     root: {
@@ -518,12 +510,10 @@ export interface Pool {
 export interface Job {
   id: string;
   jobName?: string | null;
-  jobStatus?: ('Draft' | 'Active' | 'Inactive' | 'Blocked') | null;
+  jobStatus?: ('Draft' | 'Active' | 'Running' | 'Disabled' | 'Blocked') | null;
   jobTags?: (string | null) | Tag;
-  jobAssignee?: {
-    relationTo: 'users';
-    value: string | User;
-  } | null;
+  jobType?: ('Fulfill Orders' | 'Custom Task') | null;
+  jobAssignee?: (string | null) | User;
   jobProxies?: (string | null) | Pool;
   When?: {
     trigger?: ('A Payload Collection is Changed' | 'A TradeDesk Webhook is Received') | null;
@@ -1411,8 +1401,8 @@ export interface AdminInvitationsSelect<T extends boolean = true> {
 export interface TasksSelect<T extends boolean = true> {
   name?: T;
   taskStatus?: T;
-  type?: T;
   tags?: T;
+  taskType?: T;
   taskAssignee?: T;
   taskProxies?: T;
   'Task Notes'?: T;
@@ -1429,6 +1419,7 @@ export interface JobsSelect<T extends boolean = true> {
   jobName?: T;
   jobStatus?: T;
   jobTags?: T;
+  jobType?: T;
   jobAssignee?: T;
   jobProxies?: T;
   When?:

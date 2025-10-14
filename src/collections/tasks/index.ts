@@ -20,16 +20,10 @@ export const Tasks: CollectionConfig = {
     {
       type: 'select',
       name: 'taskStatus',
-      options: ['Pending', 'In Progress', 'Complete', 'Blocked', 'Backlogged'],
+      options: ['Pending', 'In Progress', 'Running', 'Complete', 'Blocked', 'Backlogged'],
       admin: {
         position: 'sidebar',
       },
-    },
-    {
-      type: 'select',
-      name: 'type',
-      label: 'Task Type',
-      options: ['Fulfill Orders', 'Custom Task'],
     },
     {
       type: 'relationship',
@@ -50,18 +44,20 @@ export const Tasks: CollectionConfig = {
               type: 'row',
               fields: [
                 {
+                  type: 'select',
+                  name: 'taskType',
+                  label: 'Task Type',
+                  options: ['Fulfill Orders', 'Custom Task'],
+                },
+                {
                   type: 'relationship',
                   name: 'taskAssignee',
-                  relationTo: ['users', 'pools'],
-                  admin: {},
+                  relationTo: 'users',
                 },
                 {
                   type: 'relationship',
                   name: 'taskProxies',
                   relationTo: 'pools',
-                  admin: {
-                    position: 'sidebar',
-                  },
                 },
               ],
             },
