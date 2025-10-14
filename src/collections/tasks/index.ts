@@ -12,6 +12,15 @@ export const Tasks: CollectionConfig = {
     {
       type: 'text',
       name: 'name',
+      label: 'Task Name',
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    {
+      type: 'select',
+      name: 'taskStatus',
+      options: ['Pending', 'In Progress', 'Complete', 'Blocked', 'Backlogged'],
       admin: {
         position: 'sidebar',
       },
@@ -25,6 +34,7 @@ export const Tasks: CollectionConfig = {
     {
       type: 'relationship',
       name: 'tags',
+      label: 'Task Tags',
       relationTo: 'tags',
       admin: {
         position: 'sidebar',
@@ -46,10 +56,12 @@ export const Tasks: CollectionConfig = {
                   admin: {},
                 },
                 {
-                  type: 'select',
-                  name: 'taskStatus',
-                  options: ['Pending', 'In Progress', 'Complete', 'Blocked', 'Backlogged'],
-                  admin: {},
+                  type: 'relationship',
+                  name: 'taskProxies',
+                  relationTo: 'pools',
+                  admin: {
+                    position: 'sidebar',
+                  },
                 },
               ],
             },

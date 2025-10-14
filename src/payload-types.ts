@@ -184,7 +184,7 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: string;
-  userRole?: ('Bot' | 'User' | 'Admin') | null;
+  operatorRole?: ('Bot' | 'User' | 'Admin') | null;
   /**
    * Users chosen display name
    */
@@ -413,6 +413,7 @@ export interface AdminInvitation {
 export interface Task {
   id: string;
   name?: string | null;
+  taskStatus?: ('Pending' | 'In Progress' | 'Complete' | 'Blocked' | 'Backlogged') | null;
   type?: ('Fulfill Orders' | 'Custom Task') | null;
   tags?: (string | null) | Tag;
   taskAssignee?:
@@ -424,7 +425,7 @@ export interface Task {
         relationTo: 'pools';
         value: string | Pool;
       } | null);
-  taskStatus?: ('Pending' | 'In Progress' | 'Complete' | 'Blocked' | 'Backlogged') | null;
+  taskProxies?: (string | null) | Pool;
   'Task Notes'?: {
     root: {
       type: string;
@@ -517,17 +518,13 @@ export interface Pool {
 export interface Job {
   id: string;
   jobName?: string | null;
-  jobStatus?: ('Pending' | 'In Progress' | 'Complete' | 'Blocked' | 'Backlogged') | null;
-  jobAssignee?:
-    | ({
-        relationTo: 'users';
-        value: string | User;
-      } | null)
-    | ({
-        relationTo: 'pools';
-        value: string | Pool;
-      } | null);
+  jobStatus?: ('Draft' | 'Active' | 'Inactive' | 'Blocked') | null;
   jobTags?: (string | null) | Tag;
+  jobAssignee?: {
+    relationTo: 'users';
+    value: string | User;
+  } | null;
+  jobProxies?: (string | null) | Pool;
   When?: {
     trigger?: ('A Payload Collection is Changed' | 'A TradeDesk Webhook is Received') | null;
     targetCollections?: ('Orders' | 'Pools' | 'Users' | 'Tags' | 'Jobs') | null;
@@ -576,15 +573,7 @@ export interface Job {
     | null;
   then?:
     | {
-        taskAssignee?:
-          | ({
-              relationTo: 'users';
-              value: string | User;
-            } | null)
-          | ({
-              relationTo: 'pools';
-              value: string | Pool;
-            } | null);
+        taskAssignee?: (string | null) | User;
         taskStatus?: ('Pending' | 'In Progress' | 'Complete' | 'Blocked' | 'Backlogged') | null;
         'Task Notes'?: {
           root: {
@@ -1326,7 +1315,7 @@ export interface PayloadQueryPreset {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
-  userRole?: T;
+  operatorRole?: T;
   name?: T;
   email?: T;
   emailVerified?: T;
@@ -1421,10 +1410,11 @@ export interface AdminInvitationsSelect<T extends boolean = true> {
  */
 export interface TasksSelect<T extends boolean = true> {
   name?: T;
+  taskStatus?: T;
   type?: T;
   tags?: T;
   taskAssignee?: T;
-  taskStatus?: T;
+  taskProxies?: T;
   'Task Notes'?: T;
   healthStatus?: T;
   userHandbook?: T;
@@ -1438,8 +1428,9 @@ export interface TasksSelect<T extends boolean = true> {
 export interface JobsSelect<T extends boolean = true> {
   jobName?: T;
   jobStatus?: T;
-  jobAssignee?: T;
   jobTags?: T;
+  jobAssignee?: T;
+  jobProxies?: T;
   When?:
     | T
     | {

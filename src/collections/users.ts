@@ -15,7 +15,7 @@ export const Users: CollectionConfig = {
   fields: [
     {
       type: 'select',
-      name: 'userRole',
+      name: 'operatorRole',
       options: ['Bot', 'User', 'Admin'],
     },
   ],

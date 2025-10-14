@@ -19,15 +19,7 @@ export const Jobs: CollectionConfig = {
     {
       type: 'select',
       name: 'jobStatus',
-      options: ['Pending', 'In Progress', 'Complete', 'Blocked', 'Backlogged'],
-      admin: {
-        position: 'sidebar',
-      },
-    },
-    {
-      type: 'relationship',
-      name: 'jobAssignee',
-      relationTo: ['users', 'pools'],
+      options: ['Draft', 'Active', 'Inactive', 'Blocked'],
       admin: {
         position: 'sidebar',
       },
@@ -39,6 +31,25 @@ export const Jobs: CollectionConfig = {
       admin: {
         position: 'sidebar',
       },
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          type: 'relationship',
+          name: 'jobAssignee',
+          relationTo: ['users'],
+          admin: {},
+        },
+        {
+          type: 'relationship',
+          name: 'jobProxies',
+          relationTo: 'pools',
+          admin: {
+            position: 'sidebar',
+          },
+        },
+      ],
     },
     {
       type: 'tabs',
@@ -132,26 +143,18 @@ export const Jobs: CollectionConfig = {
               },
               fields: [
                 {
-                  type: 'row',
-                  fields: [],
+                  type: 'relationship',
+                  name: 'taskAssignee',
+                  relationTo: 'users',
+                  admin: {},
                 },
                 {
-                  type: 'row',
-                  fields: [
-                    {
-                      type: 'relationship',
-                      name: 'taskAssignee',
-                      relationTo: ['users', 'pools'],
-                      admin: {},
-                    },
-                    {
-                      type: 'select',
-                      name: 'taskStatus',
-                      options: ['Pending', 'In Progress', 'Complete', 'Blocked', 'Backlogged'],
-                      admin: {},
-                    },
-                  ],
+                  type: 'select',
+                  name: 'taskStatus',
+                  options: ['Pending', 'In Progress', 'Complete', 'Blocked', 'Backlogged'],
+                  admin: {},
                 },
+
                 {
                   type: 'richText',
                   name: 'Task Notes',
