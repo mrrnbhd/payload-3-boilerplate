@@ -415,7 +415,7 @@ export interface Task {
   name?: string | null;
   taskStatus?: ('Pending' | 'In Progress' | 'Running' | 'Complete' | 'Blocked' | 'Backlogged') | null;
   tags?: (string | null) | Tag;
-  taskType?: ('Fulfill Orders' | 'Custom Task') | null;
+  taskType?: ('Automated Task' | 'Manual Task') | null;
   taskAssignee?: (string | null) | User;
   taskProxies?: (string | null) | Pool;
   'Task Notes'?: {
@@ -512,7 +512,6 @@ export interface Job {
   jobName?: string | null;
   jobStatus?: ('Draft' | 'Active' | 'Running' | 'Disabled' | 'Blocked') | null;
   jobTags?: (string | null) | Tag;
-  jobType?: ('Fulfill Orders' | 'Custom Task') | null;
   jobAssignee?: (string | null) | User;
   jobProxies?: (string | null) | Pool;
   When?: {
@@ -558,28 +557,41 @@ export interface Job {
               | 'Exists'
             )
           | null;
+        targetCollections?: ('Orders' | 'Pools' | 'Users' | 'Tags' | 'Jobs') | null;
+        targetDocuments?:
+          | ({
+              relationTo: 'orders';
+              value: string | Order;
+            } | null)
+          | ({
+              relationTo: 'pools';
+              value: string | Pool;
+            } | null)
+          | ({
+              relationTo: 'users';
+              value: string | User;
+            } | null)
+          | ({
+              relationTo: 'tags';
+              value: string | Tag;
+            } | null)
+          | ({
+              relationTo: 'jobs';
+              value: string | Job;
+            } | null);
+        targetFields?: string | null;
         id?: string | null;
       }[]
     | null;
   then?:
     | {
-        taskAssignee?: (string | null) | User;
-        taskStatus?: ('Pending' | 'In Progress' | 'Complete' | 'Blocked' | 'Backlogged') | null;
-        'Task Notes'?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
+        type?: ('Sequential' | 'Parallel' | 'Asynchronous') | null;
+        operations?:
+          | {
+              type?: ('Payload Operation' | 'TradeDesk Operation') | null;
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
@@ -1419,7 +1431,6 @@ export interface JobsSelect<T extends boolean = true> {
   jobName?: T;
   jobStatus?: T;
   jobTags?: T;
-  jobType?: T;
   jobAssignee?: T;
   jobProxies?: T;
   When?:
@@ -1434,14 +1445,21 @@ export interface JobsSelect<T extends boolean = true> {
     | T
     | {
         filter?: T;
+        targetCollections?: T;
+        targetDocuments?: T;
+        targetFields?: T;
         id?: T;
       };
   then?:
     | T
     | {
-        taskAssignee?: T;
-        taskStatus?: T;
-        'Task Notes'?: T;
+        type?: T;
+        operations?:
+          | T
+          | {
+              type?: T;
+              id?: T;
+            };
         id?: T;
       };
   healthStatus?: T;

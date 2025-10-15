@@ -1,5 +1,5 @@
 {
-  "id": "d7cfe203-d499-40e4-b7fc-23821a90d165",
+  "id": "a654dced-5b8e-4959-b2ec-50f1c70d0747",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -15,9 +15,9 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "user_role": {
-          "name": "user_role",
-          "type": "enum_users_user_role",
+        "operator_role": {
+          "name": "operator_role",
+          "type": "enum_users_operator_role",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
@@ -970,9 +970,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "type": {
-          "name": "type",
-          "type": "enum_tasks_type",
+        "task_status": {
+          "name": "task_status",
+          "type": "enum_tasks_task_status",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
@@ -983,10 +983,22 @@
           "primaryKey": false,
           "notNull": false
         },
-        "task_status": {
-          "name": "task_status",
-          "type": "enum_tasks_task_status",
+        "task_type": {
+          "name": "task_type",
+          "type": "enum_tasks_task_type",
           "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "task_assignee_id": {
+          "name": "task_assignee_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "task_proxies_id": {
+          "name": "task_proxies_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -1023,6 +1035,36 @@
           "columns": [
             {
               "expression": "tags_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tasks_task_assignee_idx": {
+          "name": "tasks_task_assignee_idx",
+          "columns": [
+            {
+              "expression": "task_assignee_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tasks_task_proxies_idx": {
+          "name": "tasks_task_proxies_idx",
+          "columns": [
+            {
+              "expression": "task_proxies_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1077,170 +1119,31 @@
           ],
           "onDelete": "set null",
           "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.tasks_rels": {
-      "name": "tasks_rels",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
         },
-        "order": {
-          "name": "order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "parent_id": {
-          "name": "parent_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "path": {
-          "name": "path",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "users_id": {
-          "name": "users_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "pools_id": {
-          "name": "pools_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "tasks_rels_order_idx": {
-          "name": "tasks_rels_order_idx",
-          "columns": [
-            {
-              "expression": "order",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "tasks_rels_parent_idx": {
-          "name": "tasks_rels_parent_idx",
-          "columns": [
-            {
-              "expression": "parent_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "tasks_rels_path_idx": {
-          "name": "tasks_rels_path_idx",
-          "columns": [
-            {
-              "expression": "path",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "tasks_rels_users_id_idx": {
-          "name": "tasks_rels_users_id_idx",
-          "columns": [
-            {
-              "expression": "users_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "tasks_rels_pools_id_idx": {
-          "name": "tasks_rels_pools_id_idx",
-          "columns": [
-            {
-              "expression": "pools_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "tasks_rels_parent_fk": {
-          "name": "tasks_rels_parent_fk",
-          "tableFrom": "tasks_rels",
-          "tableTo": "tasks",
-          "columnsFrom": [
-            "parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "tasks_rels_users_fk": {
-          "name": "tasks_rels_users_fk",
-          "tableFrom": "tasks_rels",
+        "tasks_task_assignee_id_users_id_fk": {
+          "name": "tasks_task_assignee_id_users_id_fk",
+          "tableFrom": "tasks",
           "tableTo": "users",
           "columnsFrom": [
-            "users_id"
+            "task_assignee_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "set null",
           "onUpdate": "no action"
         },
-        "tasks_rels_pools_fk": {
-          "name": "tasks_rels_pools_fk",
-          "tableFrom": "tasks_rels",
+        "tasks_task_proxies_id_pools_id_fk": {
+          "name": "tasks_task_proxies_id_pools_id_fk",
+          "tableFrom": "tasks",
           "tableTo": "pools",
           "columnsFrom": [
-            "pools_id"
+            "task_proxies_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -1276,6 +1179,19 @@
           "name": "filter",
           "type": "enum_jobs_if_filter",
           "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "target_collections": {
+          "name": "target_collections",
+          "type": "enum_jobs_if_target_collections",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "target_fields": {
+          "name": "target_fields",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         }
@@ -1333,6 +1249,89 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.jobs_then_operations": {
+      "name": "jobs_then_operations",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "enum_jobs_then_operations_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "jobs_then_operations_order_idx": {
+          "name": "jobs_then_operations_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "jobs_then_operations_parent_id_idx": {
+          "name": "jobs_then_operations_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "jobs_then_operations_parent_id_fk": {
+          "name": "jobs_then_operations_parent_id_fk",
+          "tableFrom": "jobs_then_operations",
+          "tableTo": "jobs_then",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.jobs_then": {
       "name": "jobs_then",
       "schema": "",
@@ -1355,16 +1354,10 @@
           "primaryKey": true,
           "notNull": true
         },
-        "task_status": {
-          "name": "task_status",
-          "type": "enum_jobs_then_task_status",
+        "type": {
+          "name": "type",
+          "type": "enum_jobs_then_type",
           "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "task_notes": {
-          "name": "task_notes",
-          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         }
@@ -1452,6 +1445,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "job_assignee_id": {
+          "name": "job_assignee_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "job_proxies_id": {
+          "name": "job_proxies_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "when_trigger": {
           "name": "when_trigger",
           "type": "enum_jobs_when_trigger",
@@ -1509,6 +1514,36 @@
           "method": "btree",
           "with": {}
         },
+        "jobs_job_assignee_idx": {
+          "name": "jobs_job_assignee_idx",
+          "columns": [
+            {
+              "expression": "job_assignee_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "jobs_job_proxies_idx": {
+          "name": "jobs_job_proxies_idx",
+          "columns": [
+            {
+              "expression": "job_proxies_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "jobs_updated_at_idx": {
           "name": "jobs_updated_at_idx",
           "columns": [
@@ -1553,6 +1588,32 @@
           ],
           "onDelete": "set null",
           "onUpdate": "no action"
+        },
+        "jobs_job_assignee_id_users_id_fk": {
+          "name": "jobs_job_assignee_id_users_id_fk",
+          "tableFrom": "jobs",
+          "tableTo": "users",
+          "columnsFrom": [
+            "job_assignee_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "jobs_job_proxies_id_pools_id_fk": {
+          "name": "jobs_job_proxies_id_pools_id_fk",
+          "tableFrom": "jobs",
+          "tableTo": "pools",
+          "columnsFrom": [
+            "job_proxies_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1589,8 +1650,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "users_id": {
-          "name": "users_id",
+        "orders_id": {
+          "name": "orders_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
@@ -1601,8 +1662,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "orders_id": {
-          "name": "orders_id",
+        "users_id": {
+          "name": "users_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
@@ -1666,11 +1727,11 @@
           "method": "btree",
           "with": {}
         },
-        "jobs_rels_users_id_idx": {
-          "name": "jobs_rels_users_id_idx",
+        "jobs_rels_orders_id_idx": {
+          "name": "jobs_rels_orders_id_idx",
           "columns": [
             {
-              "expression": "users_id",
+              "expression": "orders_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1696,11 +1757,11 @@
           "method": "btree",
           "with": {}
         },
-        "jobs_rels_orders_id_idx": {
-          "name": "jobs_rels_orders_id_idx",
+        "jobs_rels_users_id_idx": {
+          "name": "jobs_rels_users_id_idx",
           "columns": [
             {
-              "expression": "orders_id",
+              "expression": "users_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1756,12 +1817,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "jobs_rels_users_fk": {
-          "name": "jobs_rels_users_fk",
+        "jobs_rels_orders_fk": {
+          "name": "jobs_rels_orders_fk",
           "tableFrom": "jobs_rels",
-          "tableTo": "users",
+          "tableTo": "orders",
           "columnsFrom": [
-            "users_id"
+            "orders_id"
           ],
           "columnsTo": [
             "id"
@@ -1782,12 +1843,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "jobs_rels_orders_fk": {
-          "name": "jobs_rels_orders_fk",
+        "jobs_rels_users_fk": {
+          "name": "jobs_rels_users_fk",
           "tableFrom": "jobs_rels",
-          "tableTo": "orders",
+          "tableTo": "users",
           "columnsFrom": [
-            "orders_id"
+            "users_id"
           ],
           "columnsTo": [
             "id"
@@ -8975,11 +9036,12 @@
     }
   },
   "enums": {
-    "public.enum_users_user_role": {
-      "name": "enum_users_user_role",
+    "public.enum_users_operator_role": {
+      "name": "enum_users_operator_role",
       "schema": "public",
       "values": [
-        "Operator",
+        "Bot",
+        "User",
         "Admin"
       ]
     },
@@ -8999,23 +9061,24 @@
         "user"
       ]
     },
-    "public.enum_tasks_type": {
-      "name": "enum_tasks_type",
-      "schema": "public",
-      "values": [
-        "Fulfill Orders",
-        "Custom Task"
-      ]
-    },
     "public.enum_tasks_task_status": {
       "name": "enum_tasks_task_status",
       "schema": "public",
       "values": [
         "Pending",
         "In Progress",
+        "Running",
         "Complete",
         "Blocked",
         "Backlogged"
+      ]
+    },
+    "public.enum_tasks_task_type": {
+      "name": "enum_tasks_task_type",
+      "schema": "public",
+      "values": [
+        "Automated Task",
+        "Manual Task"
       ]
     },
     "public.enum_jobs_if_filter": {
@@ -9035,26 +9098,43 @@
         "Exists"
       ]
     },
-    "public.enum_jobs_then_task_status": {
-      "name": "enum_jobs_then_task_status",
+    "public.enum_jobs_if_target_collections": {
+      "name": "enum_jobs_if_target_collections",
       "schema": "public",
       "values": [
-        "Pending",
-        "In Progress",
-        "Complete",
-        "Blocked",
-        "Backlogged"
+        "Orders",
+        "Pools",
+        "Users",
+        "Tags",
+        "Jobs"
+      ]
+    },
+    "public.enum_jobs_then_operations_type": {
+      "name": "enum_jobs_then_operations_type",
+      "schema": "public",
+      "values": [
+        "Payload Operation",
+        "TradeDesk Operation"
+      ]
+    },
+    "public.enum_jobs_then_type": {
+      "name": "enum_jobs_then_type",
+      "schema": "public",
+      "values": [
+        "Sequential",
+        "Parallel",
+        "Asynchronous"
       ]
     },
     "public.enum_jobs_job_status": {
       "name": "enum_jobs_job_status",
       "schema": "public",
       "values": [
-        "Pending",
-        "In Progress",
-        "Complete",
-        "Blocked",
-        "Backlogged"
+        "Draft",
+        "Active",
+        "Running",
+        "Disabled",
+        "Blocked"
       ]
     },
     "public.enum_jobs_when_trigger": {

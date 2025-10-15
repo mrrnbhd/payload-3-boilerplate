@@ -2,14 +2,16 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
-   CREATE TYPE "public"."enum_users_user_role" AS ENUM('Operator', 'Admin');
+   CREATE TYPE "public"."enum_users_operator_role" AS ENUM('Bot', 'User', 'Admin');
   CREATE TYPE "public"."enum_users_role" AS ENUM('admin', 'user');
   CREATE TYPE "public"."enum_admin_invitations_role" AS ENUM('admin', 'user');
-  CREATE TYPE "public"."enum_tasks_type" AS ENUM('Fulfill Orders', 'Custom Task');
-  CREATE TYPE "public"."enum_tasks_task_status" AS ENUM('Pending', 'In Progress', 'Complete', 'Blocked', 'Backlogged');
+  CREATE TYPE "public"."enum_tasks_task_status" AS ENUM('Pending', 'In Progress', 'Running', 'Complete', 'Blocked', 'Backlogged');
+  CREATE TYPE "public"."enum_tasks_task_type" AS ENUM('Automated Task', 'Manual Task');
   CREATE TYPE "public"."enum_jobs_if_filter" AS ENUM('Is Equal to', 'Is Not Equal to', 'Is Less Than', 'Is Less Than or Equal to', 'Is Greater Than', 'Is Greater Than or Equal to', 'Is Like', 'Is Not Like', 'Is In', 'Is Not In', 'Exists');
-  CREATE TYPE "public"."enum_jobs_then_task_status" AS ENUM('Pending', 'In Progress', 'Complete', 'Blocked', 'Backlogged');
-  CREATE TYPE "public"."enum_jobs_job_status" AS ENUM('Pending', 'In Progress', 'Complete', 'Blocked', 'Backlogged');
+  CREATE TYPE "public"."enum_jobs_if_target_collections" AS ENUM('Orders', 'Pools', 'Users', 'Tags', 'Jobs');
+  CREATE TYPE "public"."enum_jobs_then_operations_type" AS ENUM('Payload Operation', 'TradeDesk Operation');
+  CREATE TYPE "public"."enum_jobs_then_type" AS ENUM('Sequential', 'Parallel', 'Asynchronous');
+  CREATE TYPE "public"."enum_jobs_job_status" AS ENUM('Draft', 'Active', 'Running', 'Disabled', 'Blocked');
   CREATE TYPE "public"."enum_jobs_when_trigger" AS ENUM('A Payload Collection is Changed', 'A TradeDesk Webhook is Received');
   CREATE TYPE "public"."enum_jobs_when_target_collections" AS ENUM('Orders', 'Pools', 'Users', 'Tags', 'Jobs');
   CREATE TYPE "public"."enum_orders_event_tickets_parking_tickets_source" AS ENUM('SpotHero', 'ParkWhiz', 'ParkMobile', 'AceParking');
@@ -48,7 +50,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum_global_footer_nav_items_link_type" AS ENUM('custom', 'reference');
   CREATE TABLE "users" (
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-  	"user_role" "enum_users_user_role",
+  	"operator_role" "enum_users_operator_role",
   	"name" varchar,
   	"email" varchar NOT NULL,
   	"email_verified" boolean DEFAULT false NOT NULL,
@@ -130,37 +132,38 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TABLE "tasks" (
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"name" varchar,
-  	"type" "enum_tasks_type",
-  	"tags_id" uuid,
   	"task_status" "enum_tasks_task_status",
+  	"tags_id" uuid,
+  	"task_type" "enum_tasks_task_type",
+  	"task_assignee_id" uuid,
+  	"task_proxies_id" uuid,
   	"task_notes" jsonb,
   	"user_handbook" jsonb,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
   
-  CREATE TABLE "tasks_rels" (
-  	"id" serial PRIMARY KEY NOT NULL,
-  	"order" integer,
-  	"parent_id" uuid NOT NULL,
-  	"path" varchar NOT NULL,
-  	"users_id" uuid,
-  	"pools_id" uuid
-  );
-  
   CREATE TABLE "jobs_if" (
   	"_order" integer NOT NULL,
   	"_parent_id" uuid NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
-  	"filter" "enum_jobs_if_filter"
+  	"filter" "enum_jobs_if_filter",
+  	"target_collections" "enum_jobs_if_target_collections",
+  	"target_fields" varchar
+  );
+  
+  CREATE TABLE "jobs_then_operations" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" varchar NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"type" "enum_jobs_then_operations_type"
   );
   
   CREATE TABLE "jobs_then" (
   	"_order" integer NOT NULL,
   	"_parent_id" uuid NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
-  	"task_status" "enum_jobs_then_task_status",
-  	"task_notes" jsonb
+  	"type" "enum_jobs_then_type"
   );
   
   CREATE TABLE "jobs" (
@@ -168,6 +171,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"job_name" varchar,
   	"job_status" "enum_jobs_job_status",
   	"job_tags_id" uuid,
+  	"job_assignee_id" uuid,
+  	"job_proxies_id" uuid,
   	"when_trigger" "enum_jobs_when_trigger",
   	"when_target_collections" "enum_jobs_when_target_collections",
   	"when_target_fields" varchar,
@@ -181,9 +186,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"order" integer,
   	"parent_id" uuid NOT NULL,
   	"path" varchar NOT NULL,
-  	"users_id" uuid,
-  	"pools_id" uuid,
   	"orders_id" uuid,
+  	"pools_id" uuid,
+  	"users_id" uuid,
   	"tags_id" uuid,
   	"jobs_id" uuid
   );
@@ -807,16 +812,18 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "passkeys" ADD CONSTRAINT "passkeys_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "tasks" ADD CONSTRAINT "tasks_tags_id_tags_id_fk" FOREIGN KEY ("tags_id") REFERENCES "public"."tags"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "tasks_rels" ADD CONSTRAINT "tasks_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."tasks"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "tasks_rels" ADD CONSTRAINT "tasks_rels_users_fk" FOREIGN KEY ("users_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "tasks_rels" ADD CONSTRAINT "tasks_rels_pools_fk" FOREIGN KEY ("pools_id") REFERENCES "public"."pools"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "tasks" ADD CONSTRAINT "tasks_task_assignee_id_users_id_fk" FOREIGN KEY ("task_assignee_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "tasks" ADD CONSTRAINT "tasks_task_proxies_id_pools_id_fk" FOREIGN KEY ("task_proxies_id") REFERENCES "public"."pools"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "jobs_if" ADD CONSTRAINT "jobs_if_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."jobs"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "jobs_then_operations" ADD CONSTRAINT "jobs_then_operations_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."jobs_then"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "jobs_then" ADD CONSTRAINT "jobs_then_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."jobs"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "jobs" ADD CONSTRAINT "jobs_job_tags_id_tags_id_fk" FOREIGN KEY ("job_tags_id") REFERENCES "public"."tags"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "jobs" ADD CONSTRAINT "jobs_job_assignee_id_users_id_fk" FOREIGN KEY ("job_assignee_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "jobs" ADD CONSTRAINT "jobs_job_proxies_id_pools_id_fk" FOREIGN KEY ("job_proxies_id") REFERENCES "public"."pools"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "jobs_rels" ADD CONSTRAINT "jobs_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."jobs"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "jobs_rels" ADD CONSTRAINT "jobs_rels_users_fk" FOREIGN KEY ("users_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "jobs_rels" ADD CONSTRAINT "jobs_rels_pools_fk" FOREIGN KEY ("pools_id") REFERENCES "public"."pools"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "jobs_rels" ADD CONSTRAINT "jobs_rels_orders_fk" FOREIGN KEY ("orders_id") REFERENCES "public"."orders"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "jobs_rels" ADD CONSTRAINT "jobs_rels_pools_fk" FOREIGN KEY ("pools_id") REFERENCES "public"."pools"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "jobs_rels" ADD CONSTRAINT "jobs_rels_users_fk" FOREIGN KEY ("users_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "jobs_rels" ADD CONSTRAINT "jobs_rels_tags_fk" FOREIGN KEY ("tags_id") REFERENCES "public"."tags"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "jobs_rels" ADD CONSTRAINT "jobs_rels_jobs_fk" FOREIGN KEY ("jobs_id") REFERENCES "public"."jobs"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "orders_event_tickets_parking_tickets" ADD CONSTRAINT "orders_event_tickets_parking_tickets_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."orders_event_tickets"("id") ON DELETE cascade ON UPDATE no action;
@@ -916,26 +923,27 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "admin_invitations_updated_at_idx" ON "admin_invitations" USING btree ("updated_at");
   CREATE INDEX "admin_invitations_created_at_idx" ON "admin_invitations" USING btree ("created_at");
   CREATE INDEX "tasks_tags_idx" ON "tasks" USING btree ("tags_id");
+  CREATE INDEX "tasks_task_assignee_idx" ON "tasks" USING btree ("task_assignee_id");
+  CREATE INDEX "tasks_task_proxies_idx" ON "tasks" USING btree ("task_proxies_id");
   CREATE INDEX "tasks_updated_at_idx" ON "tasks" USING btree ("updated_at");
   CREATE INDEX "tasks_created_at_idx" ON "tasks" USING btree ("created_at");
-  CREATE INDEX "tasks_rels_order_idx" ON "tasks_rels" USING btree ("order");
-  CREATE INDEX "tasks_rels_parent_idx" ON "tasks_rels" USING btree ("parent_id");
-  CREATE INDEX "tasks_rels_path_idx" ON "tasks_rels" USING btree ("path");
-  CREATE INDEX "tasks_rels_users_id_idx" ON "tasks_rels" USING btree ("users_id");
-  CREATE INDEX "tasks_rels_pools_id_idx" ON "tasks_rels" USING btree ("pools_id");
   CREATE INDEX "jobs_if_order_idx" ON "jobs_if" USING btree ("_order");
   CREATE INDEX "jobs_if_parent_id_idx" ON "jobs_if" USING btree ("_parent_id");
+  CREATE INDEX "jobs_then_operations_order_idx" ON "jobs_then_operations" USING btree ("_order");
+  CREATE INDEX "jobs_then_operations_parent_id_idx" ON "jobs_then_operations" USING btree ("_parent_id");
   CREATE INDEX "jobs_then_order_idx" ON "jobs_then" USING btree ("_order");
   CREATE INDEX "jobs_then_parent_id_idx" ON "jobs_then" USING btree ("_parent_id");
   CREATE INDEX "jobs_job_tags_idx" ON "jobs" USING btree ("job_tags_id");
+  CREATE INDEX "jobs_job_assignee_idx" ON "jobs" USING btree ("job_assignee_id");
+  CREATE INDEX "jobs_job_proxies_idx" ON "jobs" USING btree ("job_proxies_id");
   CREATE INDEX "jobs_updated_at_idx" ON "jobs" USING btree ("updated_at");
   CREATE INDEX "jobs_created_at_idx" ON "jobs" USING btree ("created_at");
   CREATE INDEX "jobs_rels_order_idx" ON "jobs_rels" USING btree ("order");
   CREATE INDEX "jobs_rels_parent_idx" ON "jobs_rels" USING btree ("parent_id");
   CREATE INDEX "jobs_rels_path_idx" ON "jobs_rels" USING btree ("path");
-  CREATE INDEX "jobs_rels_users_id_idx" ON "jobs_rels" USING btree ("users_id");
-  CREATE INDEX "jobs_rels_pools_id_idx" ON "jobs_rels" USING btree ("pools_id");
   CREATE INDEX "jobs_rels_orders_id_idx" ON "jobs_rels" USING btree ("orders_id");
+  CREATE INDEX "jobs_rels_pools_id_idx" ON "jobs_rels" USING btree ("pools_id");
+  CREATE INDEX "jobs_rels_users_id_idx" ON "jobs_rels" USING btree ("users_id");
   CREATE INDEX "jobs_rels_tags_id_idx" ON "jobs_rels" USING btree ("tags_id");
   CREATE INDEX "jobs_rels_jobs_id_idx" ON "jobs_rels" USING btree ("jobs_id");
   CREATE INDEX "orders_event_tickets_parking_tickets_order_idx" ON "orders_event_tickets_parking_tickets" USING btree ("_order");
@@ -1123,8 +1131,8 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "passkeys" CASCADE;
   DROP TABLE "admin_invitations" CASCADE;
   DROP TABLE "tasks" CASCADE;
-  DROP TABLE "tasks_rels" CASCADE;
   DROP TABLE "jobs_if" CASCADE;
+  DROP TABLE "jobs_then_operations" CASCADE;
   DROP TABLE "jobs_then" CASCADE;
   DROP TABLE "jobs" CASCADE;
   DROP TABLE "jobs_rels" CASCADE;
@@ -1177,13 +1185,15 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "global_terms" CASCADE;
   DROP TABLE "global_privacy" CASCADE;
   DROP TABLE "settings" CASCADE;
-  DROP TYPE "public"."enum_users_user_role";
+  DROP TYPE "public"."enum_users_operator_role";
   DROP TYPE "public"."enum_users_role";
   DROP TYPE "public"."enum_admin_invitations_role";
-  DROP TYPE "public"."enum_tasks_type";
   DROP TYPE "public"."enum_tasks_task_status";
+  DROP TYPE "public"."enum_tasks_task_type";
   DROP TYPE "public"."enum_jobs_if_filter";
-  DROP TYPE "public"."enum_jobs_then_task_status";
+  DROP TYPE "public"."enum_jobs_if_target_collections";
+  DROP TYPE "public"."enum_jobs_then_operations_type";
+  DROP TYPE "public"."enum_jobs_then_type";
   DROP TYPE "public"."enum_jobs_job_status";
   DROP TYPE "public"."enum_jobs_when_trigger";
   DROP TYPE "public"."enum_jobs_when_target_collections";

@@ -47,7 +47,7 @@ export const Tasks: CollectionConfig = {
                   type: 'select',
                   name: 'taskType',
                   label: 'Task Type',
-                  options: ['Fulfill Orders', 'Custom Task'],
+                  options: ['Automated Task', 'Manual Task'],
                 },
                 {
                   type: 'relationship',

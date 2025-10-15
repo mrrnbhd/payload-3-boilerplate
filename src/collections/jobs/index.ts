@@ -1,4 +1,3 @@
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import type { CollectionConfig } from 'payload'
 import { defaultLexical } from '@/fields/default-lexical'
 
@@ -35,12 +34,6 @@ export const Jobs: CollectionConfig = {
     {
       type: 'row',
       fields: [
-        {
-          type: 'select',
-          name: 'jobType',
-          label: 'Job Type',
-          options: ['Fulfill Orders', 'Custom Task'],
-        },
         {
           type: 'relationship',
           name: 'jobAssignee',
@@ -132,6 +125,28 @@ export const Jobs: CollectionConfig = {
                         'Exists',
                       ],
                     },
+                    {
+                      type: 'row',
+                      fields: [
+                        {
+                          type: 'select',
+                          name: 'targetCollections',
+                          label: 'Filter Collection(s)',
+                          options: ['Orders', 'Pools', 'Users', 'Tags', 'Jobs'],
+                        },
+                        {
+                          type: 'relationship',
+                          name: 'targetDocuments',
+                          label: 'Filter Document(s)',
+                          relationTo: ['orders', 'pools', 'users', 'tags', 'jobs'],
+                        },
+                        {
+                          type: 'text',
+                          name: 'targetFields',
+                          label: 'Target Field(s)',
+                        },
+                      ],
+                    },
                   ],
                 },
               ],
@@ -140,27 +155,31 @@ export const Jobs: CollectionConfig = {
               type: 'array',
               name: 'then',
               labels: {
-                singular: 'Action',
+                singular: 'Actions',
                 plural: 'Actions',
               },
               fields: [
                 {
-                  type: 'relationship',
-                  name: 'taskAssignee',
-                  relationTo: 'users',
-                  admin: {},
-                },
-                {
                   type: 'select',
-                  name: 'taskStatus',
-                  options: ['Pending', 'In Progress', 'Complete', 'Blocked', 'Backlogged'],
-                  admin: {},
+                  name: 'type',
+                  label: 'Action Type',
+                  options: ['Sequential', 'Parallel', 'Asynchronous'],
                 },
-
                 {
-                  type: 'richText',
-                  name: 'Task Notes',
-                  editor: lexicalEditor(),
+                  type: 'array',
+                  name: 'operations',
+                  labels: {
+                    singular: 'Operation',
+                    plural: 'Operations',
+                  },
+                  fields: [
+                    {
+                      type: 'select',
+                      name: 'type',
+                      label: 'Operation Type',
+                      options: ['Payload Operation', 'TradeDesk Operation'],
+                    },
+                  ],
                 },
               ],
             },
