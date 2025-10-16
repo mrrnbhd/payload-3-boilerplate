@@ -512,12 +512,15 @@ export interface Job {
   jobName?: string | null;
   jobStatus?: ('Draft' | 'Active' | 'Running' | 'Disabled' | 'Blocked') | null;
   jobTags?: (string | null) | Tag;
-  jobAssignee?: (string | null) | User;
-  jobProxies?: (string | null) | Pool;
   When?: {
-    trigger?: ('A Payload Collection is Changed' | 'A TradeDesk Webhook is Received') | null;
-    targetCollections?: ('Orders' | 'Pools' | 'Users' | 'Tags' | 'Jobs') | null;
-    targetDocuments?:
+    trigger?: ('Payload Event' | 'TradeDesk Event') | null;
+    eventType?: ('Create' | 'Update' | 'Delete') | null;
+    sourceCollections?: ('Tasks' | 'Orders' | 'Pools' | 'Users' | 'Tags' | 'Jobs') | null;
+    sourceDocuments?:
+      | ({
+          relationTo: 'tasks';
+          value: string | Task;
+        } | null)
       | ({
           relationTo: 'orders';
           value: string | Order;
@@ -538,27 +541,16 @@ export interface Job {
           relationTo: 'jobs';
           value: string | Job;
         } | null);
-    targetFields?: string | null;
+    sourceFields?: string | null;
   };
   if?:
     | {
-        filter?:
-          | (
-              | 'Is Equal to'
-              | 'Is Not Equal to'
-              | 'Is Less Than'
-              | 'Is Less Than or Equal to'
-              | 'Is Greater Than'
-              | 'Is Greater Than or Equal to'
-              | 'Is Like'
-              | 'Is Not Like'
-              | 'Is In'
-              | 'Is Not In'
-              | 'Exists'
-            )
-          | null;
-        targetCollections?: ('Orders' | 'Pools' | 'Users' | 'Tags' | 'Jobs') | null;
-        targetDocuments?:
+        filterCollections?: ('Tasks' | 'Orders' | 'Pools' | 'Users' | 'Tags' | 'Jobs') | null;
+        filterDocuments?:
+          | ({
+              relationTo: 'tasks';
+              value: string | Task;
+            } | null)
           | ({
               relationTo: 'orders';
               value: string | Order;
@@ -579,16 +571,84 @@ export interface Job {
               relationTo: 'jobs';
               value: string | Job;
             } | null);
-        targetFields?: string | null;
+        filterFields?: string | null;
+        condition?:
+          | (
+              | 'Is Equal to'
+              | 'Is Not Equal to'
+              | 'Is Less Than'
+              | 'Is Less Than or Equal to'
+              | 'Is Greater Than'
+              | 'Is Greater Than or Equal to'
+              | 'Is Like'
+              | 'Is Not Like'
+              | 'Is In'
+              | 'Is Not In'
+              | 'Exists'
+            )
+          | null;
+        comparisonType?: ('Static Value' | 'Dynamic Value') | null;
+        comparedValue?: string | null;
+        comparedCollections?: ('Orders' | 'Pools' | 'Users' | 'Tags' | 'Jobs') | null;
+        comparedDocuments?:
+          | ({
+              relationTo: 'orders';
+              value: string | Order;
+            } | null)
+          | ({
+              relationTo: 'pools';
+              value: string | Pool;
+            } | null)
+          | ({
+              relationTo: 'users';
+              value: string | User;
+            } | null)
+          | ({
+              relationTo: 'tags';
+              value: string | Tag;
+            } | null)
+          | ({
+              relationTo: 'jobs';
+              value: string | Job;
+            } | null);
+        comparedFields?: string | null;
         id?: string | null;
       }[]
     | null;
   then?:
     | {
         type?: ('Sequential' | 'Parallel' | 'Asynchronous') | null;
-        operations?:
+        actions?:
           | {
-              type?: ('Payload Operation' | 'TradeDesk Operation') | null;
+              actionType?: ('Payload Action' | 'TradeDesk Action') | null;
+              eventType?: ('Create' | 'Update' | 'Delete') | null;
+              targetCollections?: ('Tasks' | 'Orders' | 'Pools' | 'Users' | 'Tags' | 'Jobs') | null;
+              targetDocuments?:
+                | ({
+                    relationTo: 'tasks';
+                    value: string | Task;
+                  } | null)
+                | ({
+                    relationTo: 'orders';
+                    value: string | Order;
+                  } | null)
+                | ({
+                    relationTo: 'pools';
+                    value: string | Pool;
+                  } | null)
+                | ({
+                    relationTo: 'users';
+                    value: string | User;
+                  } | null)
+                | ({
+                    relationTo: 'tags';
+                    value: string | Tag;
+                  } | null)
+                | ({
+                    relationTo: 'jobs';
+                    value: string | Job;
+                  } | null);
+              targetFields?: string | null;
               id?: string | null;
             }[]
           | null;
@@ -1431,33 +1491,41 @@ export interface JobsSelect<T extends boolean = true> {
   jobName?: T;
   jobStatus?: T;
   jobTags?: T;
-  jobAssignee?: T;
-  jobProxies?: T;
   When?:
     | T
     | {
         trigger?: T;
-        targetCollections?: T;
-        targetDocuments?: T;
-        targetFields?: T;
+        eventType?: T;
+        sourceCollections?: T;
+        sourceDocuments?: T;
+        sourceFields?: T;
       };
   if?:
     | T
     | {
-        filter?: T;
-        targetCollections?: T;
-        targetDocuments?: T;
-        targetFields?: T;
+        filterCollections?: T;
+        filterDocuments?: T;
+        filterFields?: T;
+        condition?: T;
+        comparisonType?: T;
+        comparedValue?: T;
+        comparedCollections?: T;
+        comparedDocuments?: T;
+        comparedFields?: T;
         id?: T;
       };
   then?:
     | T
     | {
         type?: T;
-        operations?:
+        actions?:
           | T
           | {
-              type?: T;
+              actionType?: T;
+              eventType?: T;
+              targetCollections?: T;
+              targetDocuments?: T;
+              targetFields?: T;
               id?: T;
             };
         id?: T;
