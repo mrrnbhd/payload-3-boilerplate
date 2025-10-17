@@ -251,7 +251,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
             <Bot />
           </RainbowButton>
           <Button variant={'outline'} size={'sm'}>
-            Manual Purchase
+            Manual Fulfillment
             <SquareArrowOutUpRight />
           </Button>
         </CardFooter>
@@ -299,7 +299,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
             <Bot />
           </RainbowButton>
           <Button variant={'outline'} size={'sm'}>
-            Manual Download
+            Manual Fulfillment
             <SquareArrowOutUpRight />
           </Button>
         </CardFooter>
