@@ -116,7 +116,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Progress value={33} className="[&>*]:bg-green-600 mt-1 w-full" />
+              <Progress value={33} className="[&>*]:bg-green-700 mt-1 w-full" />
             </CardContent>
           </Card>
         </div>
@@ -135,7 +135,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
             </CardHeader>
             <CardContent>
               {' '}
-              <Progress value={33} className="[&>*]:bg-green-600 mt-1 w-full" />
+              <Progress value={33} className="[&>*]:bg-green-700 mt-1 w-full" />
             </CardContent>
           </Card>
         </div>
