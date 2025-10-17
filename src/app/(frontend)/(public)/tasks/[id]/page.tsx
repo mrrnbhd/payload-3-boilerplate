@@ -1,3 +1,4 @@
+import { Bot, SquareArrowOutUpRight } from 'lucide-react'
 import { notFound } from 'next/navigation'
 
 import { DataTable } from '@/components/data-table'
@@ -98,7 +99,11 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
                       </DialogTrigger>
                       <DialogContent className="sm:max-h-[85%] sm:max-w-[90%] sm:h-[85%] sm:w-[90%] overflow-scroll">
                         <DialogHeader>
-                          <DialogTitle>All Tasks</DialogTitle>
+                          <DialogTitle>
+                            <div className="flex justify-between align-center">
+                              <h3>All Steps</h3>
+                            </div>
+                          </DialogTitle>
                           <DialogDescription>
                             View all pending tasks assigned to you.
                           </DialogDescription>
@@ -114,7 +119,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
               <h2 className="mb-5">
                 Get the purchase price of the parking pass from the vendor portal.
               </h2>
-              <Progress value={33} className="[&>*]:bg-yellow-700 mt-1 w-full" />
+              <Progress value={17} className="[&>*]:bg-yellow-700 mt-1 w-full" />
             </CardContent>
           </Card>
         </div>
@@ -122,28 +127,30 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
           <Card>
             <CardHeader>
               <CardTitle>
-                <div className="flex justify-between items-center">
-                  <h1>Step 1/3</h1>
-
-                  <div className="flex justify-between">
-                    <div>
-                      <Badge className="bg-amber-600/10 dark:bg-amber-600/20 hover:bg-amber-600/10 text-amber-500 shadow-none rounded-full p-2">
-                        <div className="h-2 w-2 rounded-full bg-amber-500 self-center" /> Pending
-                      </Badge>
-                      <Badge
-                        hidden={true}
-                        className="bg-red-600/10 dark:bg-red-600/20 hover:bg-red-600/10 text-red-500 shadow-none rounded-full"
-                      >
-                        <div className="h-1.5 w-1.5 rounded-full bg-red-500 mr-2" /> Blocked
-                      </Badge>
-                      <Badge
-                        hidden={true}
-                        className="bg-emerald-600/10 dark:bg-emerald-600/20 hover:bg-emerald-600/10 text-emerald-500 shadow-none rounded-full"
-                      >
-                        <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-2" /> Done
-                      </Badge>
-                    </div>
-                  </div>
+                <div className="flex justify-between items-center w-full">
+                  <h2>Step 1/3</h2>
+                  <Dialog>
+                    <form>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size={'sm'}>
+                          View All
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-h-[85%] sm:max-w-[90%] sm:h-[85%] sm:w-[90%] overflow-scroll">
+                        <DialogHeader>
+                          <DialogTitle>
+                            <div className="flex justify-between align-center">
+                              <h3>Task Steps</h3>
+                            </div>
+                          </DialogTitle>
+                          <DialogDescription>
+                            View all pending steps for the current task.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <DataTable />
+                      </DialogContent>
+                    </form>
+                  </Dialog>
                 </div>
               </CardTitle>
             </CardHeader>
@@ -188,28 +195,98 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
         <CardContent>
           Get the purchase price of the parking pass from the vendor portal.
         </CardContent>
-        <CardFooter className="flex justify-between">
-          <RainbowButton variant={'outline'}> Run Automation</RainbowButton>
+        <CardFooter className="flex start gap-5">
+          <RainbowButton variant={'outline'}>
+            Run Automation
+            <Bot />
+          </RainbowButton>
+          <Button variant={'outline'}>
+            Manual Purchase
+            <SquareArrowOutUpRight />
+          </Button>
         </CardFooter>
       </Card>
       <Card className="my-9 mx-6">
         <CardHeader>
-          <CardTitle>Step 2</CardTitle>
+          <CardTitle>
+            <div className="flex justify-between">
+              Step 2
+              <div>
+                <Badge className="bg-amber-600/10 dark:bg-amber-600/20 hover:bg-amber-600/10 text-amber-500 shadow-none rounded-full p-2">
+                  <div className="h-2 w-2 rounded-full bg-amber-500 self-center" /> Pending
+                </Badge>
+                <Badge
+                  hidden={true}
+                  className="bg-red-600/10 dark:bg-red-600/20 hover:bg-red-600/10 text-red-500 shadow-none rounded-full"
+                >
+                  <div className="h-1.5 w-1.5 rounded-full bg-red-500 mr-2" /> Blocked
+                </Badge>
+                <Badge
+                  hidden={true}
+                  className="bg-emerald-600/10 dark:bg-emerald-600/20 hover:bg-emerald-600/10 text-emerald-500 shadow-none rounded-full"
+                >
+                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-2" /> Done
+                </Badge>
+              </div>
+            </div>
+          </CardTitle>
           <CardDescription>Upload Parking Pass Page as PDF</CardDescription>
         </CardHeader>
-        <CardContent>Download the parking pass PDF from the web page.</CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant={'outline'}>Pending</Button>
+        <CardContent>Upload the parking pass PDF from the ticket vendor web page.</CardContent>
+        <CardFooter className="flex start gap-5">
+          <RainbowButton variant={'outline'}>
+            Run Automation
+            <Bot />
+          </RainbowButton>
+          <Button variant={'outline'}>
+            Manual Purchase
+            <SquareArrowOutUpRight />
+          </Button>
         </CardFooter>
       </Card>
       <Card className="my-9 mx-6">
         <CardHeader>
-          <CardTitle>Step 3</CardTitle>
+          <CardTitle>
+            {' '}
+            <div className="flex justify-between">
+              Step 3
+              <div>
+                <Badge
+                  hidden={true}
+                  className="bg-amber-600/10 dark:bg-amber-600/20 hover:bg-amber-600/10 text-amber-500 shadow-none rounded-full p-2"
+                >
+                  <div className="h-2 w-2 rounded-full bg-amber-500 self-center" /> Pending
+                </Badge>
+                <Badge
+                  hidden={false}
+                  className="bg-gray-600/10 dark:bg-gray-500/20 hover:bg-red-600/10 text-gray-200 shadow-none rounded-full p-2"
+                >
+                  <div className="rounded-full bg-gray-400 h-2 w-2" /> Waiting
+                </Badge>
+                <Badge
+                  hidden={true}
+                  className="bg-emerald-600/10 dark:bg-emerald-600/20 hover:bg-emerald-600/10 text-emerald-500 shadow-none rounded-full"
+                >
+                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-2" /> Done
+                </Badge>
+              </div>
+            </div>
+          </CardTitle>
           <CardDescription>Complete Purchase Order in TradeDesk</CardDescription>
         </CardHeader>
-        <CardContent>Send the purchase order for processing to complete the task.</CardContent>
-        <Button variant={'outline'}>Pending</Button>
-        <CardFooter className="flex justify-between"></CardFooter>
+        <CardContent>
+          Send the purchase order for processing in TradeDesk to complete the task.
+        </CardContent>
+        <CardFooter className="flex justify-start gap-5">
+          <RainbowButton disabled variant={'outline'}>
+            Run Automation
+            <Bot />
+          </RainbowButton>
+          <Button disabled variant={'outline'}>
+            Manual Fulfillment
+            <SquareArrowOutUpRight />
+          </Button>{' '}
+        </CardFooter>
       </Card>
     </div>
   )

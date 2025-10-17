@@ -36,6 +36,7 @@ import {
   useReactTable,
   type VisibilityState,
 } from '@tanstack/react-table'
+import { RainbowButton } from './ui/rainbow-button'
 
 const data: Payment[] = [
   {
@@ -198,6 +199,10 @@ export function DataTable() {
   return (
     <div className="w-full max-h-fill">
       <div className="flex items-center py-4">
+        <RainbowButton variant={'outline'} className="mr-4">
+          {' '}
+          Run Automations
+        </RainbowButton>
         <Input
           placeholder="Search Tasks..."
           value={(table.getColumn('task')?.getFilterValue() as string) ?? ''}
