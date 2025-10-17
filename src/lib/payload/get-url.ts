@@ -4,7 +4,7 @@ export const getServerSideURL = () => {
   let url = process.env.NEXT_PUBLIC_SERVER_URL
 
   if (!url && process.env.NEXT_PUBLIC_SERVER_URL) {
-    return `https://${process.env.NEXT_PUBLIC_SERVER_URL}`
+    return `${process.env.NEXT_PUBLIC_SERVER_URL}`
   }
 
   if (!url) {
