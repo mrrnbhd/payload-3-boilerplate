@@ -1,11 +1,11 @@
 import { betterAuthPluginOptions } from '@/lib/auth/options'
 
+import formPlugin from 'extra/plugins/form-plugin'
 import type { Plugin } from 'payload'
+import { auditorPlugin } from 'payload-auditor'
 import { betterAuthPlugin } from 'payload-auth/better-auth'
 import { s3StoragePluginPrivate, s3StoragePluginPublic } from './s3-storage-plugin'
 import { seoPlugin } from './seo-plugin'
-import formPlugin from 'extra/plugins/form-plugin'
-import { auditorPlugin } from 'payload-auditor'
 
 export const plugins: Plugin[] = [
   betterAuthPlugin(betterAuthPluginOptions),
@@ -31,10 +31,88 @@ export const plugins: Plugin[] = [
       },
       trackCollections: [
         {
+          slug: 'tasks',
+          hooks: {
+            afterOperation: {
+              create: {
+                enabled: true,
+              },
+              update: {
+                enabled: true,
+              },
+              delete: {
+                enabled: true,
+              },
+              deleteByID: {
+                enabled: true,
+              },
+              updateByID: {
+                enabled: true,
+              },
+            },
+          },
+        },
+        {
+          slug: 'jobs',
+          hooks: {
+            afterOperation: {
+              create: {
+                enabled: true,
+              },
+              update: {
+                enabled: true,
+              },
+              delete: {
+                enabled: true,
+              },
+              deleteByID: {
+                enabled: true,
+              },
+              updateByID: {
+                enabled: true,
+              },
+            },
+          },
+        },
+        {
+          slug: 'orders',
+          hooks: {
+            afterOperation: {
+              create: {
+                enabled: true,
+              },
+              update: {
+                enabled: true,
+              },
+              delete: {
+                enabled: true,
+              },
+              deleteByID: {
+                enabled: true,
+              },
+              updateByID: {
+                enabled: true,
+              },
+            },
+          },
+        },
+        {
           slug: 'accounts',
           hooks: {
-            afterChange: {
+            afterOperation: {
+              create: {
+                enabled: true,
+              },
               update: {
+                enabled: true,
+              },
+              delete: {
+                enabled: true,
+              },
+              deleteByID: {
+                enabled: true,
+              },
+              updateByID: {
                 enabled: true,
               },
             },

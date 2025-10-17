@@ -6,6 +6,9 @@ import { defaultLexical } from '@/fields/default-lexical'
 
 export const Tasks: CollectionConfig = {
   slug: 'tasks',
+  lockDocuments: {
+    duration: 3300,
+  },
   admin: {
     group: 'Workflows',
     useAsTitle: 'name',
