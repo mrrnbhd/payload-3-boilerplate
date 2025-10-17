@@ -97,7 +97,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
                   <Dialog>
                     <form>
                       <DialogTrigger asChild>
-                        <Button variant="default" size={'sm'}>
+                        <Button variant="outline" size={'sm'}>
                           View All
                         </Button>
                       </DialogTrigger>
@@ -127,7 +127,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
                 <div className="flex justify-between items-center">
                   <h1>Step 1/3</h1>
 
-                  <Button variant={'default'} size={'sm'}>
+                  <Button variant={'outline'} size={'sm'}>
                     Next Step
                   </Button>
                 </div>
