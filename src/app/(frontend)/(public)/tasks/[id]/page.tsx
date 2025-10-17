@@ -143,7 +143,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
               </div>
               <Progress value={33} className="[&>*]:bg-amber-500 mt-1 w-full" />
             </CardContent>
-            <CardFooter className="flex justify-between gap-5">
+            <CardFooter className="flex justify-start gap-5">
               <RainbowButton variant={'outline'} size={'sm'} className="rounded-md">
                 Run Automations
                 <Bot />
@@ -160,10 +160,10 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
                     <DialogHeader>
                       <DialogTitle>
                         <div className="flex justify-between align-center">
-                          <h3>All Steps</h3>
+                          <h3>Task Steps</h3>
                         </div>
                       </DialogTitle>
-                      <DialogDescription>View all pending tasks assigned to you.</DialogDescription>
+                      <DialogDescription>View all steps for the current task.</DialogDescription>
                     </DialogHeader>
                     <DataTable />
                   </DialogContent>
