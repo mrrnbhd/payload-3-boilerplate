@@ -24,7 +24,7 @@ export const getClientSideURL = () => {
   }
 
   if (process.env.NEXT_PUBLIC_SERVER_URL) {
-    return `https://${process.env.NEXT_PUBLIC_SERVER_URL}`
+    return `${process.env.NEXT_PUBLIC_SERVER_URL}`
   }
 
   return process.env.NEXT_PUBLIC_SERVER_URL || ''
