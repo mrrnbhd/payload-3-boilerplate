@@ -21,8 +21,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Progress } from '@/components/ui/progress'
 import { RainbowButton } from '@/components/ui/rainbow-button'
+import { Slider } from '@/components/ui/slider'
+
+import { cn } from '@/lib/utils'
 
 import { RefreshRouteOnSave } from '@/hooks/refresh-route-on-save'
 import config from '@payload-config'
@@ -84,6 +86,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
   return (
     <div className="my-9 mx-6">
       <RefreshRouteOnSave />
+      <div className="mx-6"></div>
       <div className="flex w-full">
         <div className="mx-6 my-9 w-full">
           <Card>
@@ -99,7 +102,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
               <h2 className="mb-5">
                 Get the purchase price of the parking pass from the vendor portal.
               </h2>
-              <Progress value={17} className="[&>*]:bg-amber-500 mt-1 w-full" />
+              <Slider defaultValue={[0]} max={100} className={cn('bg-amber-500')} step={17} />
             </CardContent>
             <CardFooter className="flex justify-between gap-5">
               <RainbowButton variant={'outline'} size={'sm'} className="rounded-md">
@@ -144,7 +147,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
               <div className="mb-5">
                 Get the purchase price of the parking pass from the vendor portal.
               </div>
-              <Progress value={33} className="[&>*]:bg-amber-500 mt-1 w-full" />
+              <Slider defaultValue={[0]} max={100} className={cn('bg-amber-500')} step={50} />
             </CardContent>
             <CardFooter className="flex justify-between gap-5">
               <RainbowButton variant={'outline'} size={'sm'} className="rounded-md">
