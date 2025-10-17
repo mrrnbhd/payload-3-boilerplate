@@ -1,7 +1,8 @@
 'use client'
-import { RefreshRouteOnSave as LivePreview } from '@payloadcms/live-preview-react'
 import { useRouter } from 'next/navigation.js'
-import React from 'react'
+import type React from 'react'
+
+import { RefreshRouteOnSave as LivePreview } from '@payloadcms/live-preview-react'
 
 export const RefreshRouteOnSave: React.FC = () => {
   const router = useRouter()

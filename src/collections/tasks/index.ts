@@ -90,12 +90,12 @@ export const Tasks: CollectionConfig = {
                 {
                   type: 'relationship',
                   name: 'taskAssignee',
-                  relationTo: ['users'],
+                  relationTo: 'users',
                 },
                 {
                   type: 'relationship',
                   name: 'taskProfile',
-                  relationTo: ['profiles'],
+                  relationTo: 'profiles',
                 },
                 {
                   type: 'relationship',

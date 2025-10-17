@@ -438,14 +438,8 @@ export interface Task {
   } | null;
   taskType?: ('Purchase Ticket' | 'Custom Task') | null;
   ticketVendor?: ('SpotHero' | 'ParkWhiz' | 'ACE Parking') | null;
-  taskAssignee?: {
-    relationTo: 'users';
-    value: string | User;
-  } | null;
-  taskProfile?: {
-    relationTo: 'profiles';
-    value: string | Profile;
-  } | null;
+  taskAssignee?: (string | null) | User;
+  taskProfile?: (string | null) | Profile;
   taskProxy?:
     | ({
         relationTo: 'pools';
