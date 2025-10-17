@@ -1,6 +1,14 @@
 'use client'
 
-import { ArrowUpDown, Bot, Filter, MoreHorizontal } from 'lucide-react'
+import {
+  ArrowUpDown,
+  Bot,
+  EllipsisVertical,
+  Filter,
+  MoreHorizontal,
+  PlusSquare,
+  SquareArrowOutUpRight,
+} from 'lucide-react'
 import * as React from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -41,54 +49,54 @@ import { RainbowButton } from './ui/rainbow-button'
 const data: Payment[] = [
   {
     id: '5kma53ae',
-    amount: 3,
+    steps: 3,
     status: 'In Progress',
-    task: 'Fulfill SpotHero Order #554461',
+    step: 'Fulfill SpotHero Order #554461',
   },
   {
     id: '3u1reuv4',
-    amount: 3,
+    steps: 3,
     status: 'Pending',
-    task: 'Fulfill SpotHero Order #554552',
+    step: 'Fulfill SpotHero Order #554552',
   },
   {
     id: 'm5gr84i9',
-    amount: 3,
+    steps: 3,
     status: 'Pending',
-    task: 'Fulfill SpotHero Order #514377',
+    step: 'Fulfill SpotHero Order #514377',
   },
 
   {
     id: 'derv1ws0',
-    amount: 3,
+    steps: 3,
     status: 'Pending',
-    task: 'Fulfill SpotHero Order #526222',
+    step: 'Fulfill SpotHero Order #526222',
   },
   {
     id: 'derv1ws0',
-    amount: 3,
+    steps: 3,
     status: 'Pending',
-    task: 'Fulfill SpotHero Order #514782',
+    step: 'Fulfill SpotHero Order #514782',
   },
   {
     id: 'derv1ws0',
-    amount: 5,
+    steps: 5,
     status: 'Blocked',
-    task: 'Fulfill ACE Parking Order #522552',
+    step: 'Fulfill ACE Parking Order #522552',
   },
   {
     id: 'bhqecj4p',
-    amount: 4,
+    steps: 4,
     status: 'Complete',
-    task: 'Fulfill ACE Parking Order #512452',
+    step: 'Fulfill ACE Parking Order #512452',
   },
 ]
 
 export type Payment = {
   id: string
-  amount: number
+  steps: number
   status: 'Pending' | 'In Progress' | 'Complete' | 'Blocked' | 'Cancelled'
-  task: string
+  step: string
 }
 
 export const columns: ColumnDef<Payment>[] = [
@@ -119,27 +127,27 @@ export const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => <div className="capitalize">{row.getValue('status')}</div>,
   },
   {
-    accessorKey: 'task',
+    accessorKey: 'step',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Task
+          Step
           <ArrowUpDown />
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue('task')}</div>,
+    cell: ({ row }) => <div>{row.getValue('step')}</div>,
   },
   {
-    accessorKey: 'amount',
+    accessorKey: 'steps',
     header: () => <div className="text-right">Steps</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('amount'))
+      const steps = parseFloat(row.getValue('steps'))
 
-      return <div className="text-right font-medium">1 / {amount}</div>
+      return <div className="self-end justify-self-end mr-1">1 / {steps}</div>
     },
   },
   {
@@ -149,29 +157,48 @@ export const columns: ColumnDef<Payment>[] = [
       const payment = row.original
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel className="w-full flex justify-between">
+                <div>Actions</div>
+                <div className="flex justify-end gap-1">
+                  <PlusSquare
+                    size={25}
+                    className="hover:cursor-pointer hover:bg-foreground/15 p-1 rounded-sm"
+                  />{' '}
+                  <SquareArrowOutUpRight
+                    size={25}
+                    className="hover:cursor-pointer hover:bg-foreground/15 p-1 rounded-sm"
+                  />
+                </div>
+              </DropdownMenuLabel>
+              <hr />
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
+                Copy Task Link
+              </DropdownMenuItem>
+              <DropdownMenuItem>Navigate to This Task</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Run This Step's Automation</DropdownMenuItem>
+              <DropdownMenuItem>Run This Task's Automations</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Export This Task as a PDF</DropdownMenuItem>
+              <DropdownMenuItem>Export This Task as a CSV</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       )
     },
   },
 ]
 
-export function DataTable() {
+export function StepsTable() {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -200,12 +227,12 @@ export function DataTable() {
     <div className="w-full max-h-fill">
       <div className="flex items-center justify-between py-4">
         <Input
-          placeholder="Search Tasks..."
-          value={(table.getColumn('task')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('task')?.setFilterValue(event.target.value)}
+          placeholder="Search Steps..."
+          value={(table.getColumn('step')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('step')?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
-        <div>
+        <div className="flex align-middle">
           <RainbowButton variant={'outline'} className="mr-4">
             Run Automations
             <Bot />
@@ -233,6 +260,40 @@ export function DataTable() {
                     </DropdownMenuCheckboxItem>
                   )
                 })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <EllipsisVertical
+                className="self-center border-2 ml-5 rounded-md p-1 hover:bg-primary-foreground/80 hover:cursor-pointer"
+                size={32}
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel className="w-full flex justify-between">
+                <div>Actions</div>
+                <div className="flex justify-end gap-1">
+                  <PlusSquare
+                    size={25}
+                    className="hover:cursor-pointer hover:bg-foreground/15 p-1 rounded-sm"
+                  />{' '}
+                  <SquareArrowOutUpRight
+                    size={25}
+                    className="hover:cursor-pointer hover:bg-foreground/15 p-1 rounded-sm"
+                  />
+                </div>
+              </DropdownMenuLabel>
+              <div>
+                <hr />
+                <DropdownMenuItem>Run Selected Steps Automations</DropdownMenuItem>
+                <DropdownMenuItem>Run Selected Tasks Automations</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Export Selected Steps as PDF</DropdownMenuItem>
+                <DropdownMenuItem>Export Selected Steps as CSV</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Export Selected Tasks as PDF</DropdownMenuItem>
+                <DropdownMenuItem>Export Selected Tasks as CSV</DropdownMenuItem>
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

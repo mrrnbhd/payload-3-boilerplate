@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 
-import { DataTable } from '@/components/data-table'
+import { DataTable } from '@/components/tasks-table'
 
 import { RefreshRouteOnSave } from '@/hooks/refresh-route-on-save'
 import config from '@payload-config'

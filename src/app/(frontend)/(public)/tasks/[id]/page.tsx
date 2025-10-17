@@ -1,7 +1,8 @@
 import { Bot, ClipboardCheckIcon, ListTodo, SquareArrowOutUpRight } from 'lucide-react'
 import { notFound } from 'next/navigation'
 
-import { DataTable } from '@/components/data-table'
+import { StepsTable } from '@/components/steps-table'
+import { TasksTable } from '@/components/tasks-table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -117,12 +118,12 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
                     <DialogHeader>
                       <DialogTitle>
                         <div className="flex justify-between align-center">
-                          <h3>All Steps</h3>
+                          <h3>All Tasks</h3>
                         </div>
                       </DialogTitle>
                       <DialogDescription>View all pending tasks assigned to you.</DialogDescription>
                     </DialogHeader>
-                    <DataTable />
+                    <TasksTable />
                   </DialogContent>
                 </form>
               </Dialog>
@@ -167,7 +168,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
                       </DialogTitle>
                       <DialogDescription>View all steps for the current task.</DialogDescription>
                     </DialogHeader>
-                    <DataTable />
+                    <StepsTable />
                   </DialogContent>
                 </form>
               </Dialog>
