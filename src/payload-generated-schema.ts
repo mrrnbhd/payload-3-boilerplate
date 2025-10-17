@@ -582,6 +582,12 @@ export const tasks = pgTable(
     "Task Notes": jsonb("task_notes"),
     taskType: enum_tasks_task_type("task_type"),
     ticketVendor: enum_tasks_ticket_vendor("ticket_vendor"),
+    taskAssignee: uuid("task_assignee_id").references(() => users.id, {
+      onDelete: "set null",
+    }),
+    taskProfile: uuid("task_profile_id").references(() => profiles.id, {
+      onDelete: "set null",
+    }),
     linkedOrder: uuid("linked_order_id").references(() => orders.id, {
       onDelete: "set null",
     }),
@@ -608,6 +614,12 @@ export const tasks = pgTable(
   },
   (columns) => ({
     tasks_tags_idx: index("tasks_tags_idx").on(columns.tags),
+    tasks_task_assignee_idx: index("tasks_task_assignee_idx").on(
+      columns.taskAssignee,
+    ),
+    tasks_task_profile_idx: index("tasks_task_profile_idx").on(
+      columns.taskProfile,
+    ),
     tasks_linked_order_idx: index("tasks_linked_order_idx").on(
       columns.linkedOrder,
     ),
@@ -625,8 +637,6 @@ export const tasks_rels = pgTable(
     order: integer("order"),
     parent: uuid("parent_id").notNull(),
     path: varchar("path").notNull(),
-    usersID: uuid("users_id"),
-    profilesID: uuid("profiles_id"),
     poolsID: uuid("pools_id"),
     proxiesID: uuid("proxies_id"),
   },
@@ -634,12 +644,6 @@ export const tasks_rels = pgTable(
     order: index("tasks_rels_order_idx").on(columns.order),
     parentIdx: index("tasks_rels_parent_idx").on(columns.parent),
     pathIdx: index("tasks_rels_path_idx").on(columns.path),
-    tasks_rels_users_id_idx: index("tasks_rels_users_id_idx").on(
-      columns.usersID,
-    ),
-    tasks_rels_profiles_id_idx: index("tasks_rels_profiles_id_idx").on(
-      columns.profilesID,
-    ),
     tasks_rels_pools_id_idx: index("tasks_rels_pools_id_idx").on(
       columns.poolsID,
     ),
@@ -650,16 +654,6 @@ export const tasks_rels = pgTable(
       columns: [columns["parent"]],
       foreignColumns: [tasks.id],
       name: "tasks_rels_parent_fk",
-    }).onDelete("cascade"),
-    usersIdFk: foreignKey({
-      columns: [columns["usersID"]],
-      foreignColumns: [users.id],
-      name: "tasks_rels_users_fk",
-    }).onDelete("cascade"),
-    profilesIdFk: foreignKey({
-      columns: [columns["profilesID"]],
-      foreignColumns: [profiles.id],
-      name: "tasks_rels_profiles_fk",
     }).onDelete("cascade"),
     poolsIdFk: foreignKey({
       columns: [columns["poolsID"]],
@@ -692,6 +686,18 @@ export const _tasks_v = pgTable(
     version_taskType: enum__tasks_v_version_task_type("version_task_type"),
     version_ticketVendor: enum__tasks_v_version_ticket_vendor(
       "version_ticket_vendor",
+    ),
+    version_taskAssignee: uuid("version_task_assignee_id").references(
+      () => users.id,
+      {
+        onDelete: "set null",
+      },
+    ),
+    version_taskProfile: uuid("version_task_profile_id").references(
+      () => profiles.id,
+      {
+        onDelete: "set null",
+      },
     ),
     version_linkedOrder: uuid("version_linked_order_id").references(
       () => orders.id,
@@ -741,6 +747,12 @@ export const _tasks_v = pgTable(
     _tasks_v_version_version_tags_idx: index(
       "_tasks_v_version_version_tags_idx",
     ).on(columns.version_tags),
+    _tasks_v_version_version_task_assignee_idx: index(
+      "_tasks_v_version_version_task_assignee_idx",
+    ).on(columns.version_taskAssignee),
+    _tasks_v_version_version_task_profile_idx: index(
+      "_tasks_v_version_version_task_profile_idx",
+    ).on(columns.version_taskProfile),
     _tasks_v_version_version_linked_order_idx: index(
       "_tasks_v_version_version_linked_order_idx",
     ).on(columns.version_linkedOrder),
@@ -774,8 +786,6 @@ export const _tasks_v_rels = pgTable(
     order: integer("order"),
     parent: uuid("parent_id").notNull(),
     path: varchar("path").notNull(),
-    usersID: uuid("users_id"),
-    profilesID: uuid("profiles_id"),
     poolsID: uuid("pools_id"),
     proxiesID: uuid("proxies_id"),
   },
@@ -783,12 +793,6 @@ export const _tasks_v_rels = pgTable(
     order: index("_tasks_v_rels_order_idx").on(columns.order),
     parentIdx: index("_tasks_v_rels_parent_idx").on(columns.parent),
     pathIdx: index("_tasks_v_rels_path_idx").on(columns.path),
-    _tasks_v_rels_users_id_idx: index("_tasks_v_rels_users_id_idx").on(
-      columns.usersID,
-    ),
-    _tasks_v_rels_profiles_id_idx: index("_tasks_v_rels_profiles_id_idx").on(
-      columns.profilesID,
-    ),
     _tasks_v_rels_pools_id_idx: index("_tasks_v_rels_pools_id_idx").on(
       columns.poolsID,
     ),
@@ -799,16 +803,6 @@ export const _tasks_v_rels = pgTable(
       columns: [columns["parent"]],
       foreignColumns: [_tasks_v.id],
       name: "_tasks_v_rels_parent_fk",
-    }).onDelete("cascade"),
-    usersIdFk: foreignKey({
-      columns: [columns["usersID"]],
-      foreignColumns: [users.id],
-      name: "_tasks_v_rels_users_fk",
-    }).onDelete("cascade"),
-    profilesIdFk: foreignKey({
-      columns: [columns["profilesID"]],
-      foreignColumns: [profiles.id],
-      name: "_tasks_v_rels_profiles_fk",
     }).onDelete("cascade"),
     poolsIdFk: foreignKey({
       columns: [columns["poolsID"]],
@@ -2970,16 +2964,6 @@ export const relations_tasks_rels = relations(tasks_rels, ({ one }) => ({
     references: [tasks.id],
     relationName: "_rels",
   }),
-  usersID: one(users, {
-    fields: [tasks_rels.usersID],
-    references: [users.id],
-    relationName: "users",
-  }),
-  profilesID: one(profiles, {
-    fields: [tasks_rels.profilesID],
-    references: [profiles.id],
-    relationName: "profiles",
-  }),
   poolsID: one(pools, {
     fields: [tasks_rels.poolsID],
     references: [pools.id],
@@ -2996,6 +2980,16 @@ export const relations_tasks = relations(tasks, ({ one, many }) => ({
     fields: [tasks.tags],
     references: [tags.id],
     relationName: "tags",
+  }),
+  taskAssignee: one(users, {
+    fields: [tasks.taskAssignee],
+    references: [users.id],
+    relationName: "taskAssignee",
+  }),
+  taskProfile: one(profiles, {
+    fields: [tasks.taskProfile],
+    references: [profiles.id],
+    relationName: "taskProfile",
   }),
   linkedOrder: one(orders, {
     fields: [tasks.linkedOrder],
@@ -3016,16 +3010,6 @@ export const relations__tasks_v_rels = relations(_tasks_v_rels, ({ one }) => ({
     fields: [_tasks_v_rels.parent],
     references: [_tasks_v.id],
     relationName: "_rels",
-  }),
-  usersID: one(users, {
-    fields: [_tasks_v_rels.usersID],
-    references: [users.id],
-    relationName: "users",
-  }),
-  profilesID: one(profiles, {
-    fields: [_tasks_v_rels.profilesID],
-    references: [profiles.id],
-    relationName: "profiles",
   }),
   poolsID: one(pools, {
     fields: [_tasks_v_rels.poolsID],
@@ -3048,6 +3032,16 @@ export const relations__tasks_v = relations(_tasks_v, ({ one, many }) => ({
     fields: [_tasks_v.version_tags],
     references: [tags.id],
     relationName: "version_tags",
+  }),
+  version_taskAssignee: one(users, {
+    fields: [_tasks_v.version_taskAssignee],
+    references: [users.id],
+    relationName: "version_taskAssignee",
+  }),
+  version_taskProfile: one(profiles, {
+    fields: [_tasks_v.version_taskProfile],
+    references: [profiles.id],
+    relationName: "version_taskProfile",
   }),
   version_linkedOrder: one(orders, {
     fields: [_tasks_v.version_linkedOrder],
