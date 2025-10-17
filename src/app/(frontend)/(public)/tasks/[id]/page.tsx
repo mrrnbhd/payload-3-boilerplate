@@ -90,28 +90,6 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
               <CardTitle>
                 <div className="flex justify-between items-center w-full">
                   <h2>Task 1/7</h2>
-                  <Dialog>
-                    <form>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" size={'sm'}>
-                          View All
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-h-[85%] sm:max-w-[90%] sm:h-[85%] sm:w-[90%] overflow-scroll">
-                        <DialogHeader>
-                          <DialogTitle>
-                            <div className="flex justify-between align-center">
-                              <h3>All Steps</h3>
-                            </div>
-                          </DialogTitle>
-                          <DialogDescription>
-                            View all pending tasks assigned to you.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <DataTable />
-                      </DialogContent>
-                    </form>
-                  </Dialog>
                 </div>
               </CardTitle>
             </CardHeader>
@@ -119,8 +97,35 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
               <h2 className="mb-5">
                 Get the purchase price of the parking pass from the vendor portal.
               </h2>
-              <Progress value={17} className="[&>*]:bg-yellow-700 mt-1 w-full" />
+              <Progress value={17} className="[&>*]:bg-amber-500 mt-1 w-full" />
             </CardContent>
+            <CardFooter className="flex justify-start gap-5">
+              <RainbowButton variant={'outline'} size={'sm'} className="rounded-md">
+                Run Automations
+                <Bot />
+              </RainbowButton>
+              <Dialog>
+                <form>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size={'sm'}>
+                      View All
+                      <SquareArrowOutUpRight />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-h-[85%] sm:max-w-[90%] sm:h-[85%] sm:w-[90%] overflow-scroll">
+                    <DialogHeader>
+                      <DialogTitle>
+                        <div className="flex justify-between align-center">
+                          <h3>All Steps</h3>
+                        </div>
+                      </DialogTitle>
+                      <DialogDescription>View all pending tasks assigned to you.</DialogDescription>
+                    </DialogHeader>
+                    <DataTable />
+                  </DialogContent>
+                </form>
+              </Dialog>
+            </CardFooter>
           </Card>
         </div>
         <div className="mx-6 my-9 w-full">
@@ -129,28 +134,6 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
               <CardTitle>
                 <div className="flex justify-between items-center w-full">
                   <h2>Step 1/3</h2>
-                  <Dialog>
-                    <form>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" size={'sm'}>
-                          View All
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-h-[85%] sm:max-w-[90%] sm:h-[85%] sm:w-[90%] overflow-scroll">
-                        <DialogHeader>
-                          <DialogTitle>
-                            <div className="flex justify-between align-center">
-                              <h3>Task Steps</h3>
-                            </div>
-                          </DialogTitle>
-                          <DialogDescription>
-                            View all pending steps for the current task.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <DataTable />
-                      </DialogContent>
-                    </form>
-                  </Dialog>
                 </div>
               </CardTitle>
             </CardHeader>
@@ -158,8 +141,35 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
               <div className="mb-5">
                 Get the purchase price of the parking pass from the vendor portal.
               </div>
-              <Progress value={33} className="[&>*]:bg-yellow-700 mt-1 w-full" />
+              <Progress value={33} className="[&>*]:bg-amber-500 mt-1 w-full" />
             </CardContent>
+            <CardFooter className="flex justify-between gap-5">
+              <RainbowButton variant={'outline'} size={'sm'} className="rounded-md">
+                Run Automations
+                <Bot />
+              </RainbowButton>
+              <Dialog>
+                <form>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size={'sm'}>
+                      View All
+                      <SquareArrowOutUpRight />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-h-[85%] sm:max-w-[90%] sm:h-[85%] sm:w-[90%] overflow-scroll">
+                    <DialogHeader>
+                      <DialogTitle>
+                        <div className="flex justify-between align-center">
+                          <h3>All Steps</h3>
+                        </div>
+                      </DialogTitle>
+                      <DialogDescription>View all pending tasks assigned to you.</DialogDescription>
+                    </DialogHeader>
+                    <DataTable />
+                  </DialogContent>
+                </form>
+              </Dialog>
+            </CardFooter>
           </Card>
         </div>
       </div>
@@ -195,12 +205,12 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
         <CardContent>
           Get the purchase price of the parking pass from the vendor portal.
         </CardContent>
-        <CardFooter className="flex start gap-5">
-          <RainbowButton variant={'outline'}>
+        <CardFooter className="flex justify-start gap-5">
+          <RainbowButton variant={'outline'} size={'sm'} className="rounded-md">
             Run Automation
             <Bot />
           </RainbowButton>
-          <Button variant={'outline'}>
+          <Button variant={'outline'} size={'sm'}>
             Manual Purchase
             <SquareArrowOutUpRight />
           </Button>
@@ -234,11 +244,11 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
         </CardHeader>
         <CardContent>Upload the parking pass PDF from the ticket vendor web page.</CardContent>
         <CardFooter className="flex start gap-5">
-          <RainbowButton variant={'outline'}>
+          <RainbowButton variant={'outline'} size={'sm'} className="rounded-md">
             Run Automation
             <Bot />
           </RainbowButton>
-          <Button variant={'outline'}>
+          <Button variant={'outline'} size={'sm'}>
             Manual Purchase
             <SquareArrowOutUpRight />
           </Button>
@@ -278,11 +288,11 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
           Send the purchase order for processing in TradeDesk to complete the task.
         </CardContent>
         <CardFooter className="flex justify-start gap-5">
-          <RainbowButton disabled variant={'outline'}>
+          <RainbowButton disabled variant={'outline'} size={'sm'} className="rounded-md">
             Run Automation
             <Bot />
           </RainbowButton>
-          <Button disabled variant={'outline'}>
+          <Button disabled variant={'outline'} size={'sm'}>
             Manual Fulfillment
             <SquareArrowOutUpRight />
           </Button>{' '}
