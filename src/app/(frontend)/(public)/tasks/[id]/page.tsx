@@ -1,4 +1,4 @@
-import { Bot, SquareArrowOutUpRight } from 'lucide-react'
+import { Bot, ClipboardCheckIcon, ListTodo, SquareArrowOutUpRight } from 'lucide-react'
 import { notFound } from 'next/navigation'
 
 import { DataTable } from '@/components/data-table'
@@ -90,6 +90,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
               <CardTitle>
                 <div className="flex justify-between items-center w-full">
                   <h2>Task 1/7</h2>
+                  <ClipboardCheckIcon />
                 </div>
               </CardTitle>
             </CardHeader>
@@ -99,7 +100,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
               </h2>
               <Progress value={17} className="[&>*]:bg-amber-500 mt-1 w-full" />
             </CardContent>
-            <CardFooter className="flex justify-start gap-5">
+            <CardFooter className="flex justify-between gap-5">
               <RainbowButton variant={'outline'} size={'sm'} className="rounded-md">
                 Run Automations
                 <Bot />
@@ -134,6 +135,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
               <CardTitle>
                 <div className="flex justify-between items-center w-full">
                   <h2>Step 1/3</h2>
+                  <ListTodo />
                 </div>
               </CardTitle>
             </CardHeader>
@@ -143,7 +145,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
               </div>
               <Progress value={33} className="[&>*]:bg-amber-500 mt-1 w-full" />
             </CardContent>
-            <CardFooter className="flex justify-start gap-5">
+            <CardFooter className="flex justify-between gap-5">
               <RainbowButton variant={'outline'} size={'sm'} className="rounded-md">
                 Run Automations
                 <Bot />
@@ -205,7 +207,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
         <CardContent>
           Get the purchase price of the parking pass from the vendor portal.
         </CardContent>
-        <CardFooter className="flex justify-start gap-5">
+        <CardFooter className="flex justify-between gap-5">
           <RainbowButton variant={'outline'} size={'sm'} className="rounded-md">
             Run Automation
             <Bot />
@@ -243,7 +245,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
           <CardDescription>Upload Parking Pass Page as PDF</CardDescription>
         </CardHeader>
         <CardContent>Upload the parking pass PDF from the ticket vendor web page.</CardContent>
-        <CardFooter className="flex start gap-5">
+        <CardFooter className="flex justify-between gap-5">
           <RainbowButton variant={'outline'} size={'sm'} className="rounded-md">
             Run Automation
             <Bot />
@@ -287,7 +289,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
         <CardContent>
           Send the purchase order for processing in TradeDesk to complete the task.
         </CardContent>
-        <CardFooter className="flex justify-start gap-5">
+        <CardFooter className="flex justify-between gap-5">
           <RainbowButton disabled variant={'outline'} size={'sm'} className="rounded-md">
             Run Automation
             <Bot />
