@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation'
 import { RefreshRouteOnSave } from '@/hooks/refresh-route-on-save'
 import config from '@payload-config'
 import { getPayload } from 'payload'
+import { chromium } from 'playwright'
+import Steel from 'steel-sdk'
 import type { Order } from '@/payload-types'
 
 interface OrderParams {
@@ -11,6 +13,11 @@ interface OrderParams {
   }>
 }
 
+const client = new Steel({
+  baseURL: `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`,
+})
+const session = await client.sessions.create()
+const browser = await chromium.connectOverCDP(session.websocketUrl)
 export default async function Orders({ params: paramsPromise }: OrderParams) {
   const { id = 'index' } = await paramsPromise
 

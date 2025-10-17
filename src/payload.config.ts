@@ -9,7 +9,10 @@ import { Jobs } from './collections/jobs'
 import { Orders } from './collections/orders'
 import { Pages } from './collections/pages'
 import { Pools } from './collections/pools'
+import { Profiles } from './collections/profiles'
+import { Proxies } from './collections/proxies'
 import { Settings } from './collections/settings'
+import { Statuses } from './collections/statuses'
 import { Tags } from './collections/tags'
 import { Tasks } from './collections/tasks'
 import { PayloadUploads } from './collections/uploads/payload-uploads'
@@ -72,9 +75,12 @@ export default buildConfig({
     Jobs,
     Orders,
     Pools,
+    Profiles,
+    Proxies,
     Pages,
     Users,
     Tags,
+    Statuses,
     PayloadUploads,
     PrivateUploads,
     Handbook,

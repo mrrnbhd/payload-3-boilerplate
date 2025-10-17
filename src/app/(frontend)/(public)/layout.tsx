@@ -35,9 +35,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const url = headersList.get('referer') || headersList.get('x-url') || ''
   const pathname = new URL(url, getServerSideURL()).pathname
 
-  const isOrdersRoute = pathname.startsWith('/orders/')
+  const isAdminDashboardRoute = pathname.startsWith('/orders/') || pathname.startsWith('/tasks/')
 
-  return isOrdersRoute ? (
+  return isAdminDashboardRoute ? (
     <div>{children}</div>
   ) : (
     <>

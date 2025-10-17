@@ -229,7 +229,7 @@ export const Jobs: CollectionConfig = {
                         {
                           type: 'select',
                           name: 'targetCollections',
-                          label: 'Target Collection(s)',
+                          label: 'Target :Collection(s)',
                           options: ['Tasks', 'Orders', 'Pools', 'Users', 'Tags', 'Jobs'],
                         },
                         {

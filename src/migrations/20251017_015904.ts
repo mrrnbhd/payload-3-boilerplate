@@ -6,14 +6,25 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum_users_role" AS ENUM('admin', 'user');
   CREATE TYPE "public"."enum_admin_invitations_role" AS ENUM('admin', 'user');
   CREATE TYPE "public"."enum_tasks_task_status" AS ENUM('Pending', 'In Progress', 'Running', 'Complete', 'Blocked', 'Backlogged');
-  CREATE TYPE "public"."enum_tasks_task_type" AS ENUM('Automated Task', 'Manual Task');
-  CREATE TYPE "public"."enum_jobs_if_filter" AS ENUM('Is Equal to', 'Is Not Equal to', 'Is Less Than', 'Is Less Than or Equal to', 'Is Greater Than', 'Is Greater Than or Equal to', 'Is Like', 'Is Not Like', 'Is In', 'Is Not In', 'Exists');
-  CREATE TYPE "public"."enum_jobs_if_target_collections" AS ENUM('Orders', 'Pools', 'Users', 'Tags', 'Jobs');
-  CREATE TYPE "public"."enum_jobs_then_operations_type" AS ENUM('Payload Operation', 'TradeDesk Operation');
+  CREATE TYPE "public"."enum_tasks_task_type" AS ENUM('Purchase Ticket', 'Custom Task');
+  CREATE TYPE "public"."enum_tasks_ticket_vendor" AS ENUM('SpotHero', 'ParkWhiz', 'ACE Parking');
+  CREATE TYPE "public"."enum_tasks_status" AS ENUM('draft', 'published');
+  CREATE TYPE "public"."enum__tasks_v_version_task_status" AS ENUM('Pending', 'In Progress', 'Running', 'Complete', 'Blocked', 'Backlogged');
+  CREATE TYPE "public"."enum__tasks_v_version_task_type" AS ENUM('Purchase Ticket', 'Custom Task');
+  CREATE TYPE "public"."enum__tasks_v_version_ticket_vendor" AS ENUM('SpotHero', 'ParkWhiz', 'ACE Parking');
+  CREATE TYPE "public"."enum__tasks_v_version_status" AS ENUM('draft', 'published');
+  CREATE TYPE "public"."enum_jobs_if_filter_collections" AS ENUM('Tasks', 'Orders', 'Pools', 'Users', 'Tags', 'Jobs');
+  CREATE TYPE "public"."enum_jobs_if_condition" AS ENUM('Is Equal to', 'Is Not Equal to', 'Is Less Than', 'Is Less Than or Equal to', 'Is Greater Than', 'Is Greater Than or Equal to', 'Is Like', 'Is Not Like', 'Is In', 'Is Not In', 'Exists');
+  CREATE TYPE "public"."enum_jobs_if_comparison_type" AS ENUM('Static Value', 'Dynamic Value');
+  CREATE TYPE "public"."enum_jobs_if_compared_collections" AS ENUM('Orders', 'Pools', 'Users', 'Tags', 'Jobs');
+  CREATE TYPE "public"."enum_jobs_then_actions_action_type" AS ENUM('Payload Action', 'TradeDesk Action');
+  CREATE TYPE "public"."enum_jobs_then_actions_event_type" AS ENUM('Create', 'Update', 'Delete');
+  CREATE TYPE "public"."enum_jobs_then_actions_target_collections" AS ENUM('Tasks', 'Orders', 'Pools', 'Users', 'Tags', 'Jobs');
   CREATE TYPE "public"."enum_jobs_then_type" AS ENUM('Sequential', 'Parallel', 'Asynchronous');
   CREATE TYPE "public"."enum_jobs_job_status" AS ENUM('Draft', 'Active', 'Running', 'Disabled', 'Blocked');
-  CREATE TYPE "public"."enum_jobs_when_trigger" AS ENUM('A Payload Collection is Changed', 'A TradeDesk Webhook is Received');
-  CREATE TYPE "public"."enum_jobs_when_target_collections" AS ENUM('Orders', 'Pools', 'Users', 'Tags', 'Jobs');
+  CREATE TYPE "public"."enum_jobs_when_trigger" AS ENUM('Payload Event', 'TradeDesk Event');
+  CREATE TYPE "public"."enum_jobs_when_event_type" AS ENUM('Create', 'Update', 'Delete');
+  CREATE TYPE "public"."enum_jobs_when_source_collections" AS ENUM('Tasks', 'Orders', 'Pools', 'Users', 'Tags', 'Jobs');
   CREATE TYPE "public"."enum_orders_event_tickets_parking_tickets_source" AS ENUM('SpotHero', 'ParkWhiz', 'ParkMobile', 'AceParking');
   CREATE TYPE "public"."enum_orders_event_tickets_parking_tickets_type" AS ENUM('Eticket');
   CREATE TYPE "public"."enum_orders_event_tickets_parking_tickets_status" AS ENUM('Pending', 'Purchased', 'Fulfilled', 'Blocked', 'Cancelled');
@@ -134,29 +145,83 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"name" varchar,
   	"task_status" "enum_tasks_task_status",
   	"tags_id" uuid,
-  	"task_type" "enum_tasks_task_type",
-  	"task_assignee_id" uuid,
-  	"task_proxies_id" uuid,
   	"task_notes" jsonb,
+  	"task_type" "enum_tasks_task_type",
+  	"ticket_vendor" "enum_tasks_ticket_vendor",
+  	"linked_order_id" uuid,
+  	"purchase_price" numeric,
+  	"pass_p_d_f_id" uuid,
   	"user_handbook" jsonb,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
-  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+  	"_status" "enum_tasks_status" DEFAULT 'draft'
+  );
+  
+  CREATE TABLE "tasks_rels" (
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"order" integer,
+  	"parent_id" uuid NOT NULL,
+  	"path" varchar NOT NULL,
+  	"users_id" uuid,
+  	"profiles_id" uuid,
+  	"pools_id" uuid,
+  	"proxies_id" uuid
+  );
+  
+  CREATE TABLE "_tasks_v" (
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  	"parent_id" uuid,
+  	"version_name" varchar,
+  	"version_task_status" "enum__tasks_v_version_task_status",
+  	"version_tags_id" uuid,
+  	"version_task_notes" jsonb,
+  	"version_task_type" "enum__tasks_v_version_task_type",
+  	"version_ticket_vendor" "enum__tasks_v_version_ticket_vendor",
+  	"version_linked_order_id" uuid,
+  	"version_purchase_price" numeric,
+  	"version_pass_p_d_f_id" uuid,
+  	"version_user_handbook" jsonb,
+  	"version_updated_at" timestamp(3) with time zone,
+  	"version_created_at" timestamp(3) with time zone,
+  	"version__status" "enum__tasks_v_version_status" DEFAULT 'draft',
+  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+  	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+  	"latest" boolean,
+  	"autosave" boolean
+  );
+  
+  CREATE TABLE "_tasks_v_rels" (
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"order" integer,
+  	"parent_id" uuid NOT NULL,
+  	"path" varchar NOT NULL,
+  	"users_id" uuid,
+  	"profiles_id" uuid,
+  	"pools_id" uuid,
+  	"proxies_id" uuid
   );
   
   CREATE TABLE "jobs_if" (
   	"_order" integer NOT NULL,
   	"_parent_id" uuid NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
-  	"filter" "enum_jobs_if_filter",
-  	"target_collections" "enum_jobs_if_target_collections",
-  	"target_fields" varchar
+  	"filter_collections" "enum_jobs_if_filter_collections",
+  	"filter_fields" varchar,
+  	"condition" "enum_jobs_if_condition",
+  	"comparison_type" "enum_jobs_if_comparison_type",
+  	"compared_value" varchar,
+  	"compared_collections" "enum_jobs_if_compared_collections",
+  	"compared_fields" varchar
   );
   
-  CREATE TABLE "jobs_then_operations" (
+  CREATE TABLE "jobs_then_actions" (
   	"_order" integer NOT NULL,
   	"_parent_id" varchar NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
-  	"type" "enum_jobs_then_operations_type"
+  	"action_type" "enum_jobs_then_actions_action_type",
+  	"event_type" "enum_jobs_then_actions_event_type",
+  	"target_collections" "enum_jobs_then_actions_target_collections",
+  	"target_fields" varchar
   );
   
   CREATE TABLE "jobs_then" (
@@ -171,11 +236,10 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"job_name" varchar,
   	"job_status" "enum_jobs_job_status",
   	"job_tags_id" uuid,
-  	"job_assignee_id" uuid,
-  	"job_proxies_id" uuid,
   	"when_trigger" "enum_jobs_when_trigger",
-  	"when_target_collections" "enum_jobs_when_target_collections",
-  	"when_target_fields" varchar,
+  	"when_event_type" "enum_jobs_when_event_type",
+  	"when_source_collections" "enum_jobs_when_source_collections",
+  	"when_source_fields" varchar,
   	"user_handbook" jsonb,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
@@ -186,6 +250,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"order" integer,
   	"parent_id" uuid NOT NULL,
   	"path" varchar NOT NULL,
+  	"tasks_id" uuid,
   	"orders_id" uuid,
   	"pools_id" uuid,
   	"users_id" uuid,
@@ -317,6 +382,20 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
   
+  CREATE TABLE "profiles" (
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  	"title" varchar,
+  	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+  );
+  
+  CREATE TABLE "proxies" (
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  	"title" varchar,
+  	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+  );
+  
   CREATE TABLE "pages" (
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"title" varchar,
@@ -357,6 +436,13 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   );
   
   CREATE TABLE "tags" (
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  	"title" varchar,
+  	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+  );
+  
+  CREATE TABLE "statuses" (
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"title" varchar,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
@@ -703,8 +789,11 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"jobs_id" uuid,
   	"orders_id" uuid,
   	"pools_id" uuid,
+  	"profiles_id" uuid,
+  	"proxies_id" uuid,
   	"pages_id" uuid,
   	"tags_id" uuid,
+  	"statuses_id" uuid,
   	"payload_uploads_id" uuid,
   	"private_uploads_id" uuid,
   	"handbook_id" uuid,
@@ -812,15 +901,28 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "passkeys" ADD CONSTRAINT "passkeys_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "tasks" ADD CONSTRAINT "tasks_tags_id_tags_id_fk" FOREIGN KEY ("tags_id") REFERENCES "public"."tags"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "tasks" ADD CONSTRAINT "tasks_task_assignee_id_users_id_fk" FOREIGN KEY ("task_assignee_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "tasks" ADD CONSTRAINT "tasks_task_proxies_id_pools_id_fk" FOREIGN KEY ("task_proxies_id") REFERENCES "public"."pools"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "tasks" ADD CONSTRAINT "tasks_linked_order_id_orders_id_fk" FOREIGN KEY ("linked_order_id") REFERENCES "public"."orders"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "tasks" ADD CONSTRAINT "tasks_pass_p_d_f_id_payload_uploads_id_fk" FOREIGN KEY ("pass_p_d_f_id") REFERENCES "public"."payload_uploads"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "tasks_rels" ADD CONSTRAINT "tasks_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."tasks"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "tasks_rels" ADD CONSTRAINT "tasks_rels_users_fk" FOREIGN KEY ("users_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "tasks_rels" ADD CONSTRAINT "tasks_rels_profiles_fk" FOREIGN KEY ("profiles_id") REFERENCES "public"."profiles"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "tasks_rels" ADD CONSTRAINT "tasks_rels_pools_fk" FOREIGN KEY ("pools_id") REFERENCES "public"."pools"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "tasks_rels" ADD CONSTRAINT "tasks_rels_proxies_fk" FOREIGN KEY ("proxies_id") REFERENCES "public"."proxies"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_tasks_v" ADD CONSTRAINT "_tasks_v_parent_id_tasks_id_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."tasks"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "_tasks_v" ADD CONSTRAINT "_tasks_v_version_tags_id_tags_id_fk" FOREIGN KEY ("version_tags_id") REFERENCES "public"."tags"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "_tasks_v" ADD CONSTRAINT "_tasks_v_version_linked_order_id_orders_id_fk" FOREIGN KEY ("version_linked_order_id") REFERENCES "public"."orders"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "_tasks_v" ADD CONSTRAINT "_tasks_v_version_pass_p_d_f_id_payload_uploads_id_fk" FOREIGN KEY ("version_pass_p_d_f_id") REFERENCES "public"."payload_uploads"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "_tasks_v_rels" ADD CONSTRAINT "_tasks_v_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."_tasks_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_tasks_v_rels" ADD CONSTRAINT "_tasks_v_rels_users_fk" FOREIGN KEY ("users_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_tasks_v_rels" ADD CONSTRAINT "_tasks_v_rels_profiles_fk" FOREIGN KEY ("profiles_id") REFERENCES "public"."profiles"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_tasks_v_rels" ADD CONSTRAINT "_tasks_v_rels_pools_fk" FOREIGN KEY ("pools_id") REFERENCES "public"."pools"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_tasks_v_rels" ADD CONSTRAINT "_tasks_v_rels_proxies_fk" FOREIGN KEY ("proxies_id") REFERENCES "public"."proxies"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "jobs_if" ADD CONSTRAINT "jobs_if_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."jobs"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "jobs_then_operations" ADD CONSTRAINT "jobs_then_operations_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."jobs_then"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "jobs_then_actions" ADD CONSTRAINT "jobs_then_actions_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."jobs_then"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "jobs_then" ADD CONSTRAINT "jobs_then_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."jobs"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "jobs" ADD CONSTRAINT "jobs_job_tags_id_tags_id_fk" FOREIGN KEY ("job_tags_id") REFERENCES "public"."tags"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "jobs" ADD CONSTRAINT "jobs_job_assignee_id_users_id_fk" FOREIGN KEY ("job_assignee_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "jobs" ADD CONSTRAINT "jobs_job_proxies_id_pools_id_fk" FOREIGN KEY ("job_proxies_id") REFERENCES "public"."pools"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "jobs_rels" ADD CONSTRAINT "jobs_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."jobs"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "jobs_rels" ADD CONSTRAINT "jobs_rels_tasks_fk" FOREIGN KEY ("tasks_id") REFERENCES "public"."tasks"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "jobs_rels" ADD CONSTRAINT "jobs_rels_orders_fk" FOREIGN KEY ("orders_id") REFERENCES "public"."orders"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "jobs_rels" ADD CONSTRAINT "jobs_rels_pools_fk" FOREIGN KEY ("pools_id") REFERENCES "public"."pools"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "jobs_rels" ADD CONSTRAINT "jobs_rels_users_fk" FOREIGN KEY ("users_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
@@ -879,8 +981,11 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_jobs_fk" FOREIGN KEY ("jobs_id") REFERENCES "public"."jobs"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_orders_fk" FOREIGN KEY ("orders_id") REFERENCES "public"."orders"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_pools_fk" FOREIGN KEY ("pools_id") REFERENCES "public"."pools"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_profiles_fk" FOREIGN KEY ("profiles_id") REFERENCES "public"."profiles"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_proxies_fk" FOREIGN KEY ("proxies_id") REFERENCES "public"."proxies"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_pages_fk" FOREIGN KEY ("pages_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_tags_fk" FOREIGN KEY ("tags_id") REFERENCES "public"."tags"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_statuses_fk" FOREIGN KEY ("statuses_id") REFERENCES "public"."statuses"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_payload_uploads_fk" FOREIGN KEY ("payload_uploads_id") REFERENCES "public"."payload_uploads"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_private_uploads_fk" FOREIGN KEY ("private_uploads_id") REFERENCES "public"."private_uploads"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_handbook_fk" FOREIGN KEY ("handbook_id") REFERENCES "public"."handbook"("id") ON DELETE cascade ON UPDATE no action;
@@ -923,24 +1028,49 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "admin_invitations_updated_at_idx" ON "admin_invitations" USING btree ("updated_at");
   CREATE INDEX "admin_invitations_created_at_idx" ON "admin_invitations" USING btree ("created_at");
   CREATE INDEX "tasks_tags_idx" ON "tasks" USING btree ("tags_id");
-  CREATE INDEX "tasks_task_assignee_idx" ON "tasks" USING btree ("task_assignee_id");
-  CREATE INDEX "tasks_task_proxies_idx" ON "tasks" USING btree ("task_proxies_id");
+  CREATE INDEX "tasks_linked_order_idx" ON "tasks" USING btree ("linked_order_id");
+  CREATE INDEX "tasks_pass_p_d_f_idx" ON "tasks" USING btree ("pass_p_d_f_id");
   CREATE INDEX "tasks_updated_at_idx" ON "tasks" USING btree ("updated_at");
   CREATE INDEX "tasks_created_at_idx" ON "tasks" USING btree ("created_at");
+  CREATE INDEX "tasks__status_idx" ON "tasks" USING btree ("_status");
+  CREATE INDEX "tasks_rels_order_idx" ON "tasks_rels" USING btree ("order");
+  CREATE INDEX "tasks_rels_parent_idx" ON "tasks_rels" USING btree ("parent_id");
+  CREATE INDEX "tasks_rels_path_idx" ON "tasks_rels" USING btree ("path");
+  CREATE INDEX "tasks_rels_users_id_idx" ON "tasks_rels" USING btree ("users_id");
+  CREATE INDEX "tasks_rels_profiles_id_idx" ON "tasks_rels" USING btree ("profiles_id");
+  CREATE INDEX "tasks_rels_pools_id_idx" ON "tasks_rels" USING btree ("pools_id");
+  CREATE INDEX "tasks_rels_proxies_id_idx" ON "tasks_rels" USING btree ("proxies_id");
+  CREATE INDEX "_tasks_v_parent_idx" ON "_tasks_v" USING btree ("parent_id");
+  CREATE INDEX "_tasks_v_version_version_tags_idx" ON "_tasks_v" USING btree ("version_tags_id");
+  CREATE INDEX "_tasks_v_version_version_linked_order_idx" ON "_tasks_v" USING btree ("version_linked_order_id");
+  CREATE INDEX "_tasks_v_version_version_pass_p_d_f_idx" ON "_tasks_v" USING btree ("version_pass_p_d_f_id");
+  CREATE INDEX "_tasks_v_version_version_updated_at_idx" ON "_tasks_v" USING btree ("version_updated_at");
+  CREATE INDEX "_tasks_v_version_version_created_at_idx" ON "_tasks_v" USING btree ("version_created_at");
+  CREATE INDEX "_tasks_v_version_version__status_idx" ON "_tasks_v" USING btree ("version__status");
+  CREATE INDEX "_tasks_v_created_at_idx" ON "_tasks_v" USING btree ("created_at");
+  CREATE INDEX "_tasks_v_updated_at_idx" ON "_tasks_v" USING btree ("updated_at");
+  CREATE INDEX "_tasks_v_latest_idx" ON "_tasks_v" USING btree ("latest");
+  CREATE INDEX "_tasks_v_autosave_idx" ON "_tasks_v" USING btree ("autosave");
+  CREATE INDEX "_tasks_v_rels_order_idx" ON "_tasks_v_rels" USING btree ("order");
+  CREATE INDEX "_tasks_v_rels_parent_idx" ON "_tasks_v_rels" USING btree ("parent_id");
+  CREATE INDEX "_tasks_v_rels_path_idx" ON "_tasks_v_rels" USING btree ("path");
+  CREATE INDEX "_tasks_v_rels_users_id_idx" ON "_tasks_v_rels" USING btree ("users_id");
+  CREATE INDEX "_tasks_v_rels_profiles_id_idx" ON "_tasks_v_rels" USING btree ("profiles_id");
+  CREATE INDEX "_tasks_v_rels_pools_id_idx" ON "_tasks_v_rels" USING btree ("pools_id");
+  CREATE INDEX "_tasks_v_rels_proxies_id_idx" ON "_tasks_v_rels" USING btree ("proxies_id");
   CREATE INDEX "jobs_if_order_idx" ON "jobs_if" USING btree ("_order");
   CREATE INDEX "jobs_if_parent_id_idx" ON "jobs_if" USING btree ("_parent_id");
-  CREATE INDEX "jobs_then_operations_order_idx" ON "jobs_then_operations" USING btree ("_order");
-  CREATE INDEX "jobs_then_operations_parent_id_idx" ON "jobs_then_operations" USING btree ("_parent_id");
+  CREATE INDEX "jobs_then_actions_order_idx" ON "jobs_then_actions" USING btree ("_order");
+  CREATE INDEX "jobs_then_actions_parent_id_idx" ON "jobs_then_actions" USING btree ("_parent_id");
   CREATE INDEX "jobs_then_order_idx" ON "jobs_then" USING btree ("_order");
   CREATE INDEX "jobs_then_parent_id_idx" ON "jobs_then" USING btree ("_parent_id");
   CREATE INDEX "jobs_job_tags_idx" ON "jobs" USING btree ("job_tags_id");
-  CREATE INDEX "jobs_job_assignee_idx" ON "jobs" USING btree ("job_assignee_id");
-  CREATE INDEX "jobs_job_proxies_idx" ON "jobs" USING btree ("job_proxies_id");
   CREATE INDEX "jobs_updated_at_idx" ON "jobs" USING btree ("updated_at");
   CREATE INDEX "jobs_created_at_idx" ON "jobs" USING btree ("created_at");
   CREATE INDEX "jobs_rels_order_idx" ON "jobs_rels" USING btree ("order");
   CREATE INDEX "jobs_rels_parent_idx" ON "jobs_rels" USING btree ("parent_id");
   CREATE INDEX "jobs_rels_path_idx" ON "jobs_rels" USING btree ("path");
+  CREATE INDEX "jobs_rels_tasks_id_idx" ON "jobs_rels" USING btree ("tasks_id");
   CREATE INDEX "jobs_rels_orders_id_idx" ON "jobs_rels" USING btree ("orders_id");
   CREATE INDEX "jobs_rels_pools_id_idx" ON "jobs_rels" USING btree ("pools_id");
   CREATE INDEX "jobs_rels_users_id_idx" ON "jobs_rels" USING btree ("users_id");
@@ -975,6 +1105,10 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "pools_connection_config_parent_id_idx" ON "pools_connection_config" USING btree ("_parent_id");
   CREATE INDEX "pools_updated_at_idx" ON "pools" USING btree ("updated_at");
   CREATE INDEX "pools_created_at_idx" ON "pools" USING btree ("created_at");
+  CREATE INDEX "profiles_updated_at_idx" ON "profiles" USING btree ("updated_at");
+  CREATE INDEX "profiles_created_at_idx" ON "profiles" USING btree ("created_at");
+  CREATE INDEX "proxies_updated_at_idx" ON "proxies" USING btree ("updated_at");
+  CREATE INDEX "proxies_created_at_idx" ON "proxies" USING btree ("created_at");
   CREATE INDEX "pages_slug_idx" ON "pages" USING btree ("slug");
   CREATE INDEX "pages_tags_idx" ON "pages" USING btree ("tags_id");
   CREATE INDEX "pages_hero_image_idx" ON "pages" USING btree ("hero_image_id");
@@ -998,6 +1132,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "_pages_v_autosave_idx" ON "_pages_v" USING btree ("autosave");
   CREATE INDEX "tags_updated_at_idx" ON "tags" USING btree ("updated_at");
   CREATE INDEX "tags_created_at_idx" ON "tags" USING btree ("created_at");
+  CREATE INDEX "statuses_updated_at_idx" ON "statuses" USING btree ("updated_at");
+  CREATE INDEX "statuses_created_at_idx" ON "statuses" USING btree ("created_at");
   CREATE INDEX "payload_uploads_folder_idx" ON "payload_uploads" USING btree ("folder_id");
   CREATE INDEX "payload_uploads_updated_at_idx" ON "payload_uploads" USING btree ("updated_at");
   CREATE INDEX "payload_uploads_created_at_idx" ON "payload_uploads" USING btree ("created_at");
@@ -1090,8 +1226,11 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "payload_locked_documents_rels_jobs_id_idx" ON "payload_locked_documents_rels" USING btree ("jobs_id");
   CREATE INDEX "payload_locked_documents_rels_orders_id_idx" ON "payload_locked_documents_rels" USING btree ("orders_id");
   CREATE INDEX "payload_locked_documents_rels_pools_id_idx" ON "payload_locked_documents_rels" USING btree ("pools_id");
+  CREATE INDEX "payload_locked_documents_rels_profiles_id_idx" ON "payload_locked_documents_rels" USING btree ("profiles_id");
+  CREATE INDEX "payload_locked_documents_rels_proxies_id_idx" ON "payload_locked_documents_rels" USING btree ("proxies_id");
   CREATE INDEX "payload_locked_documents_rels_pages_id_idx" ON "payload_locked_documents_rels" USING btree ("pages_id");
   CREATE INDEX "payload_locked_documents_rels_tags_id_idx" ON "payload_locked_documents_rels" USING btree ("tags_id");
+  CREATE INDEX "payload_locked_documents_rels_statuses_id_idx" ON "payload_locked_documents_rels" USING btree ("statuses_id");
   CREATE INDEX "payload_locked_documents_rels_payload_uploads_id_idx" ON "payload_locked_documents_rels" USING btree ("payload_uploads_id");
   CREATE INDEX "payload_locked_documents_rels_private_uploads_id_idx" ON "payload_locked_documents_rels" USING btree ("private_uploads_id");
   CREATE INDEX "payload_locked_documents_rels_handbook_id_idx" ON "payload_locked_documents_rels" USING btree ("handbook_id");
@@ -1131,8 +1270,11 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "passkeys" CASCADE;
   DROP TABLE "admin_invitations" CASCADE;
   DROP TABLE "tasks" CASCADE;
+  DROP TABLE "tasks_rels" CASCADE;
+  DROP TABLE "_tasks_v" CASCADE;
+  DROP TABLE "_tasks_v_rels" CASCADE;
   DROP TABLE "jobs_if" CASCADE;
-  DROP TABLE "jobs_then_operations" CASCADE;
+  DROP TABLE "jobs_then_actions" CASCADE;
   DROP TABLE "jobs_then" CASCADE;
   DROP TABLE "jobs" CASCADE;
   DROP TABLE "jobs_rels" CASCADE;
@@ -1146,9 +1288,12 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "_orders_v" CASCADE;
   DROP TABLE "pools_connection_config" CASCADE;
   DROP TABLE "pools" CASCADE;
+  DROP TABLE "profiles" CASCADE;
+  DROP TABLE "proxies" CASCADE;
   DROP TABLE "pages" CASCADE;
   DROP TABLE "_pages_v" CASCADE;
   DROP TABLE "tags" CASCADE;
+  DROP TABLE "statuses" CASCADE;
   DROP TABLE "payload_uploads" CASCADE;
   DROP TABLE "private_uploads" CASCADE;
   DROP TABLE "private_uploads_rels" CASCADE;
@@ -1190,13 +1335,24 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum_admin_invitations_role";
   DROP TYPE "public"."enum_tasks_task_status";
   DROP TYPE "public"."enum_tasks_task_type";
-  DROP TYPE "public"."enum_jobs_if_filter";
-  DROP TYPE "public"."enum_jobs_if_target_collections";
-  DROP TYPE "public"."enum_jobs_then_operations_type";
+  DROP TYPE "public"."enum_tasks_ticket_vendor";
+  DROP TYPE "public"."enum_tasks_status";
+  DROP TYPE "public"."enum__tasks_v_version_task_status";
+  DROP TYPE "public"."enum__tasks_v_version_task_type";
+  DROP TYPE "public"."enum__tasks_v_version_ticket_vendor";
+  DROP TYPE "public"."enum__tasks_v_version_status";
+  DROP TYPE "public"."enum_jobs_if_filter_collections";
+  DROP TYPE "public"."enum_jobs_if_condition";
+  DROP TYPE "public"."enum_jobs_if_comparison_type";
+  DROP TYPE "public"."enum_jobs_if_compared_collections";
+  DROP TYPE "public"."enum_jobs_then_actions_action_type";
+  DROP TYPE "public"."enum_jobs_then_actions_event_type";
+  DROP TYPE "public"."enum_jobs_then_actions_target_collections";
   DROP TYPE "public"."enum_jobs_then_type";
   DROP TYPE "public"."enum_jobs_job_status";
   DROP TYPE "public"."enum_jobs_when_trigger";
-  DROP TYPE "public"."enum_jobs_when_target_collections";
+  DROP TYPE "public"."enum_jobs_when_event_type";
+  DROP TYPE "public"."enum_jobs_when_source_collections";
   DROP TYPE "public"."enum_orders_event_tickets_parking_tickets_source";
   DROP TYPE "public"."enum_orders_event_tickets_parking_tickets_type";
   DROP TYPE "public"."enum_orders_event_tickets_parking_tickets_status";

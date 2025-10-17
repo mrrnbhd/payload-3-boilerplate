@@ -77,8 +77,11 @@ export interface Config {
     jobs: Job;
     orders: Order;
     pools: Pool;
+    profiles: Profile;
+    proxies: Proxy;
     pages: Page;
     tags: Tag;
+    statuses: Status;
     'payload-uploads': PayloadUpload;
     'private-uploads': PrivateUpload;
     handbook: Handbook;
@@ -110,8 +113,11 @@ export interface Config {
     jobs: JobsSelect<false> | JobsSelect<true>;
     orders: OrdersSelect<false> | OrdersSelect<true>;
     pools: PoolsSelect<false> | PoolsSelect<true>;
+    profiles: ProfilesSelect<false> | ProfilesSelect<true>;
+    proxies: ProxiesSelect<false> | ProxiesSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
+    statuses: StatusesSelect<false> | StatusesSelect<true>;
     'payload-uploads': PayloadUploadsSelect<false> | PayloadUploadsSelect<true>;
     'private-uploads': PrivateUploadsSelect<false> | PrivateUploadsSelect<true>;
     handbook: HandbookSelect<false> | HandbookSelect<true>;
@@ -415,9 +421,6 @@ export interface Task {
   name?: string | null;
   taskStatus?: ('Pending' | 'In Progress' | 'Running' | 'Complete' | 'Blocked' | 'Backlogged') | null;
   tags?: (string | null) | Tag;
-  taskType?: ('Automated Task' | 'Manual Task') | null;
-  taskAssignee?: (string | null) | User;
-  taskProxies?: (string | null) | Pool;
   'Task Notes'?: {
     root: {
       type: string;
@@ -433,6 +436,37 @@ export interface Task {
     };
     [k: string]: unknown;
   } | null;
+  taskType?: ('Purchase Ticket' | 'Custom Task') | null;
+  ticketVendor?: ('SpotHero' | 'ParkWhiz' | 'ACE Parking') | null;
+  taskAssignee?: {
+    relationTo: 'users';
+    value: string | User;
+  } | null;
+  taskProfile?: {
+    relationTo: 'profiles';
+    value: string | Profile;
+  } | null;
+  taskProxy?:
+    | ({
+        relationTo: 'pools';
+        value: string | Pool;
+      } | null)
+    | ({
+        relationTo: 'proxies';
+        value: string | Proxy;
+      } | null);
+  /**
+   * Select the order you would like to process.
+   */
+  linkedOrder?: (string | null) | Order;
+  /**
+   * Get purchase price.
+   */
+  purchasePrice?: number | null;
+  /**
+   * Upload the parking pass as a PDF.
+   */
+  passPDF?: (string | null) | PayloadUpload;
   healthStatus?: string | null;
   userHandbook?: {
     root: {
@@ -451,12 +485,23 @@ export interface Task {
   } | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "tags".
  */
 export interface Tag {
+  id: string;
+  title?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "profiles".
+ */
+export interface Profile {
   id: string;
   title?: string | null;
   updatedAt: string;
@@ -502,6 +547,304 @@ export interface Pool {
   } | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "proxies".
+ */
+export interface Proxy {
+  id: string;
+  title?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders".
+ */
+export interface Order {
+  id: string;
+  orderStatus?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Blocked' | 'Cancelled' | 'Archived') | null;
+  orderValue?: number | null;
+  orderNumber?: number | null;
+  orderLink?: string | null;
+  orderTags?: (string | null) | Tag;
+  eventTickets?:
+    | {
+        marketplace?: ('Stubhub' | 'SeatGeek' | 'GoTickets') | null;
+        eventOrPerformerName?: string | null;
+        venueName?: string | null;
+        parkingTickets?:
+          | {
+              source?: ('SpotHero' | 'ParkWhiz' | 'ParkMobile' | 'AceParking') | null;
+              link?: string | null;
+              type?: 'Eticket' | null;
+              status?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Blocked' | 'Cancelled') | null;
+              parkingSpotLocation?: string | null;
+              projectedPurchasePrice?: number | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  orderHistory?:
+    | {
+        source?: ('SpotHero' | 'ParkWhiz' | 'ParkMobile' | 'AceParking') | null;
+        link?: string | null;
+        type?: 'Eticket' | null;
+        status?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Blocked' | 'Cancelled') | null;
+        parkingSpotLocation?: string | null;
+        projectedPurchasePrice?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  orderNotes?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  userHandbook?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * All media uploaded from the admin panel.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-uploads".
+ */
+export interface PayloadUpload {
+  id: string;
+  alt: string;
+  caption?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  prefix?: string | null;
+  folder?: (string | null) | FolderInterface;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    square?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    small?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    medium?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    large?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    xlarge?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    og?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-folders".
+ */
+export interface FolderInterface {
+  id: string;
+  name: string;
+  folder?: (string | null) | FolderInterface;
+  documentsAndFolders?: {
+    docs?: (
+      | {
+          relationTo?: 'payload-folders';
+          value: string | FolderInterface;
+        }
+      | {
+          relationTo?: 'pages';
+          value: string | Page;
+        }
+      | {
+          relationTo?: 'payload-uploads';
+          value: string | PayloadUpload;
+        }
+      | {
+          relationTo?: 'private-uploads';
+          value: string | PrivateUpload;
+        }
+    )[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: string;
+  title?: string | null;
+  slug?: string | null;
+  slugLock?: boolean | null;
+  tags?: (string | null) | User;
+  heroImage?: (string | null) | PayloadUpload;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | PayloadUpload;
+    description?: string | null;
+  };
+  pageHelp?: {
+    docs?: (string | Handbook)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  folder?: (string | null) | FolderInterface;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "handbook".
+ */
+export interface Handbook {
+  id: string;
+  title?: string | null;
+  tags?: (string | null) | Tag;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Private uploads that require authentication to access
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "private-uploads".
+ */
+export interface PrivateUpload {
+  id: string;
+  title: string;
+  /**
+   * Specific users who have access to this upload. If not assigned, it will respect the access level of the upload.
+   */
+  assignedTo?: (string | User)[] | null;
+  prefix?: string | null;
+  folder?: (string | null) | FolderInterface;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -676,289 +1019,11 @@ export interface Job {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "orders".
+ * via the `definition` "statuses".
  */
-export interface Order {
-  id: string;
-  orderStatus?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Blocked' | 'Cancelled' | 'Archived') | null;
-  orderValue?: number | null;
-  orderNumber?: number | null;
-  orderLink?: string | null;
-  orderTags?: (string | null) | Tag;
-  eventTickets?:
-    | {
-        marketplace?: ('Stubhub' | 'SeatGeek' | 'GoTickets') | null;
-        eventOrPerformerName?: string | null;
-        venueName?: string | null;
-        parkingTickets?:
-          | {
-              source?: ('SpotHero' | 'ParkWhiz' | 'ParkMobile' | 'AceParking') | null;
-              link?: string | null;
-              type?: 'Eticket' | null;
-              status?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Blocked' | 'Cancelled') | null;
-              parkingSpotLocation?: string | null;
-              projectedPurchasePrice?: number | null;
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  orderHistory?:
-    | {
-        source?: ('SpotHero' | 'ParkWhiz' | 'ParkMobile' | 'AceParking') | null;
-        link?: string | null;
-        type?: 'Eticket' | null;
-        status?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Blocked' | 'Cancelled') | null;
-        parkingSpotLocation?: string | null;
-        projectedPurchasePrice?: number | null;
-        id?: string | null;
-      }[]
-    | null;
-  orderNotes?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  userHandbook?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pages".
- */
-export interface Page {
+export interface Status {
   id: string;
   title?: string | null;
-  slug?: string | null;
-  slugLock?: boolean | null;
-  tags?: (string | null) | User;
-  heroImage?: (string | null) | PayloadUpload;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  meta?: {
-    title?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (string | null) | PayloadUpload;
-    description?: string | null;
-  };
-  pageHelp?: {
-    docs?: (string | Handbook)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  folder?: (string | null) | FolderInterface;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * All media uploaded from the admin panel.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-uploads".
- */
-export interface PayloadUpload {
-  id: string;
-  alt: string;
-  caption?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  prefix?: string | null;
-  folder?: (string | null) | FolderInterface;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-  sizes?: {
-    thumbnail?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    square?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    small?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    medium?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    large?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    xlarge?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    og?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-folders".
- */
-export interface FolderInterface {
-  id: string;
-  name: string;
-  folder?: (string | null) | FolderInterface;
-  documentsAndFolders?: {
-    docs?: (
-      | {
-          relationTo?: 'payload-folders';
-          value: string | FolderInterface;
-        }
-      | {
-          relationTo?: 'pages';
-          value: string | Page;
-        }
-      | {
-          relationTo?: 'payload-uploads';
-          value: string | PayloadUpload;
-        }
-      | {
-          relationTo?: 'private-uploads';
-          value: string | PrivateUpload;
-        }
-    )[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Private uploads that require authentication to access
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "private-uploads".
- */
-export interface PrivateUpload {
-  id: string;
-  title: string;
-  /**
-   * Specific users who have access to this upload. If not assigned, it will respect the access level of the upload.
-   */
-  assignedTo?: (string | User)[] | null;
-  prefix?: string | null;
-  folder?: (string | null) | FolderInterface;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "handbook".
- */
-export interface Handbook {
-  id: string;
-  title?: string | null;
-  tags?: (string | null) | Tag;
   updatedAt: string;
   createdAt: string;
 }
@@ -1247,12 +1312,24 @@ export interface PayloadLockedDocument {
         value: string | Pool;
       } | null)
     | ({
+        relationTo: 'profiles';
+        value: string | Profile;
+      } | null)
+    | ({
+        relationTo: 'proxies';
+        value: string | Proxy;
+      } | null)
+    | ({
         relationTo: 'pages';
         value: string | Page;
       } | null)
     | ({
         relationTo: 'tags';
         value: string | Tag;
+      } | null)
+    | ({
+        relationTo: 'statuses';
+        value: string | Status;
       } | null)
     | ({
         relationTo: 'payload-uploads';
@@ -1474,14 +1551,20 @@ export interface TasksSelect<T extends boolean = true> {
   name?: T;
   taskStatus?: T;
   tags?: T;
-  taskType?: T;
-  taskAssignee?: T;
-  taskProxies?: T;
   'Task Notes'?: T;
+  taskType?: T;
+  ticketVendor?: T;
+  taskAssignee?: T;
+  taskProfile?: T;
+  taskProxy?: T;
+  linkedOrder?: T;
+  purchasePrice?: T;
+  passPDF?: T;
   healthStatus?: T;
   userHandbook?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1611,6 +1694,24 @@ export interface PoolsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "profiles_select".
+ */
+export interface ProfilesSelect<T extends boolean = true> {
+  title?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "proxies_select".
+ */
+export interface ProxiesSelect<T extends boolean = true> {
+  title?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages_select".
  */
 export interface PagesSelect<T extends boolean = true> {
@@ -1638,6 +1739,15 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "tags_select".
  */
 export interface TagsSelect<T extends boolean = true> {
+  title?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "statuses_select".
+ */
+export interface StatusesSelect<T extends boolean = true> {
   title?: T;
   updatedAt?: T;
   createdAt?: T;

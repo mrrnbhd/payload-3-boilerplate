@@ -1,19 +1,7 @@
 'use client'
 
-import * as React from 'react'
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-  VisibilityState,
-} from '@tanstack/react-table'
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from 'lucide-react'
+import * as React from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -36,39 +24,73 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-export type TournamentField = {
-  label: string
-  type: string
-  value: any
-  default: any
-}
+import {
+  type ColumnDef,
+  type ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  type SortingState,
+  useReactTable,
+  type VisibilityState,
+} from '@tanstack/react-table'
 
-export type TournamentTitle = string
-
-const title: TournamentTitle = 'Title'
-
-const fields: TournamentField[] = [
+const data: Payment[] = [
   {
-    label: 'Number Field',
-    type: 'Number',
-    value: 2,
-    default: 2,
+    id: '5kma53ae',
+    amount: 3,
+    status: 'In Progress',
+    task: 'Fulfill SpotHero Order #554461',
   },
   {
-    label: 'Text Field',
-    type: 'Text',
-    value: 'Sample',
-    default: 'Default',
+    id: '3u1reuv4',
+    amount: 3,
+    status: 'Pending',
+    task: 'Fulfill SpotHero Order #554552',
   },
   {
-    label: 'Boolean Field',
-    type: 'Boolean',
-    value: true,
-    default: false,
+    id: 'm5gr84i9',
+    amount: 3,
+    status: 'Pending',
+    task: 'Fulfill SpotHero Order #514377',
+  },
+
+  {
+    id: 'derv1ws0',
+    amount: 3,
+    status: 'Pending',
+    task: 'Fulfill SpotHero Order #526222',
+  },
+  {
+    id: 'derv1ws0',
+    amount: 3,
+    status: 'Pending',
+    task: 'Fulfill SpotHero Order #514782',
+  },
+  {
+    id: 'derv1ws0',
+    amount: 5,
+    status: 'Blocked',
+    task: 'Fulfill ACE Parking Order #522552',
+  },
+  {
+    id: 'bhqecj4p',
+    amount: 4,
+    status: 'Complete',
+    task: 'Fulfill ACE Parking Order #512452',
   },
 ]
 
-export const columns: ColumnDef<TournamentField>[] = [
+export type Payment = {
+  id: string
+  amount: number
+  status: 'Pending' | 'In Progress' | 'Complete' | 'Blocked' | 'Cancelled'
+  task: string
+}
+
+export const columns: ColumnDef<Payment>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -91,80 +113,56 @@ export const columns: ColumnDef<TournamentField>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'label',
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => <div className="capitalize">{row.getValue('status')}</div>,
+  },
+  {
+    accessorKey: 'task',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Label
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          Task
+          <ArrowUpDown />
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue('label')}</div>,
+    cell: ({ row }) => <div>{row.getValue('task')}</div>,
   },
   {
-    accessorKey: 'type',
-    header: 'Type',
-    cell: ({ row }) => <div className="capitalize">{row.getValue('type')}</div>,
-  },
-  {
-    accessorKey: 'value',
-    header: () => <div className="text-right">Value</div>,
+    accessorKey: 'amount',
+    header: () => <div className="text-right">Steps</div>,
     cell: ({ row }) => {
-      const value = row.getValue('value')
+      const amount = parseFloat(row.getValue('amount'))
 
-      // Format based on value type
-      let formatted = value
-      if (typeof value === 'number') {
-        formatted = new Intl.NumberFormat('en-US').format(value)
-      } else if (typeof value === 'boolean') {
-        formatted = value ? 'Yes' : 'No'
-      }
-
-      return <div className="text-right font-medium">{formatted as React.ReactNode}</div>
-    },
-  },
-  {
-    accessorKey: 'default',
-    header: () => <div className="text-right">Default</div>,
-    cell: ({ row }) => {
-      const defaultValue = row.getValue('default')
-
-      let formatted = defaultValue
-      if (typeof defaultValue === 'number') {
-        formatted = new Intl.NumberFormat('en-US').format(defaultValue)
-      } else if (typeof defaultValue === 'boolean') {
-        formatted = defaultValue ? 'Yes' : 'No'
-      }
-
-      return <div className="text-right font-medium">{formatted as React.ReactNode}</div>
+      return <div className="text-right font-medium">1 / {amount}</div>
     },
   },
   {
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const tournamentField = row.original
+      const payment = row.original
 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
+              <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(tournamentField.label)}>
-              Copy field label
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
+              Copy payment ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View field details</DropdownMenuItem>
-            <DropdownMenuItem>Edit field</DropdownMenuItem>
+            <DropdownMenuItem>View customer</DropdownMenuItem>
+            <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -179,7 +177,7 @@ export function DataTable() {
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
-    data: fields, // Changed from 'fields' to 'data'
+    data,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -198,18 +196,18 @@ export function DataTable() {
   })
 
   return (
-    <div className="w-full">
+    <div className="w-full max-h-fill">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter labels..."
-          value={(table.getColumn('label')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('label')?.setFilterValue(event.target.value)}
+          placeholder="Search Tasks..."
+          value={(table.getColumn('task')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('task')?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
+              Columns <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

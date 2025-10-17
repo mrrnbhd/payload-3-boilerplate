@@ -1,5 +1,5 @@
 {
-  "id": "a654dced-5b8e-4959-b2ec-50f1c70d0747",
+  "id": "e0fad12e-9d77-4c20-b976-7a5c4d1be35b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -983,6 +983,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "task_notes": {
+          "name": "task_notes",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
         "task_type": {
           "name": "task_type",
           "type": "enum_tasks_task_type",
@@ -990,21 +996,28 @@
           "primaryKey": false,
           "notNull": false
         },
-        "task_assignee_id": {
-          "name": "task_assignee_id",
+        "ticket_vendor": {
+          "name": "ticket_vendor",
+          "type": "enum_tasks_ticket_vendor",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "linked_order_id": {
+          "name": "linked_order_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
-        "task_proxies_id": {
-          "name": "task_proxies_id",
-          "type": "uuid",
+        "purchase_price": {
+          "name": "purchase_price",
+          "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "task_notes": {
-          "name": "task_notes",
-          "type": "jsonb",
+        "pass_p_d_f_id": {
+          "name": "pass_p_d_f_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -1027,6 +1040,14 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "_status": {
+          "name": "_status",
+          "type": "enum_tasks_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'draft'"
         }
       },
       "indexes": {
@@ -1045,11 +1066,11 @@
           "method": "btree",
           "with": {}
         },
-        "tasks_task_assignee_idx": {
-          "name": "tasks_task_assignee_idx",
+        "tasks_linked_order_idx": {
+          "name": "tasks_linked_order_idx",
           "columns": [
             {
-              "expression": "task_assignee_id",
+              "expression": "linked_order_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1060,11 +1081,11 @@
           "method": "btree",
           "with": {}
         },
-        "tasks_task_proxies_idx": {
-          "name": "tasks_task_proxies_idx",
+        "tasks_pass_p_d_f_idx": {
+          "name": "tasks_pass_p_d_f_idx",
           "columns": [
             {
-              "expression": "task_proxies_id",
+              "expression": "pass_p_d_f_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1104,6 +1125,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "tasks__status_idx": {
+          "name": "tasks__status_idx",
+          "columns": [
+            {
+              "expression": "_status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -1120,12 +1156,12 @@
           "onDelete": "set null",
           "onUpdate": "no action"
         },
-        "tasks_task_assignee_id_users_id_fk": {
-          "name": "tasks_task_assignee_id_users_id_fk",
+        "tasks_linked_order_id_orders_id_fk": {
+          "name": "tasks_linked_order_id_orders_id_fk",
           "tableFrom": "tasks",
-          "tableTo": "users",
+          "tableTo": "orders",
           "columnsFrom": [
-            "task_assignee_id"
+            "linked_order_id"
           ],
           "columnsTo": [
             "id"
@@ -1133,17 +1169,837 @@
           "onDelete": "set null",
           "onUpdate": "no action"
         },
-        "tasks_task_proxies_id_pools_id_fk": {
-          "name": "tasks_task_proxies_id_pools_id_fk",
+        "tasks_pass_p_d_f_id_payload_uploads_id_fk": {
+          "name": "tasks_pass_p_d_f_id_payload_uploads_id_fk",
           "tableFrom": "tasks",
-          "tableTo": "pools",
+          "tableTo": "payload_uploads",
           "columnsFrom": [
-            "task_proxies_id"
+            "pass_p_d_f_id"
           ],
           "columnsTo": [
             "id"
           ],
           "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tasks_rels": {
+      "name": "tasks_rels",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "path": {
+          "name": "path",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "users_id": {
+          "name": "users_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "profiles_id": {
+          "name": "profiles_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pools_id": {
+          "name": "pools_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proxies_id": {
+          "name": "proxies_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "tasks_rels_order_idx": {
+          "name": "tasks_rels_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tasks_rels_parent_idx": {
+          "name": "tasks_rels_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tasks_rels_path_idx": {
+          "name": "tasks_rels_path_idx",
+          "columns": [
+            {
+              "expression": "path",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tasks_rels_users_id_idx": {
+          "name": "tasks_rels_users_id_idx",
+          "columns": [
+            {
+              "expression": "users_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tasks_rels_profiles_id_idx": {
+          "name": "tasks_rels_profiles_id_idx",
+          "columns": [
+            {
+              "expression": "profiles_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tasks_rels_pools_id_idx": {
+          "name": "tasks_rels_pools_id_idx",
+          "columns": [
+            {
+              "expression": "pools_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tasks_rels_proxies_id_idx": {
+          "name": "tasks_rels_proxies_id_idx",
+          "columns": [
+            {
+              "expression": "proxies_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "tasks_rels_parent_fk": {
+          "name": "tasks_rels_parent_fk",
+          "tableFrom": "tasks_rels",
+          "tableTo": "tasks",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "tasks_rels_users_fk": {
+          "name": "tasks_rels_users_fk",
+          "tableFrom": "tasks_rels",
+          "tableTo": "users",
+          "columnsFrom": [
+            "users_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "tasks_rels_profiles_fk": {
+          "name": "tasks_rels_profiles_fk",
+          "tableFrom": "tasks_rels",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "profiles_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "tasks_rels_pools_fk": {
+          "name": "tasks_rels_pools_fk",
+          "tableFrom": "tasks_rels",
+          "tableTo": "pools",
+          "columnsFrom": [
+            "pools_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "tasks_rels_proxies_fk": {
+          "name": "tasks_rels_proxies_fk",
+          "tableFrom": "tasks_rels",
+          "tableTo": "proxies",
+          "columnsFrom": [
+            "proxies_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._tasks_v": {
+      "name": "_tasks_v",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_name": {
+          "name": "version_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_task_status": {
+          "name": "version_task_status",
+          "type": "enum__tasks_v_version_task_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_tags_id": {
+          "name": "version_tags_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_task_notes": {
+          "name": "version_task_notes",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_task_type": {
+          "name": "version_task_type",
+          "type": "enum__tasks_v_version_task_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_ticket_vendor": {
+          "name": "version_ticket_vendor",
+          "type": "enum__tasks_v_version_ticket_vendor",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_linked_order_id": {
+          "name": "version_linked_order_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_purchase_price": {
+          "name": "version_purchase_price",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_pass_p_d_f_id": {
+          "name": "version_pass_p_d_f_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_user_handbook": {
+          "name": "version_user_handbook",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_updated_at": {
+          "name": "version_updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_created_at": {
+          "name": "version_created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version__status": {
+          "name": "version__status",
+          "type": "enum__tasks_v_version_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'draft'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "latest": {
+          "name": "latest",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "autosave": {
+          "name": "autosave",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_tasks_v_parent_idx": {
+          "name": "_tasks_v_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_version_version_tags_idx": {
+          "name": "_tasks_v_version_version_tags_idx",
+          "columns": [
+            {
+              "expression": "version_tags_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_version_version_linked_order_idx": {
+          "name": "_tasks_v_version_version_linked_order_idx",
+          "columns": [
+            {
+              "expression": "version_linked_order_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_version_version_pass_p_d_f_idx": {
+          "name": "_tasks_v_version_version_pass_p_d_f_idx",
+          "columns": [
+            {
+              "expression": "version_pass_p_d_f_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_version_version_updated_at_idx": {
+          "name": "_tasks_v_version_version_updated_at_idx",
+          "columns": [
+            {
+              "expression": "version_updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_version_version_created_at_idx": {
+          "name": "_tasks_v_version_version_created_at_idx",
+          "columns": [
+            {
+              "expression": "version_created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_version_version__status_idx": {
+          "name": "_tasks_v_version_version__status_idx",
+          "columns": [
+            {
+              "expression": "version__status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_created_at_idx": {
+          "name": "_tasks_v_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_updated_at_idx": {
+          "name": "_tasks_v_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_latest_idx": {
+          "name": "_tasks_v_latest_idx",
+          "columns": [
+            {
+              "expression": "latest",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_autosave_idx": {
+          "name": "_tasks_v_autosave_idx",
+          "columns": [
+            {
+              "expression": "autosave",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_tasks_v_parent_id_tasks_id_fk": {
+          "name": "_tasks_v_parent_id_tasks_id_fk",
+          "tableFrom": "_tasks_v",
+          "tableTo": "tasks",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_tasks_v_version_tags_id_tags_id_fk": {
+          "name": "_tasks_v_version_tags_id_tags_id_fk",
+          "tableFrom": "_tasks_v",
+          "tableTo": "tags",
+          "columnsFrom": [
+            "version_tags_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_tasks_v_version_linked_order_id_orders_id_fk": {
+          "name": "_tasks_v_version_linked_order_id_orders_id_fk",
+          "tableFrom": "_tasks_v",
+          "tableTo": "orders",
+          "columnsFrom": [
+            "version_linked_order_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_tasks_v_version_pass_p_d_f_id_payload_uploads_id_fk": {
+          "name": "_tasks_v_version_pass_p_d_f_id_payload_uploads_id_fk",
+          "tableFrom": "_tasks_v",
+          "tableTo": "payload_uploads",
+          "columnsFrom": [
+            "version_pass_p_d_f_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._tasks_v_rels": {
+      "name": "_tasks_v_rels",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "path": {
+          "name": "path",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "users_id": {
+          "name": "users_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "profiles_id": {
+          "name": "profiles_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pools_id": {
+          "name": "pools_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proxies_id": {
+          "name": "proxies_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_tasks_v_rels_order_idx": {
+          "name": "_tasks_v_rels_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_rels_parent_idx": {
+          "name": "_tasks_v_rels_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_rels_path_idx": {
+          "name": "_tasks_v_rels_path_idx",
+          "columns": [
+            {
+              "expression": "path",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_rels_users_id_idx": {
+          "name": "_tasks_v_rels_users_id_idx",
+          "columns": [
+            {
+              "expression": "users_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_rels_profiles_id_idx": {
+          "name": "_tasks_v_rels_profiles_id_idx",
+          "columns": [
+            {
+              "expression": "profiles_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_rels_pools_id_idx": {
+          "name": "_tasks_v_rels_pools_id_idx",
+          "columns": [
+            {
+              "expression": "pools_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_tasks_v_rels_proxies_id_idx": {
+          "name": "_tasks_v_rels_proxies_id_idx",
+          "columns": [
+            {
+              "expression": "proxies_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_tasks_v_rels_parent_fk": {
+          "name": "_tasks_v_rels_parent_fk",
+          "tableFrom": "_tasks_v_rels",
+          "tableTo": "_tasks_v",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "_tasks_v_rels_users_fk": {
+          "name": "_tasks_v_rels_users_fk",
+          "tableFrom": "_tasks_v_rels",
+          "tableTo": "users",
+          "columnsFrom": [
+            "users_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "_tasks_v_rels_profiles_fk": {
+          "name": "_tasks_v_rels_profiles_fk",
+          "tableFrom": "_tasks_v_rels",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "profiles_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "_tasks_v_rels_pools_fk": {
+          "name": "_tasks_v_rels_pools_fk",
+          "tableFrom": "_tasks_v_rels",
+          "tableTo": "pools",
+          "columnsFrom": [
+            "pools_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "_tasks_v_rels_proxies_fk": {
+          "name": "_tasks_v_rels_proxies_fk",
+          "tableFrom": "_tasks_v_rels",
+          "tableTo": "proxies",
+          "columnsFrom": [
+            "proxies_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1175,22 +2031,48 @@
           "primaryKey": true,
           "notNull": true
         },
-        "filter": {
-          "name": "filter",
-          "type": "enum_jobs_if_filter",
+        "filter_collections": {
+          "name": "filter_collections",
+          "type": "enum_jobs_if_filter_collections",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         },
-        "target_collections": {
-          "name": "target_collections",
-          "type": "enum_jobs_if_target_collections",
+        "filter_fields": {
+          "name": "filter_fields",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "condition": {
+          "name": "condition",
+          "type": "enum_jobs_if_condition",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         },
-        "target_fields": {
-          "name": "target_fields",
+        "comparison_type": {
+          "name": "comparison_type",
+          "type": "enum_jobs_if_comparison_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "compared_value": {
+          "name": "compared_value",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "compared_collections": {
+          "name": "compared_collections",
+          "type": "enum_jobs_if_compared_collections",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "compared_fields": {
+          "name": "compared_fields",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -1249,8 +2131,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.jobs_then_operations": {
-      "name": "jobs_then_operations",
+    "public.jobs_then_actions": {
+      "name": "jobs_then_actions",
       "schema": "",
       "columns": {
         "_order": {
@@ -1271,17 +2153,37 @@
           "primaryKey": true,
           "notNull": true
         },
-        "type": {
-          "name": "type",
-          "type": "enum_jobs_then_operations_type",
+        "action_type": {
+          "name": "action_type",
+          "type": "enum_jobs_then_actions_action_type",
           "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "event_type": {
+          "name": "event_type",
+          "type": "enum_jobs_then_actions_event_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "target_collections": {
+          "name": "target_collections",
+          "type": "enum_jobs_then_actions_target_collections",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "target_fields": {
+          "name": "target_fields",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         }
       },
       "indexes": {
-        "jobs_then_operations_order_idx": {
-          "name": "jobs_then_operations_order_idx",
+        "jobs_then_actions_order_idx": {
+          "name": "jobs_then_actions_order_idx",
           "columns": [
             {
               "expression": "_order",
@@ -1295,8 +2197,8 @@
           "method": "btree",
           "with": {}
         },
-        "jobs_then_operations_parent_id_idx": {
-          "name": "jobs_then_operations_parent_id_idx",
+        "jobs_then_actions_parent_id_idx": {
+          "name": "jobs_then_actions_parent_id_idx",
           "columns": [
             {
               "expression": "_parent_id",
@@ -1312,9 +2214,9 @@
         }
       },
       "foreignKeys": {
-        "jobs_then_operations_parent_id_fk": {
-          "name": "jobs_then_operations_parent_id_fk",
-          "tableFrom": "jobs_then_operations",
+        "jobs_then_actions_parent_id_fk": {
+          "name": "jobs_then_actions_parent_id_fk",
+          "tableFrom": "jobs_then_actions",
           "tableTo": "jobs_then",
           "columnsFrom": [
             "_parent_id"
@@ -1445,18 +2347,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "job_assignee_id": {
-          "name": "job_assignee_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "job_proxies_id": {
-          "name": "job_proxies_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
         "when_trigger": {
           "name": "when_trigger",
           "type": "enum_jobs_when_trigger",
@@ -1464,15 +2354,22 @@
           "primaryKey": false,
           "notNull": false
         },
-        "when_target_collections": {
-          "name": "when_target_collections",
-          "type": "enum_jobs_when_target_collections",
+        "when_event_type": {
+          "name": "when_event_type",
+          "type": "enum_jobs_when_event_type",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         },
-        "when_target_fields": {
-          "name": "when_target_fields",
+        "when_source_collections": {
+          "name": "when_source_collections",
+          "type": "enum_jobs_when_source_collections",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "when_source_fields": {
+          "name": "when_source_fields",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -1504,36 +2401,6 @@
           "columns": [
             {
               "expression": "job_tags_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "jobs_job_assignee_idx": {
-          "name": "jobs_job_assignee_idx",
-          "columns": [
-            {
-              "expression": "job_assignee_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "jobs_job_proxies_idx": {
-          "name": "jobs_job_proxies_idx",
-          "columns": [
-            {
-              "expression": "job_proxies_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1588,32 +2455,6 @@
           ],
           "onDelete": "set null",
           "onUpdate": "no action"
-        },
-        "jobs_job_assignee_id_users_id_fk": {
-          "name": "jobs_job_assignee_id_users_id_fk",
-          "tableFrom": "jobs",
-          "tableTo": "users",
-          "columnsFrom": [
-            "job_assignee_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "jobs_job_proxies_id_pools_id_fk": {
-          "name": "jobs_job_proxies_id_pools_id_fk",
-          "tableFrom": "jobs",
-          "tableTo": "pools",
-          "columnsFrom": [
-            "job_proxies_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1649,6 +2490,12 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
+        },
+        "tasks_id": {
+          "name": "tasks_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         },
         "orders_id": {
           "name": "orders_id",
@@ -1717,6 +2564,21 @@
           "columns": [
             {
               "expression": "path",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "jobs_rels_tasks_id_idx": {
+          "name": "jobs_rels_tasks_id_idx",
+          "columns": [
+            {
+              "expression": "tasks_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1810,6 +2672,19 @@
           "tableTo": "jobs",
           "columnsFrom": [
             "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "jobs_rels_tasks_fk": {
+          "name": "jobs_rels_tasks_fk",
+          "tableFrom": "jobs_rels",
+          "tableTo": "tasks",
+          "columnsFrom": [
+            "tasks_id"
           ],
           "columnsTo": [
             "id"
@@ -3203,6 +4078,148 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.profiles": {
+      "name": "profiles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "profiles_updated_at_idx": {
+          "name": "profiles_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "profiles_created_at_idx": {
+          "name": "profiles_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.proxies": {
+      "name": "proxies",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "proxies_updated_at_idx": {
+          "name": "proxies_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "proxies_created_at_idx": {
+          "name": "proxies_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.pages": {
       "name": "pages",
       "schema": "",
@@ -3925,6 +4942,77 @@
         },
         "tags_created_at_idx": {
           "name": "tags_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.statuses": {
+      "name": "statuses",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "statuses_updated_at_idx": {
+          "name": "statuses_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "statuses_created_at_idx": {
+          "name": "statuses_created_at_idx",
           "columns": [
             {
               "expression": "created_at",
@@ -7435,6 +8523,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "profiles_id": {
+          "name": "profiles_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proxies_id": {
+          "name": "proxies_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "pages_id": {
           "name": "pages_id",
           "type": "uuid",
@@ -7443,6 +8543,12 @@
         },
         "tags_id": {
           "name": "tags_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "statuses_id": {
+          "name": "statuses_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
@@ -7686,6 +8792,36 @@
           "method": "btree",
           "with": {}
         },
+        "payload_locked_documents_rels_profiles_id_idx": {
+          "name": "payload_locked_documents_rels_profiles_id_idx",
+          "columns": [
+            {
+              "expression": "profiles_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "payload_locked_documents_rels_proxies_id_idx": {
+          "name": "payload_locked_documents_rels_proxies_id_idx",
+          "columns": [
+            {
+              "expression": "proxies_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "payload_locked_documents_rels_pages_id_idx": {
           "name": "payload_locked_documents_rels_pages_id_idx",
           "columns": [
@@ -7706,6 +8842,21 @@
           "columns": [
             {
               "expression": "tags_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "payload_locked_documents_rels_statuses_id_idx": {
+          "name": "payload_locked_documents_rels_statuses_id_idx",
+          "columns": [
+            {
+              "expression": "statuses_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -7966,6 +9117,32 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
+        "payload_locked_documents_rels_profiles_fk": {
+          "name": "payload_locked_documents_rels_profiles_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "profiles_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_proxies_fk": {
+          "name": "payload_locked_documents_rels_proxies_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "proxies",
+          "columnsFrom": [
+            "proxies_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
         "payload_locked_documents_rels_pages_fk": {
           "name": "payload_locked_documents_rels_pages_fk",
           "tableFrom": "payload_locked_documents_rels",
@@ -7985,6 +9162,19 @@
           "tableTo": "tags",
           "columnsFrom": [
             "tags_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_statuses_fk": {
+          "name": "payload_locked_documents_rels_statuses_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "statuses",
+          "columnsFrom": [
+            "statuses_id"
           ],
           "columnsTo": [
             "id"
@@ -9077,12 +10267,78 @@
       "name": "enum_tasks_task_type",
       "schema": "public",
       "values": [
-        "Automated Task",
-        "Manual Task"
+        "Purchase Ticket",
+        "Custom Task"
       ]
     },
-    "public.enum_jobs_if_filter": {
-      "name": "enum_jobs_if_filter",
+    "public.enum_tasks_ticket_vendor": {
+      "name": "enum_tasks_ticket_vendor",
+      "schema": "public",
+      "values": [
+        "SpotHero",
+        "ParkWhiz",
+        "ACE Parking"
+      ]
+    },
+    "public.enum_tasks_status": {
+      "name": "enum_tasks_status",
+      "schema": "public",
+      "values": [
+        "draft",
+        "published"
+      ]
+    },
+    "public.enum__tasks_v_version_task_status": {
+      "name": "enum__tasks_v_version_task_status",
+      "schema": "public",
+      "values": [
+        "Pending",
+        "In Progress",
+        "Running",
+        "Complete",
+        "Blocked",
+        "Backlogged"
+      ]
+    },
+    "public.enum__tasks_v_version_task_type": {
+      "name": "enum__tasks_v_version_task_type",
+      "schema": "public",
+      "values": [
+        "Purchase Ticket",
+        "Custom Task"
+      ]
+    },
+    "public.enum__tasks_v_version_ticket_vendor": {
+      "name": "enum__tasks_v_version_ticket_vendor",
+      "schema": "public",
+      "values": [
+        "SpotHero",
+        "ParkWhiz",
+        "ACE Parking"
+      ]
+    },
+    "public.enum__tasks_v_version_status": {
+      "name": "enum__tasks_v_version_status",
+      "schema": "public",
+      "values": [
+        "draft",
+        "published"
+      ]
+    },
+    "public.enum_jobs_if_filter_collections": {
+      "name": "enum_jobs_if_filter_collections",
+      "schema": "public",
+      "values": [
+        "Tasks",
+        "Orders",
+        "Pools",
+        "Users",
+        "Tags",
+        "Jobs"
+      ]
+    },
+    "public.enum_jobs_if_condition": {
+      "name": "enum_jobs_if_condition",
       "schema": "public",
       "values": [
         "Is Equal to",
@@ -9098,8 +10354,16 @@
         "Exists"
       ]
     },
-    "public.enum_jobs_if_target_collections": {
-      "name": "enum_jobs_if_target_collections",
+    "public.enum_jobs_if_comparison_type": {
+      "name": "enum_jobs_if_comparison_type",
+      "schema": "public",
+      "values": [
+        "Static Value",
+        "Dynamic Value"
+      ]
+    },
+    "public.enum_jobs_if_compared_collections": {
+      "name": "enum_jobs_if_compared_collections",
       "schema": "public",
       "values": [
         "Orders",
@@ -9109,12 +10373,33 @@
         "Jobs"
       ]
     },
-    "public.enum_jobs_then_operations_type": {
-      "name": "enum_jobs_then_operations_type",
+    "public.enum_jobs_then_actions_action_type": {
+      "name": "enum_jobs_then_actions_action_type",
       "schema": "public",
       "values": [
-        "Payload Operation",
-        "TradeDesk Operation"
+        "Payload Action",
+        "TradeDesk Action"
+      ]
+    },
+    "public.enum_jobs_then_actions_event_type": {
+      "name": "enum_jobs_then_actions_event_type",
+      "schema": "public",
+      "values": [
+        "Create",
+        "Update",
+        "Delete"
+      ]
+    },
+    "public.enum_jobs_then_actions_target_collections": {
+      "name": "enum_jobs_then_actions_target_collections",
+      "schema": "public",
+      "values": [
+        "Tasks",
+        "Orders",
+        "Pools",
+        "Users",
+        "Tags",
+        "Jobs"
       ]
     },
     "public.enum_jobs_then_type": {
@@ -9141,14 +10426,24 @@
       "name": "enum_jobs_when_trigger",
       "schema": "public",
       "values": [
-        "A Payload Collection is Changed",
-        "A TradeDesk Webhook is Received"
+        "Payload Event",
+        "TradeDesk Event"
       ]
     },
-    "public.enum_jobs_when_target_collections": {
-      "name": "enum_jobs_when_target_collections",
+    "public.enum_jobs_when_event_type": {
+      "name": "enum_jobs_when_event_type",
       "schema": "public",
       "values": [
+        "Create",
+        "Update",
+        "Delete"
+      ]
+    },
+    "public.enum_jobs_when_source_collections": {
+      "name": "enum_jobs_when_source_collections",
+      "schema": "public",
+      "values": [
+        "Tasks",
         "Orders",
         "Pools",
         "Users",
