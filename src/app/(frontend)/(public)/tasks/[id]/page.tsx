@@ -102,7 +102,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
               <h2 className="mb-5">
                 Get the purchase price of the parking pass from the vendor portal.
               </h2>
-              <Slider defaultValue={[0]} max={100} className={cn('bg-amber-500')} step={17} />
+              <Slider defaultValue={[16]} max={100} className={cn('bg-amber-500')} step={15} />
             </CardContent>
             <CardFooter className="flex justify-between gap-5">
               <RainbowButton variant={'outline'} size={'sm'} className="rounded-md">
@@ -147,7 +147,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
               <div className="mb-5">
                 Get the purchase price of the parking pass from the vendor portal.
               </div>
-              <Slider defaultValue={[0]} max={100} className={cn('bg-amber-500')} step={50} />
+              <Slider defaultValue={[34]} max={100} className={cn('bg-amber-500')} step={33} />
             </CardContent>
             <CardFooter className="flex justify-between gap-5">
               <RainbowButton variant={'outline'} size={'sm'} className="rounded-md">
