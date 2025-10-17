@@ -1,4 +1,10 @@
-import { Bot, ClipboardCheckIcon, ListTodo, SquareArrowOutUpRight } from 'lucide-react'
+import {
+  Bot,
+  ClipboardCheckIcon,
+  EllipsisVertical,
+  ListTodo,
+  SquareArrowOutUpRight,
+} from 'lucide-react'
 import { notFound } from 'next/navigation'
 
 import { StepsTable } from '@/components/steps-table'
@@ -93,16 +99,30 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
             <CardHeader>
               <CardTitle>
                 <div className="flex justify-between items-center w-full">
-                  <h2>Task 1/7</h2>
-                  <ClipboardCheckIcon />
+                  <div className="flex align-middle gap-3 items-center">
+                    <div>
+                      <ClipboardCheckIcon size={26} className="self-center align-middle" />
+                    </div>
+                    <div>
+                      <h2>Task 1/7</h2>
+                    </div>
+                  </div>
+
+                  <div className="flex align-middle justify-end">
+                    <EllipsisVertical
+                      className="self-center border-2 ml-5 rounded-md p-1 hover:bg-primary-foreground/80 hover:cursor-pointer"
+                      size={26}
+                    />
+                  </div>
                 </div>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <h2 className="mb-5">
+              <Slider defaultValue={[16]} max={100} className={cn('bg-amber-500')} step={15} />
+
+              <h2 className="mt-7">
                 Get the purchase price of the parking pass from the vendor portal.
               </h2>
-              <Slider defaultValue={[16]} max={100} className={cn('bg-amber-500')} step={15} />
             </CardContent>
             <CardFooter className="flex justify-between gap-5">
               <RainbowButton variant={'outline'} size={'sm'} className="rounded-md">
@@ -138,16 +158,24 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
             <CardHeader>
               <CardTitle>
                 <div className="flex justify-between items-center w-full">
-                  <h2>Step 1/3</h2>
-                  <ListTodo />
+                  <div className="flex items-center justify-items-center align-middle gap-3">
+                    <ListTodo size={26} />
+                    <h2>Step 1/3</h2>
+                  </div>
+                  <div className="flex align-middle justify-end">
+                    <EllipsisVertical
+                      className="self-center border-2 ml-5 rounded-md p-1 hover:bg-primary-foreground/80 hover:cursor-pointer"
+                      size={26}
+                    />
+                  </div>
                 </div>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="mb-5">
+              <Slider defaultValue={[34]} max={100} className={cn('bg-amber-500')} step={33} />
+              <div className="mt-7">
                 Get the purchase price of the parking pass from the vendor portal.
               </div>
-              <Slider defaultValue={[34]} max={100} className={cn('bg-amber-500')} step={33} />
             </CardContent>
             <CardFooter className="flex justify-between gap-5">
               <RainbowButton variant={'outline'} size={'sm'} className="rounded-md">
@@ -185,7 +213,7 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
             <div className="flex justify-between items-center">
               <h1>Step 1</h1>
 
-              <div className="flex justify-between">
+              <div className="flex justify-end">
                 <div>
                   <Badge className="bg-amber-600/10 dark:bg-amber-600/20 hover:bg-amber-600/10 text-amber-500 shadow-none rounded-full p-2">
                     <div className="h-2 w-2 rounded-full bg-amber-500 self-center" /> Pending
@@ -202,6 +230,12 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
                   >
                     <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-2" /> Done
                   </Badge>
+                </div>
+                <div className="flex align-middle justify-end">
+                  <EllipsisVertical
+                    className="self-center border-2 ml-5 rounded-md p-1 hover:bg-primary-foreground/80 hover:cursor-pointer"
+                    size={26}
+                  />
                 </div>
               </div>
             </div>
@@ -227,22 +261,32 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
           <CardTitle>
             <div className="flex justify-between">
               Step 2
-              <div>
-                <Badge className="bg-amber-600/10 dark:bg-amber-600/20 hover:bg-amber-600/10 text-amber-500 shadow-none rounded-full p-2">
-                  <div className="h-2 w-2 rounded-full bg-amber-500 self-center" /> Pending
-                </Badge>
-                <Badge
-                  hidden={true}
-                  className="bg-red-600/10 dark:bg-red-600/20 hover:bg-red-600/10 text-red-500 shadow-none rounded-full"
-                >
-                  <div className="h-1.5 w-1.5 rounded-full bg-red-500 mr-2" /> Blocked
-                </Badge>
-                <Badge
-                  hidden={true}
-                  className="bg-emerald-600/10 dark:bg-emerald-600/20 hover:bg-emerald-600/10 text-emerald-500 shadow-none rounded-full"
-                >
-                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-2" /> Done
-                </Badge>
+              <div className={'align-center justify-end items-center'}>
+                <div className="flex justify-end">
+                  <div>
+                    <Badge className="bg-amber-600/10 dark:bg-amber-600/20 hover:bg-amber-600/10 text-amber-500 shadow-none rounded-full p-2">
+                      <div className="h-2 w-2 rounded-full bg-amber-500 self-center" /> Pending
+                    </Badge>
+                    <Badge
+                      hidden={true}
+                      className="bg-red-600/10 dark:bg-red-600/20 hover:bg-red-600/10 text-red-500 shadow-none rounded-full"
+                    >
+                      <div className="h-1.5 w-1.5 rounded-full bg-red-500 mr-2" /> Blocked
+                    </Badge>
+                    <Badge
+                      hidden={true}
+                      className="bg-emerald-600/10 dark:bg-emerald-600/20 hover:bg-emerald-600/10 text-emerald-500 shadow-none rounded-full"
+                    >
+                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-2" /> Done
+                    </Badge>
+                  </div>
+                  <div className="flex align-middle justify-end">
+                    <EllipsisVertical
+                      className="self-center border-2 ml-5 rounded-md p-1 hover:bg-primary-foreground/80 hover:cursor-pointer"
+                      size={26}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </CardTitle>
@@ -263,28 +307,37 @@ export default async function Tasks({ params: paramsPromise }: TaskParams) {
       <Card className="my-9 mx-6">
         <CardHeader>
           <CardTitle>
-            {' '}
             <div className="flex justify-between">
               Step 3
-              <div>
-                <Badge
-                  hidden={true}
-                  className="bg-amber-600/10 dark:bg-amber-600/20 hover:bg-amber-600/10 text-amber-500 shadow-none rounded-full p-2"
-                >
-                  <div className="h-2 w-2 rounded-full bg-amber-500 self-center" /> Pending
-                </Badge>
-                <Badge
-                  hidden={false}
-                  className="bg-gray-600/10 dark:bg-gray-500/20 hover:bg-red-600/10 text-gray-200 shadow-none rounded-full p-2"
-                >
-                  <div className="rounded-full bg-gray-400 h-2 w-2" /> Waiting
-                </Badge>
-                <Badge
-                  hidden={true}
-                  className="bg-emerald-600/10 dark:bg-emerald-600/20 hover:bg-emerald-600/10 text-emerald-500 shadow-none rounded-full"
-                >
-                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-2" /> Done
-                </Badge>
+              <div className={'align-center justify-end items-center'}>
+                <div className="flex justify-end">
+                  <div>
+                    <Badge
+                      className="bg-amber-600/10 dark:bg-amber-600/20 hover:bg-amber-600/10 text-amber-500 shadow-none rounded-full p-2"
+                      hidden={true}
+                    >
+                      <div className="h-2 w-2 rounded-full bg-amber-500 self-center" /> Pending
+                    </Badge>
+                    <Badge
+                      className="bg-amber-600/10 dark:bg-gray-600/20 hover:bg-amber-600/10 text-gray-300 shadow-none rounded-full p-2"
+                      hidden={false}
+                    >
+                      <div className="h-2 w-2 rounded-full bg-gray-300 self-center" /> Waiting
+                    </Badge>
+                    <Badge
+                      hidden={true}
+                      className="bg-gray-600/10 dark:bg-gray-600/20 hover:bg-gray-600/10 text-gray-200 shadow-none rounded-full"
+                    >
+                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-2" /> Done
+                    </Badge>
+                  </div>
+                  <div className="flex align-middle justify-end">
+                    <EllipsisVertical
+                      className="self-center border-2 ml-5 rounded-md p-1 hover:bg-primary-foreground/80 hover:cursor-pointer"
+                      size={26}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </CardTitle>
