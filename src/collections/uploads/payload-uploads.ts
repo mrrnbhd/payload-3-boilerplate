@@ -1,5 +1,4 @@
 import type { CollectionConfig } from 'payload'
-import { defaultLexical } from '@/fields/default-lexical'
 
 /** All media uploaded from Payload Admin*/
 export const PayloadUploads: CollectionConfig = {
@@ -15,7 +14,7 @@ export const PayloadUploads: CollectionConfig = {
     read: () => true,
   },
   admin: {
-    group: 'Library',
+    group: 'Operation',
     description: 'All media uploaded from the admin panel.',
   },
   fields: [
@@ -26,8 +25,7 @@ export const PayloadUploads: CollectionConfig = {
     },
     {
       name: 'caption',
-      type: 'richText',
-      editor: defaultLexical,
+      type: 'textarea',
     },
   ],
   upload: {

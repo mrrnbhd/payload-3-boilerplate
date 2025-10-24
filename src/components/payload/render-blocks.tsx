@@ -1,10 +1,10 @@
 import type React from 'react'
 import { Fragment } from 'react'
 
-import { ContentBlock } from '@/blocks/content-block/component'
-import { GalleryBlock } from '@/blocks/gallery-block/component'
-import { MediaBlock } from '@/blocks/media-block/component'
-import { DataBlock } from '@/blocks/data-block/component'
+import { ContentBlock } from '@/blocks/pages/content-block/component'
+import { DataBlock } from '@/blocks/pages/data-block/component'
+import { GalleryBlock } from '@/blocks/pages/gallery-block/component'
+import { MediaBlock } from '@/blocks/pages/media-block/component'
 
 const blockComponents = {
   //* [Extra] Form Block *//

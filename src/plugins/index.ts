@@ -1,16 +1,12 @@
 import { betterAuthPluginOptions } from '@/lib/auth/options'
 
-import formPlugin from 'extra/plugins/form-plugin'
 import type { Plugin } from 'payload'
 import { auditorPlugin } from 'payload-auditor'
 import { betterAuthPlugin } from 'payload-auth/better-auth'
 import { s3StoragePluginPrivate, s3StoragePluginPublic } from './s3-storage-plugin'
-import { seoPlugin } from './seo-plugin'
 
 export const plugins: Plugin[] = [
   betterAuthPlugin(betterAuthPluginOptions),
-  seoPlugin,
-  formPlugin,
   s3StoragePluginPublic,
   s3StoragePluginPrivate,
   auditorPlugin({
@@ -21,7 +17,7 @@ export const plugins: Plugin[] = [
         return {
           ...prevConf,
           admin: {
-            group: 'Library',
+            group: 'Operation',
           },
           labels: {
             singular: 'Log',

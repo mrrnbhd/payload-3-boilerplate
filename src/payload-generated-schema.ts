@@ -17,138 +17,33 @@ import {
   boolean,
   timestamp,
   numeric,
-  jsonb,
-  serial,
   integer,
-  text,
   type AnyPgColumn,
+  serial,
+  jsonb,
   pgEnum,
 } from "@payloadcms/db-postgres/drizzle/pg-core";
 import { sql, relations } from "@payloadcms/db-postgres/drizzle";
-export const enum_users_operator_role = pgEnum("enum_users_operator_role", [
-  "Bot",
+export const enum_users_user_role = pgEnum("enum_users_user_role", [
   "User",
   "Admin",
 ]);
-export const enum_users_role = pgEnum("enum_users_role", ["admin", "user"]);
+export const enum_users_role = pgEnum("enum_users_role", ["Admin", "user"]);
 export const enum_admin_invitations_role = pgEnum(
   "enum_admin_invitations_role",
-  ["admin", "user"],
+  ["Admin", "user"],
 );
-export const enum_tasks_task_status = pgEnum("enum_tasks_task_status", [
-  "Pending",
-  "In Progress",
-  "Running",
-  "Complete",
-  "Blocked",
-  "Backlogged",
-]);
-export const enum_tasks_task_type = pgEnum("enum_tasks_task_type", [
-  "Purchase Ticket",
-  "Custom Task",
-]);
-export const enum_tasks_ticket_vendor = pgEnum("enum_tasks_ticket_vendor", [
-  "SpotHero",
-  "ParkWhiz",
-  "ACE Parking",
-]);
-export const enum_tasks_status = pgEnum("enum_tasks_status", [
-  "draft",
-  "published",
-]);
-export const enum__tasks_v_version_task_status = pgEnum(
-  "enum__tasks_v_version_task_status",
-  ["Pending", "In Progress", "Running", "Complete", "Blocked", "Backlogged"],
-);
-export const enum__tasks_v_version_task_type = pgEnum(
-  "enum__tasks_v_version_task_type",
-  ["Purchase Ticket", "Custom Task"],
-);
-export const enum__tasks_v_version_ticket_vendor = pgEnum(
-  "enum__tasks_v_version_ticket_vendor",
-  ["SpotHero", "ParkWhiz", "ACE Parking"],
-);
-export const enum__tasks_v_version_status = pgEnum(
-  "enum__tasks_v_version_status",
-  ["draft", "published"],
-);
-export const enum_jobs_if_filter_collections = pgEnum(
-  "enum_jobs_if_filter_collections",
-  ["Tasks", "Orders", "Pools", "Users", "Tags", "Jobs"],
-);
-export const enum_jobs_if_condition = pgEnum("enum_jobs_if_condition", [
-  "Is Equal to",
-  "Is Not Equal to",
-  "Is Less Than",
-  "Is Less Than or Equal to",
-  "Is Greater Than",
-  "Is Greater Than or Equal to",
-  "Is Like",
-  "Is Not Like",
-  "Is In",
-  "Is Not In",
-  "Exists",
-]);
-export const enum_jobs_if_comparison_type = pgEnum(
-  "enum_jobs_if_comparison_type",
-  ["Static Value", "Dynamic Value"],
-);
-export const enum_jobs_if_compared_collections = pgEnum(
-  "enum_jobs_if_compared_collections",
-  ["Orders", "Pools", "Users", "Tags", "Jobs"],
-);
-export const enum_jobs_then_actions_action_type = pgEnum(
-  "enum_jobs_then_actions_action_type",
-  ["Payload Action", "TradeDesk Action"],
-);
-export const enum_jobs_then_actions_event_type = pgEnum(
-  "enum_jobs_then_actions_event_type",
-  ["Create", "Update", "Delete"],
-);
-export const enum_jobs_then_actions_target_collections = pgEnum(
-  "enum_jobs_then_actions_target_collections",
-  ["Tasks", "Orders", "Pools", "Users", "Tags", "Jobs"],
-);
-export const enum_jobs_then_type = pgEnum("enum_jobs_then_type", [
-  "Sequential",
-  "Parallel",
-  "Asynchronous",
-]);
-export const enum_jobs_job_status = pgEnum("enum_jobs_job_status", [
-  "Draft",
-  "Active",
-  "Running",
-  "Disabled",
-  "Blocked",
-]);
-export const enum_jobs_when_trigger = pgEnum("enum_jobs_when_trigger", [
-  "Payload Event",
-  "TradeDesk Event",
-]);
-export const enum_jobs_when_event_type = pgEnum("enum_jobs_when_event_type", [
-  "Create",
-  "Update",
-  "Delete",
-]);
-export const enum_jobs_when_source_collections = pgEnum(
-  "enum_jobs_when_source_collections",
-  ["Tasks", "Orders", "Pools", "Users", "Tags", "Jobs"],
-);
-export const enum_orders_event_tickets_parking_tickets_source = pgEnum(
-  "enum_orders_event_tickets_parking_tickets_source",
+export const enum_orders_parking_tickets_source = pgEnum(
+  "enum_orders_parking_tickets_source",
   ["SpotHero", "ParkWhiz", "ParkMobile", "AceParking"],
 );
-export const enum_orders_event_tickets_parking_tickets_type = pgEnum(
-  "enum_orders_event_tickets_parking_tickets_type",
+export const enum_orders_parking_tickets_type = pgEnum(
+  "enum_orders_parking_tickets_type",
   ["Eticket"],
 );
-export const enum_orders_event_tickets_parking_tickets_status = pgEnum(
-  "enum_orders_event_tickets_parking_tickets_status",
+export const enum_orders_parking_tickets_status = pgEnum(
+  "enum_orders_parking_tickets_status",
   ["Pending", "Purchased", "Fulfilled", "Blocked", "Cancelled"],
-);
-export const enum_orders_event_tickets_marketplace = pgEnum(
-  "enum_orders_event_tickets_marketplace",
-  ["Stubhub", "SeatGeek", "GoTickets"],
 );
 export const enum_orders_order_history_source = pgEnum(
   "enum_orders_order_history_source",
@@ -170,32 +65,26 @@ export const enum_orders_order_status = pgEnum("enum_orders_order_status", [
   "Cancelled",
   "Archived",
 ]);
+export const enum_orders_marketplace = pgEnum("enum_orders_marketplace", [
+  "Stubhub",
+  "SeatGeek",
+  "GoTickets",
+]);
 export const enum_orders_status = pgEnum("enum_orders_status", [
   "draft",
   "published",
 ]);
-export const enum__orders_v_version_event_tickets_parking_tickets_source =
-  pgEnum("enum__orders_v_version_event_tickets_parking_tickets_source", [
-    "SpotHero",
-    "ParkWhiz",
-    "ParkMobile",
-    "AceParking",
-  ]);
-export const enum__orders_v_version_event_tickets_parking_tickets_type = pgEnum(
-  "enum__orders_v_version_event_tickets_parking_tickets_type",
+export const enum__orders_v_version_parking_tickets_source = pgEnum(
+  "enum__orders_v_version_parking_tickets_source",
+  ["SpotHero", "ParkWhiz", "ParkMobile", "AceParking"],
+);
+export const enum__orders_v_version_parking_tickets_type = pgEnum(
+  "enum__orders_v_version_parking_tickets_type",
   ["Eticket"],
 );
-export const enum__orders_v_version_event_tickets_parking_tickets_status =
-  pgEnum("enum__orders_v_version_event_tickets_parking_tickets_status", [
-    "Pending",
-    "Purchased",
-    "Fulfilled",
-    "Blocked",
-    "Cancelled",
-  ]);
-export const enum__orders_v_version_event_tickets_marketplace = pgEnum(
-  "enum__orders_v_version_event_tickets_marketplace",
-  ["Stubhub", "SeatGeek", "GoTickets"],
+export const enum__orders_v_version_parking_tickets_status = pgEnum(
+  "enum__orders_v_version_parking_tickets_status",
+  ["Pending", "Purchased", "Fulfilled", "Blocked", "Cancelled"],
 );
 export const enum__orders_v_version_order_history_source = pgEnum(
   "enum__orders_v_version_order_history_source",
@@ -213,6 +102,10 @@ export const enum__orders_v_version_order_status = pgEnum(
   "enum__orders_v_version_order_status",
   ["Pending", "Purchased", "Fulfilled", "Blocked", "Cancelled", "Archived"],
 );
+export const enum__orders_v_version_marketplace = pgEnum(
+  "enum__orders_v_version_marketplace",
+  ["Stubhub", "SeatGeek", "GoTickets"],
+);
 export const enum__orders_v_version_status = pgEnum(
   "enum__orders_v_version_status",
   ["draft", "published"],
@@ -226,38 +119,6 @@ export const enum_pools_pool_status = pgEnum("enum_pools_pool_status", [
   "maintenance",
   "disabled",
 ]);
-export const enum_pages_status = pgEnum("enum_pages_status", [
-  "draft",
-  "published",
-]);
-export const enum__pages_v_version_status = pgEnum(
-  "enum__pages_v_version_status",
-  ["draft", "published"],
-);
-export const enum_forms_blocks_email_width = pgEnum(
-  "enum_forms_blocks_email_width",
-  ["full", "3/4", "2/3", "1/2", "1/3", "1/4"],
-);
-export const enum_forms_blocks_text_width = pgEnum(
-  "enum_forms_blocks_text_width",
-  ["full", "3/4", "2/3", "1/2", "1/3", "1/4"],
-);
-export const enum_forms_blocks_user_info_options = pgEnum(
-  "enum_forms_blocks_user_info_options",
-  ["name", "email", "phoneNumber", "id"],
-);
-export const enum_forms_blocks_user_info_width = pgEnum(
-  "enum_forms_blocks_user_info_width",
-  ["full", "3/4", "2/3", "1/2", "1/3", "1/4"],
-);
-export const enum_forms_blocks_phone_width = pgEnum(
-  "enum_forms_blocks_phone_width",
-  ["full", "3/4", "2/3", "1/2", "1/3", "1/4"],
-);
-export const enum_forms_confirmation_type = pgEnum(
-  "enum_forms_confirmation_type",
-  ["message", "redirect"],
-);
 export const enum_audit_log_type = pgEnum("enum_audit_log_type", [
   "info",
   "debug",
@@ -281,18 +142,14 @@ export const enum_payload_query_presets_access_delete_constraint = pgEnum(
 );
 export const enum_payload_query_presets_related_collection = pgEnum(
   "enum_payload_query_presets_related_collection",
-  ["pages", "payload-uploads", "private-uploads"],
-);
-export const enum_global_footer_nav_items_link_type = pgEnum(
-  "enum_global_footer_nav_items_link_type",
-  ["custom", "reference"],
+  ["payload-uploads"],
 );
 
 export const users = pgTable(
   "users",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-    operatorRole: enum_users_operator_role("operator_role"),
+    userRole: enum_users_user_role("user_role"),
     name: varchar("name"),
     email: varchar("email").notNull(),
     emailVerified: boolean("email_verified").notNull().default(false),
@@ -570,473 +427,28 @@ export const admin_invitations = pgTable(
   }),
 );
 
-export const tasks = pgTable(
-  "tasks",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    name: varchar("name"),
-    taskStatus: enum_tasks_task_status("task_status"),
-    tags: uuid("tags_id").references(() => tags.id, {
-      onDelete: "set null",
-    }),
-    "Task Notes": jsonb("task_notes"),
-    taskType: enum_tasks_task_type("task_type"),
-    ticketVendor: enum_tasks_ticket_vendor("ticket_vendor"),
-    taskAssignee: uuid("task_assignee_id").references(() => users.id, {
-      onDelete: "set null",
-    }),
-    taskProfile: uuid("task_profile_id").references(() => profiles.id, {
-      onDelete: "set null",
-    }),
-    linkedOrder: uuid("linked_order_id").references(() => orders.id, {
-      onDelete: "set null",
-    }),
-    purchasePrice: numeric("purchase_price"),
-    passPDF: uuid("pass_p_d_f_id").references(() => payload_uploads.id, {
-      onDelete: "set null",
-    }),
-    userHandbook: jsonb("user_handbook"),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    _status: enum_tasks_status("_status").default("draft"),
-  },
-  (columns) => ({
-    tasks_tags_idx: index("tasks_tags_idx").on(columns.tags),
-    tasks_task_assignee_idx: index("tasks_task_assignee_idx").on(
-      columns.taskAssignee,
-    ),
-    tasks_task_profile_idx: index("tasks_task_profile_idx").on(
-      columns.taskProfile,
-    ),
-    tasks_linked_order_idx: index("tasks_linked_order_idx").on(
-      columns.linkedOrder,
-    ),
-    tasks_pass_p_d_f_idx: index("tasks_pass_p_d_f_idx").on(columns.passPDF),
-    tasks_updated_at_idx: index("tasks_updated_at_idx").on(columns.updatedAt),
-    tasks_created_at_idx: index("tasks_created_at_idx").on(columns.createdAt),
-    tasks__status_idx: index("tasks__status_idx").on(columns._status),
-  }),
-);
-
-export const tasks_rels = pgTable(
-  "tasks_rels",
-  {
-    id: serial("id").primaryKey(),
-    order: integer("order"),
-    parent: uuid("parent_id").notNull(),
-    path: varchar("path").notNull(),
-    poolsID: uuid("pools_id"),
-    proxiesID: uuid("proxies_id"),
-  },
-  (columns) => ({
-    order: index("tasks_rels_order_idx").on(columns.order),
-    parentIdx: index("tasks_rels_parent_idx").on(columns.parent),
-    pathIdx: index("tasks_rels_path_idx").on(columns.path),
-    tasks_rels_pools_id_idx: index("tasks_rels_pools_id_idx").on(
-      columns.poolsID,
-    ),
-    tasks_rels_proxies_id_idx: index("tasks_rels_proxies_id_idx").on(
-      columns.proxiesID,
-    ),
-    parentFk: foreignKey({
-      columns: [columns["parent"]],
-      foreignColumns: [tasks.id],
-      name: "tasks_rels_parent_fk",
-    }).onDelete("cascade"),
-    poolsIdFk: foreignKey({
-      columns: [columns["poolsID"]],
-      foreignColumns: [pools.id],
-      name: "tasks_rels_pools_fk",
-    }).onDelete("cascade"),
-    proxiesIdFk: foreignKey({
-      columns: [columns["proxiesID"]],
-      foreignColumns: [proxies.id],
-      name: "tasks_rels_proxies_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const _tasks_v = pgTable(
-  "_tasks_v",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    parent: uuid("parent_id").references(() => tasks.id, {
-      onDelete: "set null",
-    }),
-    version_name: varchar("version_name"),
-    version_taskStatus: enum__tasks_v_version_task_status(
-      "version_task_status",
-    ),
-    version_tags: uuid("version_tags_id").references(() => tags.id, {
-      onDelete: "set null",
-    }),
-    "version_Task Notes": jsonb("version_task_notes"),
-    version_taskType: enum__tasks_v_version_task_type("version_task_type"),
-    version_ticketVendor: enum__tasks_v_version_ticket_vendor(
-      "version_ticket_vendor",
-    ),
-    version_taskAssignee: uuid("version_task_assignee_id").references(
-      () => users.id,
-      {
-        onDelete: "set null",
-      },
-    ),
-    version_taskProfile: uuid("version_task_profile_id").references(
-      () => profiles.id,
-      {
-        onDelete: "set null",
-      },
-    ),
-    version_linkedOrder: uuid("version_linked_order_id").references(
-      () => orders.id,
-      {
-        onDelete: "set null",
-      },
-    ),
-    version_purchasePrice: numeric("version_purchase_price"),
-    version_passPDF: uuid("version_pass_p_d_f_id").references(
-      () => payload_uploads.id,
-      {
-        onDelete: "set null",
-      },
-    ),
-    version_userHandbook: jsonb("version_user_handbook"),
-    version_updatedAt: timestamp("version_updated_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    }),
-    version_createdAt: timestamp("version_created_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    }),
-    version__status:
-      enum__tasks_v_version_status("version__status").default("draft"),
-    createdAt: timestamp("created_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    latest: boolean("latest"),
-    autosave: boolean("autosave"),
-  },
-  (columns) => ({
-    _tasks_v_parent_idx: index("_tasks_v_parent_idx").on(columns.parent),
-    _tasks_v_version_version_tags_idx: index(
-      "_tasks_v_version_version_tags_idx",
-    ).on(columns.version_tags),
-    _tasks_v_version_version_task_assignee_idx: index(
-      "_tasks_v_version_version_task_assignee_idx",
-    ).on(columns.version_taskAssignee),
-    _tasks_v_version_version_task_profile_idx: index(
-      "_tasks_v_version_version_task_profile_idx",
-    ).on(columns.version_taskProfile),
-    _tasks_v_version_version_linked_order_idx: index(
-      "_tasks_v_version_version_linked_order_idx",
-    ).on(columns.version_linkedOrder),
-    _tasks_v_version_version_pass_p_d_f_idx: index(
-      "_tasks_v_version_version_pass_p_d_f_idx",
-    ).on(columns.version_passPDF),
-    _tasks_v_version_version_updated_at_idx: index(
-      "_tasks_v_version_version_updated_at_idx",
-    ).on(columns.version_updatedAt),
-    _tasks_v_version_version_created_at_idx: index(
-      "_tasks_v_version_version_created_at_idx",
-    ).on(columns.version_createdAt),
-    _tasks_v_version_version__status_idx: index(
-      "_tasks_v_version_version__status_idx",
-    ).on(columns.version__status),
-    _tasks_v_created_at_idx: index("_tasks_v_created_at_idx").on(
-      columns.createdAt,
-    ),
-    _tasks_v_updated_at_idx: index("_tasks_v_updated_at_idx").on(
-      columns.updatedAt,
-    ),
-    _tasks_v_latest_idx: index("_tasks_v_latest_idx").on(columns.latest),
-    _tasks_v_autosave_idx: index("_tasks_v_autosave_idx").on(columns.autosave),
-  }),
-);
-
-export const _tasks_v_rels = pgTable(
-  "_tasks_v_rels",
-  {
-    id: serial("id").primaryKey(),
-    order: integer("order"),
-    parent: uuid("parent_id").notNull(),
-    path: varchar("path").notNull(),
-    poolsID: uuid("pools_id"),
-    proxiesID: uuid("proxies_id"),
-  },
-  (columns) => ({
-    order: index("_tasks_v_rels_order_idx").on(columns.order),
-    parentIdx: index("_tasks_v_rels_parent_idx").on(columns.parent),
-    pathIdx: index("_tasks_v_rels_path_idx").on(columns.path),
-    _tasks_v_rels_pools_id_idx: index("_tasks_v_rels_pools_id_idx").on(
-      columns.poolsID,
-    ),
-    _tasks_v_rels_proxies_id_idx: index("_tasks_v_rels_proxies_id_idx").on(
-      columns.proxiesID,
-    ),
-    parentFk: foreignKey({
-      columns: [columns["parent"]],
-      foreignColumns: [_tasks_v.id],
-      name: "_tasks_v_rels_parent_fk",
-    }).onDelete("cascade"),
-    poolsIdFk: foreignKey({
-      columns: [columns["poolsID"]],
-      foreignColumns: [pools.id],
-      name: "_tasks_v_rels_pools_fk",
-    }).onDelete("cascade"),
-    proxiesIdFk: foreignKey({
-      columns: [columns["proxiesID"]],
-      foreignColumns: [proxies.id],
-      name: "_tasks_v_rels_proxies_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const jobs_if = pgTable(
-  "jobs_if",
+export const orders_parking_tickets = pgTable(
+  "orders_parking_tickets",
   {
     _order: integer("_order").notNull(),
     _parentID: uuid("_parent_id").notNull(),
     id: varchar("id").primaryKey(),
-    filterCollections: enum_jobs_if_filter_collections("filter_collections"),
-    filterFields: varchar("filter_fields"),
-    condition: enum_jobs_if_condition("condition"),
-    comparisonType: enum_jobs_if_comparison_type("comparison_type"),
-    comparedValue: varchar("compared_value"),
-    comparedCollections: enum_jobs_if_compared_collections(
-      "compared_collections",
-    ),
-    comparedFields: varchar("compared_fields"),
-  },
-  (columns) => ({
-    _orderIdx: index("jobs_if_order_idx").on(columns._order),
-    _parentIDIdx: index("jobs_if_parent_id_idx").on(columns._parentID),
-    _parentIDFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [jobs.id],
-      name: "jobs_if_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const jobs_then_actions = pgTable(
-  "jobs_then_actions",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: varchar("_parent_id").notNull(),
-    id: varchar("id").primaryKey(),
-    actionType: enum_jobs_then_actions_action_type("action_type"),
-    eventType: enum_jobs_then_actions_event_type("event_type"),
-    targetCollections:
-      enum_jobs_then_actions_target_collections("target_collections"),
-    targetFields: varchar("target_fields"),
-  },
-  (columns) => ({
-    _orderIdx: index("jobs_then_actions_order_idx").on(columns._order),
-    _parentIDIdx: index("jobs_then_actions_parent_id_idx").on(
-      columns._parentID,
-    ),
-    _parentIDFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [jobs_then.id],
-      name: "jobs_then_actions_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const jobs_then = pgTable(
-  "jobs_then",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    id: varchar("id").primaryKey(),
-    type: enum_jobs_then_type("type"),
-  },
-  (columns) => ({
-    _orderIdx: index("jobs_then_order_idx").on(columns._order),
-    _parentIDIdx: index("jobs_then_parent_id_idx").on(columns._parentID),
-    _parentIDFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [jobs.id],
-      name: "jobs_then_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const jobs = pgTable(
-  "jobs",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    jobName: varchar("job_name"),
-    jobStatus: enum_jobs_job_status("job_status"),
-    jobTags: uuid("job_tags_id").references(() => tags.id, {
-      onDelete: "set null",
-    }),
-    When_trigger: enum_jobs_when_trigger("when_trigger"),
-    When_eventType: enum_jobs_when_event_type("when_event_type"),
-    When_sourceCollections: enum_jobs_when_source_collections(
-      "when_source_collections",
-    ),
-    When_sourceFields: varchar("when_source_fields"),
-    userHandbook: jsonb("user_handbook"),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-  },
-  (columns) => ({
-    jobs_job_tags_idx: index("jobs_job_tags_idx").on(columns.jobTags),
-    jobs_updated_at_idx: index("jobs_updated_at_idx").on(columns.updatedAt),
-    jobs_created_at_idx: index("jobs_created_at_idx").on(columns.createdAt),
-  }),
-);
-
-export const jobs_rels = pgTable(
-  "jobs_rels",
-  {
-    id: serial("id").primaryKey(),
-    order: integer("order"),
-    parent: uuid("parent_id").notNull(),
-    path: varchar("path").notNull(),
-    tasksID: uuid("tasks_id"),
-    ordersID: uuid("orders_id"),
-    poolsID: uuid("pools_id"),
-    usersID: uuid("users_id"),
-    tagsID: uuid("tags_id"),
-    jobsID: uuid("jobs_id"),
-  },
-  (columns) => ({
-    order: index("jobs_rels_order_idx").on(columns.order),
-    parentIdx: index("jobs_rels_parent_idx").on(columns.parent),
-    pathIdx: index("jobs_rels_path_idx").on(columns.path),
-    jobs_rels_tasks_id_idx: index("jobs_rels_tasks_id_idx").on(columns.tasksID),
-    jobs_rels_orders_id_idx: index("jobs_rels_orders_id_idx").on(
-      columns.ordersID,
-    ),
-    jobs_rels_pools_id_idx: index("jobs_rels_pools_id_idx").on(columns.poolsID),
-    jobs_rels_users_id_idx: index("jobs_rels_users_id_idx").on(columns.usersID),
-    jobs_rels_tags_id_idx: index("jobs_rels_tags_id_idx").on(columns.tagsID),
-    jobs_rels_jobs_id_idx: index("jobs_rels_jobs_id_idx").on(columns.jobsID),
-    parentFk: foreignKey({
-      columns: [columns["parent"]],
-      foreignColumns: [jobs.id],
-      name: "jobs_rels_parent_fk",
-    }).onDelete("cascade"),
-    tasksIdFk: foreignKey({
-      columns: [columns["tasksID"]],
-      foreignColumns: [tasks.id],
-      name: "jobs_rels_tasks_fk",
-    }).onDelete("cascade"),
-    ordersIdFk: foreignKey({
-      columns: [columns["ordersID"]],
-      foreignColumns: [orders.id],
-      name: "jobs_rels_orders_fk",
-    }).onDelete("cascade"),
-    poolsIdFk: foreignKey({
-      columns: [columns["poolsID"]],
-      foreignColumns: [pools.id],
-      name: "jobs_rels_pools_fk",
-    }).onDelete("cascade"),
-    usersIdFk: foreignKey({
-      columns: [columns["usersID"]],
-      foreignColumns: [users.id],
-      name: "jobs_rels_users_fk",
-    }).onDelete("cascade"),
-    tagsIdFk: foreignKey({
-      columns: [columns["tagsID"]],
-      foreignColumns: [tags.id],
-      name: "jobs_rels_tags_fk",
-    }).onDelete("cascade"),
-    jobsIdFk: foreignKey({
-      columns: [columns["jobsID"]],
-      foreignColumns: [jobs.id],
-      name: "jobs_rels_jobs_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const orders_event_tickets_parking_tickets = pgTable(
-  "orders_event_tickets_parking_tickets",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: varchar("_parent_id").notNull(),
-    id: varchar("id").primaryKey(),
-    source: enum_orders_event_tickets_parking_tickets_source("source"),
+    source: enum_orders_parking_tickets_source("source"),
     link: varchar("link"),
-    type: enum_orders_event_tickets_parking_tickets_type("type"),
-    status: enum_orders_event_tickets_parking_tickets_status("status"),
+    type: enum_orders_parking_tickets_type("type"),
+    status: enum_orders_parking_tickets_status("status"),
     parkingSpotLocation: varchar("parking_spot_location"),
     projectedPurchasePrice: numeric("projected_purchase_price"),
   },
   (columns) => ({
-    _orderIdx: index("orders_event_tickets_parking_tickets_order_idx").on(
-      columns._order,
-    ),
-    _parentIDIdx: index(
-      "orders_event_tickets_parking_tickets_parent_id_idx",
-    ).on(columns._parentID),
-    _parentIDFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [orders_event_tickets.id],
-      name: "orders_event_tickets_parking_tickets_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const orders_event_tickets = pgTable(
-  "orders_event_tickets",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    id: varchar("id").primaryKey(),
-    marketplace: enum_orders_event_tickets_marketplace("marketplace"),
-    eventOrPerformerName: varchar("event_or_performer_name"),
-    venueName: varchar("venue_name"),
-  },
-  (columns) => ({
-    _orderIdx: index("orders_event_tickets_order_idx").on(columns._order),
-    _parentIDIdx: index("orders_event_tickets_parent_id_idx").on(
+    _orderIdx: index("orders_parking_tickets_order_idx").on(columns._order),
+    _parentIDIdx: index("orders_parking_tickets_parent_id_idx").on(
       columns._parentID,
     ),
     _parentIDFk: foreignKey({
       columns: [columns["_parentID"]],
       foreignColumns: [orders.id],
-      name: "orders_event_tickets_parent_id_fk",
+      name: "orders_parking_tickets_parent_id_fk",
     }).onDelete("cascade"),
   }),
 );
@@ -1075,11 +487,11 @@ export const orders = pgTable(
     orderValue: numeric("order_value"),
     orderNumber: numeric("order_number"),
     orderLink: varchar("order_link"),
-    orderTags: uuid("order_tags_id").references(() => tags.id, {
-      onDelete: "set null",
-    }),
-    orderNotes: jsonb("order_notes"),
-    userHandbook: jsonb("user_handbook"),
+    marketplace: enum_orders_marketplace("marketplace"),
+    eventOrPerformerName: varchar("event_or_performer_name"),
+    venueName: varchar("venue_name"),
+    orderNotes: varchar("order_notes"),
+    handbook: varchar("handbook"),
     updatedAt: timestamp("updated_at", {
       mode: "string",
       withTimezone: true,
@@ -1097,67 +509,37 @@ export const orders = pgTable(
     _status: enum_orders_status("_status").default("draft"),
   },
   (columns) => ({
-    orders_order_tags_idx: index("orders_order_tags_idx").on(columns.orderTags),
     orders_updated_at_idx: index("orders_updated_at_idx").on(columns.updatedAt),
     orders_created_at_idx: index("orders_created_at_idx").on(columns.createdAt),
     orders__status_idx: index("orders__status_idx").on(columns._status),
   }),
 );
 
-export const _orders_v_version_event_tickets_parking_tickets = pgTable(
-  "_orders_v_version_event_tickets_parking_tickets",
+export const _orders_v_version_parking_tickets = pgTable(
+  "_orders_v_version_parking_tickets",
   {
     _order: integer("_order").notNull(),
     _parentID: uuid("_parent_id").notNull(),
     id: uuid("id").defaultRandom().primaryKey(),
-    source:
-      enum__orders_v_version_event_tickets_parking_tickets_source("source"),
+    source: enum__orders_v_version_parking_tickets_source("source"),
     link: varchar("link"),
-    type: enum__orders_v_version_event_tickets_parking_tickets_type("type"),
-    status:
-      enum__orders_v_version_event_tickets_parking_tickets_status("status"),
+    type: enum__orders_v_version_parking_tickets_type("type"),
+    status: enum__orders_v_version_parking_tickets_status("status"),
     parkingSpotLocation: varchar("parking_spot_location"),
     projectedPurchasePrice: numeric("projected_purchase_price"),
     _uuid: varchar("_uuid"),
   },
   (columns) => ({
-    _orderIdx: index(
-      "_orders_v_version_event_tickets_parking_tickets_order_idx",
-    ).on(columns._order),
-    _parentIDIdx: index(
-      "_orders_v_version_event_tickets_parking_tickets_parent_id_idx",
-    ).on(columns._parentID),
-    _parentIDFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [_orders_v_version_event_tickets.id],
-      name: "_orders_v_version_event_tickets_parking_tickets_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const _orders_v_version_event_tickets = pgTable(
-  "_orders_v_version_event_tickets",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    id: uuid("id").defaultRandom().primaryKey(),
-    marketplace:
-      enum__orders_v_version_event_tickets_marketplace("marketplace"),
-    eventOrPerformerName: varchar("event_or_performer_name"),
-    venueName: varchar("venue_name"),
-    _uuid: varchar("_uuid"),
-  },
-  (columns) => ({
-    _orderIdx: index("_orders_v_version_event_tickets_order_idx").on(
+    _orderIdx: index("_orders_v_version_parking_tickets_order_idx").on(
       columns._order,
     ),
-    _parentIDIdx: index("_orders_v_version_event_tickets_parent_id_idx").on(
+    _parentIDIdx: index("_orders_v_version_parking_tickets_parent_id_idx").on(
       columns._parentID,
     ),
     _parentIDFk: foreignKey({
       columns: [columns["_parentID"]],
       foreignColumns: [_orders_v.id],
-      name: "_orders_v_version_event_tickets_parent_id_fk",
+      name: "_orders_v_version_parking_tickets_parent_id_fk",
     }).onDelete("cascade"),
   }),
 );
@@ -1204,11 +586,13 @@ export const _orders_v = pgTable(
     version_orderValue: numeric("version_order_value"),
     version_orderNumber: numeric("version_order_number"),
     version_orderLink: varchar("version_order_link"),
-    version_orderTags: uuid("version_order_tags_id").references(() => tags.id, {
-      onDelete: "set null",
-    }),
-    version_orderNotes: jsonb("version_order_notes"),
-    version_userHandbook: jsonb("version_user_handbook"),
+    version_marketplace: enum__orders_v_version_marketplace(
+      "version_marketplace",
+    ),
+    version_eventOrPerformerName: varchar("version_event_or_performer_name"),
+    version_venueName: varchar("version_venue_name"),
+    version_orderNotes: varchar("version_order_notes"),
+    version_handbook: varchar("version_handbook"),
     version_updatedAt: timestamp("version_updated_at", {
       mode: "string",
       withTimezone: true,
@@ -1240,9 +624,6 @@ export const _orders_v = pgTable(
   },
   (columns) => ({
     _orders_v_parent_idx: index("_orders_v_parent_idx").on(columns.parent),
-    _orders_v_version_version_order_tags_idx: index(
-      "_orders_v_version_version_order_tags_idx",
-    ).on(columns.version_orderTags),
     _orders_v_version_version_updated_at_idx: index(
       "_orders_v_version_version_updated_at_idx",
     ).on(columns.version_updatedAt),
@@ -1261,6 +642,36 @@ export const _orders_v = pgTable(
     _orders_v_latest_idx: index("_orders_v_latest_idx").on(columns.latest),
     _orders_v_autosave_idx: index("_orders_v_autosave_idx").on(
       columns.autosave,
+    ),
+  }),
+);
+
+export const profiles = pgTable(
+  "profiles",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    title: varchar("title"),
+    updatedAt: timestamp("updated_at", {
+      mode: "string",
+      withTimezone: true,
+      precision: 3,
+    })
+      .defaultNow()
+      .notNull(),
+    createdAt: timestamp("created_at", {
+      mode: "string",
+      withTimezone: true,
+      precision: 3,
+    })
+      .defaultNow()
+      .notNull(),
+  },
+  (columns) => ({
+    profiles_updated_at_idx: index("profiles_updated_at_idx").on(
+      columns.updatedAt,
+    ),
+    profiles_created_at_idx: index("profiles_created_at_idx").on(
+      columns.createdAt,
     ),
   }),
 );
@@ -1307,7 +718,7 @@ export const pools = pgTable(
     poolStatus: enum_pools_pool_status("pool_status")
       .notNull()
       .default("active"),
-    userHandbook: jsonb("user_handbook"),
+    userHandbook: varchar("user_handbook"),
     updatedAt: timestamp("updated_at", {
       mode: "string",
       withTimezone: true,
@@ -1329,280 +740,12 @@ export const pools = pgTable(
   }),
 );
 
-export const profiles = pgTable(
-  "profiles",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    title: varchar("title"),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-  },
-  (columns) => ({
-    profiles_updated_at_idx: index("profiles_updated_at_idx").on(
-      columns.updatedAt,
-    ),
-    profiles_created_at_idx: index("profiles_created_at_idx").on(
-      columns.createdAt,
-    ),
-  }),
-);
-
-export const proxies = pgTable(
-  "proxies",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    title: varchar("title"),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-  },
-  (columns) => ({
-    proxies_updated_at_idx: index("proxies_updated_at_idx").on(
-      columns.updatedAt,
-    ),
-    proxies_created_at_idx: index("proxies_created_at_idx").on(
-      columns.createdAt,
-    ),
-  }),
-);
-
-export const pages = pgTable(
-  "pages",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    title: varchar("title"),
-    slug: varchar("slug"),
-    slugLock: boolean("slug_lock").default(true),
-    tags: uuid("tags_id").references(() => users.id, {
-      onDelete: "set null",
-    }),
-    heroImage: uuid("hero_image_id").references(() => payload_uploads.id, {
-      onDelete: "set null",
-    }),
-    content: jsonb("content"),
-    meta_title: varchar("meta_title"),
-    meta_image: uuid("meta_image_id").references(() => payload_uploads.id, {
-      onDelete: "set null",
-    }),
-    meta_description: varchar("meta_description"),
-    folder: uuid("folder_id").references(() => payload_folders.id, {
-      onDelete: "set null",
-    }),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    _status: enum_pages_status("_status").default("draft"),
-  },
-  (columns) => ({
-    pages_slug_idx: index("pages_slug_idx").on(columns.slug),
-    pages_tags_idx: index("pages_tags_idx").on(columns.tags),
-    pages_hero_image_idx: index("pages_hero_image_idx").on(columns.heroImage),
-    pages_meta_meta_image_idx: index("pages_meta_meta_image_idx").on(
-      columns.meta_image,
-    ),
-    pages_folder_idx: index("pages_folder_idx").on(columns.folder),
-    pages_updated_at_idx: index("pages_updated_at_idx").on(columns.updatedAt),
-    pages_created_at_idx: index("pages_created_at_idx").on(columns.createdAt),
-    pages__status_idx: index("pages__status_idx").on(columns._status),
-  }),
-);
-
-export const _pages_v = pgTable(
-  "_pages_v",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    parent: uuid("parent_id").references(() => pages.id, {
-      onDelete: "set null",
-    }),
-    version_title: varchar("version_title"),
-    version_slug: varchar("version_slug"),
-    version_slugLock: boolean("version_slug_lock").default(true),
-    version_tags: uuid("version_tags_id").references(() => users.id, {
-      onDelete: "set null",
-    }),
-    version_heroImage: uuid("version_hero_image_id").references(
-      () => payload_uploads.id,
-      {
-        onDelete: "set null",
-      },
-    ),
-    version_content: jsonb("version_content"),
-    version_meta_title: varchar("version_meta_title"),
-    version_meta_image: uuid("version_meta_image_id").references(
-      () => payload_uploads.id,
-      {
-        onDelete: "set null",
-      },
-    ),
-    version_meta_description: varchar("version_meta_description"),
-    version_folder: uuid("version_folder_id").references(
-      () => payload_folders.id,
-      {
-        onDelete: "set null",
-      },
-    ),
-    version_updatedAt: timestamp("version_updated_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    }),
-    version_createdAt: timestamp("version_created_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    }),
-    version__status:
-      enum__pages_v_version_status("version__status").default("draft"),
-    createdAt: timestamp("created_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    latest: boolean("latest"),
-    autosave: boolean("autosave"),
-  },
-  (columns) => ({
-    _pages_v_parent_idx: index("_pages_v_parent_idx").on(columns.parent),
-    _pages_v_version_version_slug_idx: index(
-      "_pages_v_version_version_slug_idx",
-    ).on(columns.version_slug),
-    _pages_v_version_version_tags_idx: index(
-      "_pages_v_version_version_tags_idx",
-    ).on(columns.version_tags),
-    _pages_v_version_version_hero_image_idx: index(
-      "_pages_v_version_version_hero_image_idx",
-    ).on(columns.version_heroImage),
-    _pages_v_version_meta_version_meta_image_idx: index(
-      "_pages_v_version_meta_version_meta_image_idx",
-    ).on(columns.version_meta_image),
-    _pages_v_version_version_folder_idx: index(
-      "_pages_v_version_version_folder_idx",
-    ).on(columns.version_folder),
-    _pages_v_version_version_updated_at_idx: index(
-      "_pages_v_version_version_updated_at_idx",
-    ).on(columns.version_updatedAt),
-    _pages_v_version_version_created_at_idx: index(
-      "_pages_v_version_version_created_at_idx",
-    ).on(columns.version_createdAt),
-    _pages_v_version_version__status_idx: index(
-      "_pages_v_version_version__status_idx",
-    ).on(columns.version__status),
-    _pages_v_created_at_idx: index("_pages_v_created_at_idx").on(
-      columns.createdAt,
-    ),
-    _pages_v_updated_at_idx: index("_pages_v_updated_at_idx").on(
-      columns.updatedAt,
-    ),
-    _pages_v_latest_idx: index("_pages_v_latest_idx").on(columns.latest),
-    _pages_v_autosave_idx: index("_pages_v_autosave_idx").on(columns.autosave),
-  }),
-);
-
-export const tags = pgTable(
-  "tags",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    title: varchar("title"),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-  },
-  (columns) => ({
-    tags_updated_at_idx: index("tags_updated_at_idx").on(columns.updatedAt),
-    tags_created_at_idx: index("tags_created_at_idx").on(columns.createdAt),
-  }),
-);
-
-export const statuses = pgTable(
-  "statuses",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    title: varchar("title"),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-  },
-  (columns) => ({
-    statuses_updated_at_idx: index("statuses_updated_at_idx").on(
-      columns.updatedAt,
-    ),
-    statuses_created_at_idx: index("statuses_created_at_idx").on(
-      columns.createdAt,
-    ),
-  }),
-);
-
 export const payload_uploads = pgTable(
   "payload_uploads",
   {
     id: uuid("id").defaultRandom().primaryKey(),
     alt: varchar("alt").notNull(),
-    caption: jsonb("caption"),
+    caption: varchar("caption"),
     prefix: varchar("prefix").default("payload-uploads"),
     folder: uuid("folder_id").references(() => payload_folders.id, {
       onDelete: "set null",
@@ -1715,605 +858,6 @@ export const payload_uploads = pgTable(
     payload_uploads_sizes_og_sizes_og_filename_idx: index(
       "payload_uploads_sizes_og_sizes_og_filename_idx",
     ).on(columns.sizes_og_filename),
-  }),
-);
-
-export const private_uploads = pgTable(
-  "private_uploads",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    title: varchar("title").notNull(),
-    prefix: varchar("prefix").default("private-uploads"),
-    folder: uuid("folder_id").references(() => payload_folders.id, {
-      onDelete: "set null",
-    }),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    deletedAt: timestamp("deleted_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    }),
-    url: varchar("url"),
-    thumbnailURL: varchar("thumbnail_u_r_l"),
-    filename: varchar("filename"),
-    mimeType: varchar("mime_type"),
-    filesize: numeric("filesize"),
-    width: numeric("width"),
-    height: numeric("height"),
-    focalX: numeric("focal_x"),
-    focalY: numeric("focal_y"),
-  },
-  (columns) => ({
-    private_uploads_folder_idx: index("private_uploads_folder_idx").on(
-      columns.folder,
-    ),
-    private_uploads_updated_at_idx: index("private_uploads_updated_at_idx").on(
-      columns.updatedAt,
-    ),
-    private_uploads_created_at_idx: index("private_uploads_created_at_idx").on(
-      columns.createdAt,
-    ),
-    private_uploads_deleted_at_idx: index("private_uploads_deleted_at_idx").on(
-      columns.deletedAt,
-    ),
-    private_uploads_filename_idx: uniqueIndex(
-      "private_uploads_filename_idx",
-    ).on(columns.filename),
-  }),
-);
-
-export const private_uploads_rels = pgTable(
-  "private_uploads_rels",
-  {
-    id: serial("id").primaryKey(),
-    order: integer("order"),
-    parent: uuid("parent_id").notNull(),
-    path: varchar("path").notNull(),
-    usersID: uuid("users_id"),
-  },
-  (columns) => ({
-    order: index("private_uploads_rels_order_idx").on(columns.order),
-    parentIdx: index("private_uploads_rels_parent_idx").on(columns.parent),
-    pathIdx: index("private_uploads_rels_path_idx").on(columns.path),
-    private_uploads_rels_users_id_idx: index(
-      "private_uploads_rels_users_id_idx",
-    ).on(columns.usersID),
-    parentFk: foreignKey({
-      columns: [columns["parent"]],
-      foreignColumns: [private_uploads.id],
-      name: "private_uploads_rels_parent_fk",
-    }).onDelete("cascade"),
-    usersIdFk: foreignKey({
-      columns: [columns["usersID"]],
-      foreignColumns: [users.id],
-      name: "private_uploads_rels_users_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const handbook = pgTable(
-  "handbook",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    title: varchar("title"),
-    tags: uuid("tags_id").references(() => tags.id, {
-      onDelete: "set null",
-    }),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-  },
-  (columns) => ({
-    handbook_tags_idx: index("handbook_tags_idx").on(columns.tags),
-    handbook_updated_at_idx: index("handbook_updated_at_idx").on(
-      columns.updatedAt,
-    ),
-    handbook_created_at_idx: index("handbook_created_at_idx").on(
-      columns.createdAt,
-    ),
-  }),
-);
-
-export const forms_blocks_checkbox = pgTable(
-  "forms_blocks_checkbox",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    _path: text("_path").notNull(),
-    id: varchar("id").primaryKey(),
-    name: varchar("name").notNull(),
-    label: varchar("label"),
-    width: numeric("width"),
-    required: boolean("required"),
-    defaultValue: boolean("default_value"),
-    blockName: varchar("block_name"),
-  },
-  (columns) => ({
-    _orderIdx: index("forms_blocks_checkbox_order_idx").on(columns._order),
-    _parentIDIdx: index("forms_blocks_checkbox_parent_id_idx").on(
-      columns._parentID,
-    ),
-    _pathIdx: index("forms_blocks_checkbox_path_idx").on(columns._path),
-    _parentIdFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [forms.id],
-      name: "forms_blocks_checkbox_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const forms_blocks_country = pgTable(
-  "forms_blocks_country",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    _path: text("_path").notNull(),
-    id: varchar("id").primaryKey(),
-    name: varchar("name").notNull(),
-    label: varchar("label"),
-    width: numeric("width"),
-    required: boolean("required"),
-    blockName: varchar("block_name"),
-  },
-  (columns) => ({
-    _orderIdx: index("forms_blocks_country_order_idx").on(columns._order),
-    _parentIDIdx: index("forms_blocks_country_parent_id_idx").on(
-      columns._parentID,
-    ),
-    _pathIdx: index("forms_blocks_country_path_idx").on(columns._path),
-    _parentIdFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [forms.id],
-      name: "forms_blocks_country_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const forms_blocks_email = pgTable(
-  "forms_blocks_email",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    _path: text("_path").notNull(),
-    id: varchar("id").primaryKey(),
-    name: varchar("name").notNull(),
-    label: varchar("label"),
-    description: varchar("description"),
-    placeholder: varchar("placeholder"),
-    defaultValue: varchar("default_value"),
-    width: enum_forms_blocks_email_width("width").default("full"),
-    required: boolean("required"),
-    hidden: boolean("hidden"),
-    blockName: varchar("block_name"),
-  },
-  (columns) => ({
-    _orderIdx: index("forms_blocks_email_order_idx").on(columns._order),
-    _parentIDIdx: index("forms_blocks_email_parent_id_idx").on(
-      columns._parentID,
-    ),
-    _pathIdx: index("forms_blocks_email_path_idx").on(columns._path),
-    _parentIdFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [forms.id],
-      name: "forms_blocks_email_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const forms_blocks_message = pgTable(
-  "forms_blocks_message",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    _path: text("_path").notNull(),
-    id: varchar("id").primaryKey(),
-    message: jsonb("message"),
-    blockName: varchar("block_name"),
-  },
-  (columns) => ({
-    _orderIdx: index("forms_blocks_message_order_idx").on(columns._order),
-    _parentIDIdx: index("forms_blocks_message_parent_id_idx").on(
-      columns._parentID,
-    ),
-    _pathIdx: index("forms_blocks_message_path_idx").on(columns._path),
-    _parentIdFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [forms.id],
-      name: "forms_blocks_message_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const forms_blocks_number = pgTable(
-  "forms_blocks_number",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    _path: text("_path").notNull(),
-    id: varchar("id").primaryKey(),
-    name: varchar("name").notNull(),
-    label: varchar("label"),
-    width: numeric("width"),
-    defaultValue: numeric("default_value"),
-    required: boolean("required"),
-    blockName: varchar("block_name"),
-  },
-  (columns) => ({
-    _orderIdx: index("forms_blocks_number_order_idx").on(columns._order),
-    _parentIDIdx: index("forms_blocks_number_parent_id_idx").on(
-      columns._parentID,
-    ),
-    _pathIdx: index("forms_blocks_number_path_idx").on(columns._path),
-    _parentIdFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [forms.id],
-      name: "forms_blocks_number_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const forms_blocks_select_options = pgTable(
-  "forms_blocks_select_options",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: varchar("_parent_id").notNull(),
-    id: varchar("id").primaryKey(),
-    label: varchar("label").notNull(),
-    value: varchar("value").notNull(),
-  },
-  (columns) => ({
-    _orderIdx: index("forms_blocks_select_options_order_idx").on(
-      columns._order,
-    ),
-    _parentIDIdx: index("forms_blocks_select_options_parent_id_idx").on(
-      columns._parentID,
-    ),
-    _parentIDFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [forms_blocks_select.id],
-      name: "forms_blocks_select_options_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const forms_blocks_select = pgTable(
-  "forms_blocks_select",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    _path: text("_path").notNull(),
-    id: varchar("id").primaryKey(),
-    name: varchar("name").notNull(),
-    label: varchar("label"),
-    width: numeric("width"),
-    defaultValue: varchar("default_value"),
-    placeholder: varchar("placeholder"),
-    required: boolean("required"),
-    blockName: varchar("block_name"),
-  },
-  (columns) => ({
-    _orderIdx: index("forms_blocks_select_order_idx").on(columns._order),
-    _parentIDIdx: index("forms_blocks_select_parent_id_idx").on(
-      columns._parentID,
-    ),
-    _pathIdx: index("forms_blocks_select_path_idx").on(columns._path),
-    _parentIdFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [forms.id],
-      name: "forms_blocks_select_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const forms_blocks_state = pgTable(
-  "forms_blocks_state",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    _path: text("_path").notNull(),
-    id: varchar("id").primaryKey(),
-    name: varchar("name").notNull(),
-    label: varchar("label"),
-    width: numeric("width"),
-    required: boolean("required"),
-    blockName: varchar("block_name"),
-  },
-  (columns) => ({
-    _orderIdx: index("forms_blocks_state_order_idx").on(columns._order),
-    _parentIDIdx: index("forms_blocks_state_parent_id_idx").on(
-      columns._parentID,
-    ),
-    _pathIdx: index("forms_blocks_state_path_idx").on(columns._path),
-    _parentIdFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [forms.id],
-      name: "forms_blocks_state_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const forms_blocks_text = pgTable(
-  "forms_blocks_text",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    _path: text("_path").notNull(),
-    id: varchar("id").primaryKey(),
-    name: varchar("name").notNull(),
-    label: varchar("label"),
-    description: varchar("description"),
-    placeholder: varchar("placeholder"),
-    defaultValue: varchar("default_value"),
-    width: enum_forms_blocks_text_width("width").default("full"),
-    required: boolean("required"),
-    hidden: boolean("hidden"),
-    blockName: varchar("block_name"),
-  },
-  (columns) => ({
-    _orderIdx: index("forms_blocks_text_order_idx").on(columns._order),
-    _parentIDIdx: index("forms_blocks_text_parent_id_idx").on(
-      columns._parentID,
-    ),
-    _pathIdx: index("forms_blocks_text_path_idx").on(columns._path),
-    _parentIdFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [forms.id],
-      name: "forms_blocks_text_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const forms_blocks_textarea = pgTable(
-  "forms_blocks_textarea",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    _path: text("_path").notNull(),
-    id: varchar("id").primaryKey(),
-    name: varchar("name").notNull(),
-    label: varchar("label"),
-    description: varchar("description"),
-    placeholder: varchar("placeholder"),
-    required: boolean("required"),
-    hidden: boolean("hidden"),
-    blockName: varchar("block_name"),
-  },
-  (columns) => ({
-    _orderIdx: index("forms_blocks_textarea_order_idx").on(columns._order),
-    _parentIDIdx: index("forms_blocks_textarea_parent_id_idx").on(
-      columns._parentID,
-    ),
-    _pathIdx: index("forms_blocks_textarea_path_idx").on(columns._path),
-    _parentIdFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [forms.id],
-      name: "forms_blocks_textarea_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const forms_blocks_user_info_options = pgTable(
-  "forms_blocks_user_info_options",
-  {
-    order: integer("order").notNull(),
-    parent: varchar("parent_id").notNull(),
-    value: enum_forms_blocks_user_info_options("value"),
-    id: uuid("id").defaultRandom().primaryKey(),
-  },
-  (columns) => ({
-    orderIdx: index("forms_blocks_user_info_options_order_idx").on(
-      columns.order,
-    ),
-    parentIdx: index("forms_blocks_user_info_options_parent_idx").on(
-      columns.parent,
-    ),
-    parentFk: foreignKey({
-      columns: [columns["parent"]],
-      foreignColumns: [forms_blocks_user_info.id],
-      name: "forms_blocks_user_info_options_parent_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const forms_blocks_user_info = pgTable(
-  "forms_blocks_user_info",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    _path: text("_path").notNull(),
-    id: varchar("id").primaryKey(),
-    width: enum_forms_blocks_user_info_width("width").default("full"),
-    editable: boolean("editable").default(false),
-    blockName: varchar("block_name"),
-  },
-  (columns) => ({
-    _orderIdx: index("forms_blocks_user_info_order_idx").on(columns._order),
-    _parentIDIdx: index("forms_blocks_user_info_parent_id_idx").on(
-      columns._parentID,
-    ),
-    _pathIdx: index("forms_blocks_user_info_path_idx").on(columns._path),
-    _parentIdFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [forms.id],
-      name: "forms_blocks_user_info_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const forms_blocks_phone = pgTable(
-  "forms_blocks_phone",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    _path: text("_path").notNull(),
-    id: varchar("id").primaryKey(),
-    name: varchar("name").notNull(),
-    label: varchar("label"),
-    description: varchar("description"),
-    placeholder: varchar("placeholder"),
-    defaultValue: varchar("default_value"),
-    width: enum_forms_blocks_phone_width("width").default("full"),
-    required: boolean("required"),
-    hidden: boolean("hidden"),
-    blockName: varchar("block_name"),
-  },
-  (columns) => ({
-    _orderIdx: index("forms_blocks_phone_order_idx").on(columns._order),
-    _parentIDIdx: index("forms_blocks_phone_parent_id_idx").on(
-      columns._parentID,
-    ),
-    _pathIdx: index("forms_blocks_phone_path_idx").on(columns._path),
-    _parentIdFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [forms.id],
-      name: "forms_blocks_phone_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const forms_emails = pgTable(
-  "forms_emails",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    id: varchar("id").primaryKey(),
-    emailTo: varchar("email_to"),
-    cc: varchar("cc"),
-    bcc: varchar("bcc"),
-    replyTo: varchar("reply_to"),
-    emailFrom: varchar("email_from"),
-    subject: varchar("subject")
-      .notNull()
-      .default("You've received a new message."),
-    message: jsonb("message"),
-  },
-  (columns) => ({
-    _orderIdx: index("forms_emails_order_idx").on(columns._order),
-    _parentIDIdx: index("forms_emails_parent_id_idx").on(columns._parentID),
-    _parentIDFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [forms.id],
-      name: "forms_emails_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const forms = pgTable(
-  "forms",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    title: varchar("title").notNull(),
-    submitButtonLabel: varchar("submit_button_label"),
-    confirmationType:
-      enum_forms_confirmation_type("confirmation_type").default("message"),
-    confirmationMessage: jsonb("confirmation_message"),
-    redirect_url: varchar("redirect_url"),
-    slug: varchar("slug"),
-    slugLock: boolean("slug_lock").default(true),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-  },
-  (columns) => ({
-    forms_slug_idx: index("forms_slug_idx").on(columns.slug),
-    forms_updated_at_idx: index("forms_updated_at_idx").on(columns.updatedAt),
-    forms_created_at_idx: index("forms_created_at_idx").on(columns.createdAt),
-  }),
-);
-
-export const form_submissions_submission_data = pgTable(
-  "form_submissions_submission_data",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    id: varchar("id").primaryKey(),
-    field: varchar("field").notNull(),
-    value: varchar("value").notNull(),
-  },
-  (columns) => ({
-    _orderIdx: index("form_submissions_submission_data_order_idx").on(
-      columns._order,
-    ),
-    _parentIDIdx: index("form_submissions_submission_data_parent_id_idx").on(
-      columns._parentID,
-    ),
-    _parentIDFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [form_submissions.id],
-      name: "form_submissions_submission_data_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const form_submissions = pgTable(
-  "form_submissions",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    form: uuid("form_id")
-      .notNull()
-      .references(() => forms.id, {
-        onDelete: "set null",
-      }),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
-      withTimezone: true,
-      precision: 3,
-    })
-      .defaultNow()
-      .notNull(),
-  },
-  (columns) => ({
-    form_submissions_form_idx: index("form_submissions_form_idx").on(
-      columns.form,
-    ),
-    form_submissions_updated_at_idx: index(
-      "form_submissions_updated_at_idx",
-    ).on(columns.updatedAt),
-    form_submissions_created_at_idx: index(
-      "form_submissions_created_at_idx",
-    ).on(columns.createdAt),
   }),
 );
 
@@ -2431,20 +975,10 @@ export const payload_locked_documents_rels = pgTable(
     verificationsID: uuid("verifications_id"),
     passkeysID: uuid("passkeys_id"),
     "admin-invitationsID": uuid("admin_invitations_id"),
-    tasksID: uuid("tasks_id"),
-    jobsID: uuid("jobs_id"),
     ordersID: uuid("orders_id"),
-    poolsID: uuid("pools_id"),
     profilesID: uuid("profiles_id"),
-    proxiesID: uuid("proxies_id"),
-    pagesID: uuid("pages_id"),
-    tagsID: uuid("tags_id"),
-    statusesID: uuid("statuses_id"),
+    poolsID: uuid("pools_id"),
     "payload-uploadsID": uuid("payload_uploads_id"),
-    "private-uploadsID": uuid("private_uploads_id"),
-    handbookID: uuid("handbook_id"),
-    formsID: uuid("forms_id"),
-    "form-submissionsID": uuid("form_submissions_id"),
     "Audit-logID": uuid("audit_log_id"),
     "payload-foldersID": uuid("payload_folders_id"),
   },
@@ -2472,48 +1006,18 @@ export const payload_locked_documents_rels = pgTable(
     payload_locked_documents_rels_admin_invitations_id_idx: index(
       "payload_locked_documents_rels_admin_invitations_id_idx",
     ).on(columns["admin-invitationsID"]),
-    payload_locked_documents_rels_tasks_id_idx: index(
-      "payload_locked_documents_rels_tasks_id_idx",
-    ).on(columns.tasksID),
-    payload_locked_documents_rels_jobs_id_idx: index(
-      "payload_locked_documents_rels_jobs_id_idx",
-    ).on(columns.jobsID),
     payload_locked_documents_rels_orders_id_idx: index(
       "payload_locked_documents_rels_orders_id_idx",
     ).on(columns.ordersID),
-    payload_locked_documents_rels_pools_id_idx: index(
-      "payload_locked_documents_rels_pools_id_idx",
-    ).on(columns.poolsID),
     payload_locked_documents_rels_profiles_id_idx: index(
       "payload_locked_documents_rels_profiles_id_idx",
     ).on(columns.profilesID),
-    payload_locked_documents_rels_proxies_id_idx: index(
-      "payload_locked_documents_rels_proxies_id_idx",
-    ).on(columns.proxiesID),
-    payload_locked_documents_rels_pages_id_idx: index(
-      "payload_locked_documents_rels_pages_id_idx",
-    ).on(columns.pagesID),
-    payload_locked_documents_rels_tags_id_idx: index(
-      "payload_locked_documents_rels_tags_id_idx",
-    ).on(columns.tagsID),
-    payload_locked_documents_rels_statuses_id_idx: index(
-      "payload_locked_documents_rels_statuses_id_idx",
-    ).on(columns.statusesID),
+    payload_locked_documents_rels_pools_id_idx: index(
+      "payload_locked_documents_rels_pools_id_idx",
+    ).on(columns.poolsID),
     payload_locked_documents_rels_payload_uploads_id_idx: index(
       "payload_locked_documents_rels_payload_uploads_id_idx",
     ).on(columns["payload-uploadsID"]),
-    payload_locked_documents_rels_private_uploads_id_idx: index(
-      "payload_locked_documents_rels_private_uploads_id_idx",
-    ).on(columns["private-uploadsID"]),
-    payload_locked_documents_rels_handbook_id_idx: index(
-      "payload_locked_documents_rels_handbook_id_idx",
-    ).on(columns.handbookID),
-    payload_locked_documents_rels_forms_id_idx: index(
-      "payload_locked_documents_rels_forms_id_idx",
-    ).on(columns.formsID),
-    payload_locked_documents_rels_form_submissions_id_idx: index(
-      "payload_locked_documents_rels_form_submissions_id_idx",
-    ).on(columns["form-submissionsID"]),
     payload_locked_documents_rels_audit_log_id_idx: index(
       "payload_locked_documents_rels_audit_log_id_idx",
     ).on(columns["Audit-logID"]),
@@ -2555,75 +1059,25 @@ export const payload_locked_documents_rels = pgTable(
       foreignColumns: [admin_invitations.id],
       name: "payload_locked_documents_rels_admin_invitations_fk",
     }).onDelete("cascade"),
-    tasksIdFk: foreignKey({
-      columns: [columns["tasksID"]],
-      foreignColumns: [tasks.id],
-      name: "payload_locked_documents_rels_tasks_fk",
-    }).onDelete("cascade"),
-    jobsIdFk: foreignKey({
-      columns: [columns["jobsID"]],
-      foreignColumns: [jobs.id],
-      name: "payload_locked_documents_rels_jobs_fk",
-    }).onDelete("cascade"),
     ordersIdFk: foreignKey({
       columns: [columns["ordersID"]],
       foreignColumns: [orders.id],
       name: "payload_locked_documents_rels_orders_fk",
-    }).onDelete("cascade"),
-    poolsIdFk: foreignKey({
-      columns: [columns["poolsID"]],
-      foreignColumns: [pools.id],
-      name: "payload_locked_documents_rels_pools_fk",
     }).onDelete("cascade"),
     profilesIdFk: foreignKey({
       columns: [columns["profilesID"]],
       foreignColumns: [profiles.id],
       name: "payload_locked_documents_rels_profiles_fk",
     }).onDelete("cascade"),
-    proxiesIdFk: foreignKey({
-      columns: [columns["proxiesID"]],
-      foreignColumns: [proxies.id],
-      name: "payload_locked_documents_rels_proxies_fk",
-    }).onDelete("cascade"),
-    pagesIdFk: foreignKey({
-      columns: [columns["pagesID"]],
-      foreignColumns: [pages.id],
-      name: "payload_locked_documents_rels_pages_fk",
-    }).onDelete("cascade"),
-    tagsIdFk: foreignKey({
-      columns: [columns["tagsID"]],
-      foreignColumns: [tags.id],
-      name: "payload_locked_documents_rels_tags_fk",
-    }).onDelete("cascade"),
-    statusesIdFk: foreignKey({
-      columns: [columns["statusesID"]],
-      foreignColumns: [statuses.id],
-      name: "payload_locked_documents_rels_statuses_fk",
+    poolsIdFk: foreignKey({
+      columns: [columns["poolsID"]],
+      foreignColumns: [pools.id],
+      name: "payload_locked_documents_rels_pools_fk",
     }).onDelete("cascade"),
     "payload-uploadsIdFk": foreignKey({
       columns: [columns["payload-uploadsID"]],
       foreignColumns: [payload_uploads.id],
       name: "payload_locked_documents_rels_payload_uploads_fk",
-    }).onDelete("cascade"),
-    "private-uploadsIdFk": foreignKey({
-      columns: [columns["private-uploadsID"]],
-      foreignColumns: [private_uploads.id],
-      name: "payload_locked_documents_rels_private_uploads_fk",
-    }).onDelete("cascade"),
-    handbookIdFk: foreignKey({
-      columns: [columns["handbookID"]],
-      foreignColumns: [handbook.id],
-      name: "payload_locked_documents_rels_handbook_fk",
-    }).onDelete("cascade"),
-    formsIdFk: foreignKey({
-      columns: [columns["formsID"]],
-      foreignColumns: [forms.id],
-      name: "payload_locked_documents_rels_forms_fk",
-    }).onDelete("cascade"),
-    "form-submissionsIdFk": foreignKey({
-      columns: [columns["form-submissionsID"]],
-      foreignColumns: [form_submissions.id],
-      name: "payload_locked_documents_rels_form_submissions_fk",
     }).onDelete("cascade"),
     "Audit-logIdFk": foreignKey({
       columns: [columns["Audit-logID"]],
@@ -2812,120 +1266,6 @@ export const payload_query_presets_rels = pgTable(
   }),
 );
 
-export const global_footer_nav_items = pgTable(
-  "global_footer_nav_items",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    id: varchar("id").primaryKey(),
-    link_type:
-      enum_global_footer_nav_items_link_type("link_type").default("custom"),
-    link_newTab: boolean("link_new_tab"),
-    link_url: varchar("link_url").default("https://ticketer.com"),
-    link_label: varchar("link_label").notNull(),
-  },
-  (columns) => ({
-    _orderIdx: index("global_footer_nav_items_order_idx").on(columns._order),
-    _parentIDIdx: index("global_footer_nav_items_parent_id_idx").on(
-      columns._parentID,
-    ),
-    _parentIDFk: foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [global_footer.id],
-      name: "global_footer_nav_items_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const global_footer = pgTable("global_footer", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  footerText: jsonb("footer_text").notNull(),
-  updatedAt: timestamp("updated_at", {
-    mode: "string",
-    withTimezone: true,
-    precision: 3,
-  }),
-  createdAt: timestamp("created_at", {
-    mode: "string",
-    withTimezone: true,
-    precision: 3,
-  }),
-});
-
-export const global_footer_rels = pgTable(
-  "global_footer_rels",
-  {
-    id: serial("id").primaryKey(),
-    order: integer("order"),
-    parent: uuid("parent_id").notNull(),
-    path: varchar("path").notNull(),
-    pagesID: uuid("pages_id"),
-  },
-  (columns) => ({
-    order: index("global_footer_rels_order_idx").on(columns.order),
-    parentIdx: index("global_footer_rels_parent_idx").on(columns.parent),
-    pathIdx: index("global_footer_rels_path_idx").on(columns.path),
-    global_footer_rels_pages_id_idx: index(
-      "global_footer_rels_pages_id_idx",
-    ).on(columns.pagesID),
-    parentFk: foreignKey({
-      columns: [columns["parent"]],
-      foreignColumns: [global_footer.id],
-      name: "global_footer_rels_parent_fk",
-    }).onDelete("cascade"),
-    pagesIdFk: foreignKey({
-      columns: [columns["pagesID"]],
-      foreignColumns: [pages.id],
-      name: "global_footer_rels_pages_fk",
-    }).onDelete("cascade"),
-  }),
-);
-
-export const global_terms = pgTable("global_terms", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  content: jsonb("content").notNull(),
-  updatedAt: timestamp("updated_at", {
-    mode: "string",
-    withTimezone: true,
-    precision: 3,
-  }),
-  createdAt: timestamp("created_at", {
-    mode: "string",
-    withTimezone: true,
-    precision: 3,
-  }),
-});
-
-export const global_privacy = pgTable("global_privacy", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  content: jsonb("content").notNull(),
-  updatedAt: timestamp("updated_at", {
-    mode: "string",
-    withTimezone: true,
-    precision: 3,
-  }),
-  createdAt: timestamp("created_at", {
-    mode: "string",
-    withTimezone: true,
-    precision: 3,
-  }),
-});
-
-export const settings = pgTable("settings", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  title: varchar("title"),
-  updatedAt: timestamp("updated_at", {
-    mode: "string",
-    withTimezone: true,
-    precision: 3,
-  }),
-  createdAt: timestamp("created_at", {
-    mode: "string",
-    withTimezone: true,
-    precision: 3,
-  }),
-});
-
 export const relations_users = relations(users, () => ({}));
 export const relations_sessions = relations(sessions, ({ one }) => ({
   user: one(users, {
@@ -2958,204 +1298,12 @@ export const relations_admin_invitations = relations(
   admin_invitations,
   () => ({}),
 );
-export const relations_tasks_rels = relations(tasks_rels, ({ one }) => ({
-  parent: one(tasks, {
-    fields: [tasks_rels.parent],
-    references: [tasks.id],
-    relationName: "_rels",
-  }),
-  poolsID: one(pools, {
-    fields: [tasks_rels.poolsID],
-    references: [pools.id],
-    relationName: "pools",
-  }),
-  proxiesID: one(proxies, {
-    fields: [tasks_rels.proxiesID],
-    references: [proxies.id],
-    relationName: "proxies",
-  }),
-}));
-export const relations_tasks = relations(tasks, ({ one, many }) => ({
-  tags: one(tags, {
-    fields: [tasks.tags],
-    references: [tags.id],
-    relationName: "tags",
-  }),
-  taskAssignee: one(users, {
-    fields: [tasks.taskAssignee],
-    references: [users.id],
-    relationName: "taskAssignee",
-  }),
-  taskProfile: one(profiles, {
-    fields: [tasks.taskProfile],
-    references: [profiles.id],
-    relationName: "taskProfile",
-  }),
-  linkedOrder: one(orders, {
-    fields: [tasks.linkedOrder],
-    references: [orders.id],
-    relationName: "linkedOrder",
-  }),
-  passPDF: one(payload_uploads, {
-    fields: [tasks.passPDF],
-    references: [payload_uploads.id],
-    relationName: "passPDF",
-  }),
-  _rels: many(tasks_rels, {
-    relationName: "_rels",
-  }),
-}));
-export const relations__tasks_v_rels = relations(_tasks_v_rels, ({ one }) => ({
-  parent: one(_tasks_v, {
-    fields: [_tasks_v_rels.parent],
-    references: [_tasks_v.id],
-    relationName: "_rels",
-  }),
-  poolsID: one(pools, {
-    fields: [_tasks_v_rels.poolsID],
-    references: [pools.id],
-    relationName: "pools",
-  }),
-  proxiesID: one(proxies, {
-    fields: [_tasks_v_rels.proxiesID],
-    references: [proxies.id],
-    relationName: "proxies",
-  }),
-}));
-export const relations__tasks_v = relations(_tasks_v, ({ one, many }) => ({
-  parent: one(tasks, {
-    fields: [_tasks_v.parent],
-    references: [tasks.id],
-    relationName: "parent",
-  }),
-  version_tags: one(tags, {
-    fields: [_tasks_v.version_tags],
-    references: [tags.id],
-    relationName: "version_tags",
-  }),
-  version_taskAssignee: one(users, {
-    fields: [_tasks_v.version_taskAssignee],
-    references: [users.id],
-    relationName: "version_taskAssignee",
-  }),
-  version_taskProfile: one(profiles, {
-    fields: [_tasks_v.version_taskProfile],
-    references: [profiles.id],
-    relationName: "version_taskProfile",
-  }),
-  version_linkedOrder: one(orders, {
-    fields: [_tasks_v.version_linkedOrder],
-    references: [orders.id],
-    relationName: "version_linkedOrder",
-  }),
-  version_passPDF: one(payload_uploads, {
-    fields: [_tasks_v.version_passPDF],
-    references: [payload_uploads.id],
-    relationName: "version_passPDF",
-  }),
-  _rels: many(_tasks_v_rels, {
-    relationName: "_rels",
-  }),
-}));
-export const relations_jobs_if = relations(jobs_if, ({ one }) => ({
-  _parentID: one(jobs, {
-    fields: [jobs_if._parentID],
-    references: [jobs.id],
-    relationName: "if",
-  }),
-}));
-export const relations_jobs_then_actions = relations(
-  jobs_then_actions,
+export const relations_orders_parking_tickets = relations(
+  orders_parking_tickets,
   ({ one }) => ({
-    _parentID: one(jobs_then, {
-      fields: [jobs_then_actions._parentID],
-      references: [jobs_then.id],
-      relationName: "actions",
-    }),
-  }),
-);
-export const relations_jobs_then = relations(jobs_then, ({ one, many }) => ({
-  _parentID: one(jobs, {
-    fields: [jobs_then._parentID],
-    references: [jobs.id],
-    relationName: "then",
-  }),
-  actions: many(jobs_then_actions, {
-    relationName: "actions",
-  }),
-}));
-export const relations_jobs_rels = relations(jobs_rels, ({ one }) => ({
-  parent: one(jobs, {
-    fields: [jobs_rels.parent],
-    references: [jobs.id],
-    relationName: "_rels",
-  }),
-  tasksID: one(tasks, {
-    fields: [jobs_rels.tasksID],
-    references: [tasks.id],
-    relationName: "tasks",
-  }),
-  ordersID: one(orders, {
-    fields: [jobs_rels.ordersID],
-    references: [orders.id],
-    relationName: "orders",
-  }),
-  poolsID: one(pools, {
-    fields: [jobs_rels.poolsID],
-    references: [pools.id],
-    relationName: "pools",
-  }),
-  usersID: one(users, {
-    fields: [jobs_rels.usersID],
-    references: [users.id],
-    relationName: "users",
-  }),
-  tagsID: one(tags, {
-    fields: [jobs_rels.tagsID],
-    references: [tags.id],
-    relationName: "tags",
-  }),
-  jobsID: one(jobs, {
-    fields: [jobs_rels.jobsID],
-    references: [jobs.id],
-    relationName: "jobs",
-  }),
-}));
-export const relations_jobs = relations(jobs, ({ one, many }) => ({
-  jobTags: one(tags, {
-    fields: [jobs.jobTags],
-    references: [tags.id],
-    relationName: "jobTags",
-  }),
-  if: many(jobs_if, {
-    relationName: "if",
-  }),
-  then: many(jobs_then, {
-    relationName: "then",
-  }),
-  _rels: many(jobs_rels, {
-    relationName: "_rels",
-  }),
-}));
-export const relations_orders_event_tickets_parking_tickets = relations(
-  orders_event_tickets_parking_tickets,
-  ({ one }) => ({
-    _parentID: one(orders_event_tickets, {
-      fields: [orders_event_tickets_parking_tickets._parentID],
-      references: [orders_event_tickets.id],
-      relationName: "parkingTickets",
-    }),
-  }),
-);
-export const relations_orders_event_tickets = relations(
-  orders_event_tickets,
-  ({ one, many }) => ({
     _parentID: one(orders, {
-      fields: [orders_event_tickets._parentID],
+      fields: [orders_parking_tickets._parentID],
       references: [orders.id],
-      relationName: "eventTickets",
-    }),
-    parkingTickets: many(orders_event_tickets_parking_tickets, {
       relationName: "parkingTickets",
     }),
   }),
@@ -3170,37 +1318,21 @@ export const relations_orders_order_history = relations(
     }),
   }),
 );
-export const relations_orders = relations(orders, ({ one, many }) => ({
-  orderTags: one(tags, {
-    fields: [orders.orderTags],
-    references: [tags.id],
-    relationName: "orderTags",
-  }),
-  eventTickets: many(orders_event_tickets, {
-    relationName: "eventTickets",
+export const relations_orders = relations(orders, ({ many }) => ({
+  parkingTickets: many(orders_parking_tickets, {
+    relationName: "parkingTickets",
   }),
   orderHistory: many(orders_order_history, {
     relationName: "orderHistory",
   }),
 }));
-export const relations__orders_v_version_event_tickets_parking_tickets =
-  relations(_orders_v_version_event_tickets_parking_tickets, ({ one }) => ({
-    _parentID: one(_orders_v_version_event_tickets, {
-      fields: [_orders_v_version_event_tickets_parking_tickets._parentID],
-      references: [_orders_v_version_event_tickets.id],
-      relationName: "parkingTickets",
-    }),
-  }));
-export const relations__orders_v_version_event_tickets = relations(
-  _orders_v_version_event_tickets,
-  ({ one, many }) => ({
+export const relations__orders_v_version_parking_tickets = relations(
+  _orders_v_version_parking_tickets,
+  ({ one }) => ({
     _parentID: one(_orders_v, {
-      fields: [_orders_v_version_event_tickets._parentID],
+      fields: [_orders_v_version_parking_tickets._parentID],
       references: [_orders_v.id],
-      relationName: "version_eventTickets",
-    }),
-    parkingTickets: many(_orders_v_version_event_tickets_parking_tickets, {
-      relationName: "parkingTickets",
+      relationName: "version_parkingTickets",
     }),
   }),
 );
@@ -3220,18 +1352,14 @@ export const relations__orders_v = relations(_orders_v, ({ one, many }) => ({
     references: [orders.id],
     relationName: "parent",
   }),
-  version_orderTags: one(tags, {
-    fields: [_orders_v.version_orderTags],
-    references: [tags.id],
-    relationName: "version_orderTags",
-  }),
-  version_eventTickets: many(_orders_v_version_event_tickets, {
-    relationName: "version_eventTickets",
+  version_parkingTickets: many(_orders_v_version_parking_tickets, {
+    relationName: "version_parkingTickets",
   }),
   version_orderHistory: many(_orders_v_version_order_history, {
     relationName: "version_orderHistory",
   }),
 }));
+export const relations_profiles = relations(profiles, () => ({}));
 export const relations_pools_connection_config = relations(
   pools_connection_config,
   ({ one }) => ({
@@ -3247,59 +1375,6 @@ export const relations_pools = relations(pools, ({ many }) => ({
     relationName: "connectionConfig",
   }),
 }));
-export const relations_profiles = relations(profiles, () => ({}));
-export const relations_proxies = relations(proxies, () => ({}));
-export const relations_pages = relations(pages, ({ one }) => ({
-  tags: one(users, {
-    fields: [pages.tags],
-    references: [users.id],
-    relationName: "tags",
-  }),
-  heroImage: one(payload_uploads, {
-    fields: [pages.heroImage],
-    references: [payload_uploads.id],
-    relationName: "heroImage",
-  }),
-  meta_image: one(payload_uploads, {
-    fields: [pages.meta_image],
-    references: [payload_uploads.id],
-    relationName: "meta_image",
-  }),
-  folder: one(payload_folders, {
-    fields: [pages.folder],
-    references: [payload_folders.id],
-    relationName: "folder",
-  }),
-}));
-export const relations__pages_v = relations(_pages_v, ({ one }) => ({
-  parent: one(pages, {
-    fields: [_pages_v.parent],
-    references: [pages.id],
-    relationName: "parent",
-  }),
-  version_tags: one(users, {
-    fields: [_pages_v.version_tags],
-    references: [users.id],
-    relationName: "version_tags",
-  }),
-  version_heroImage: one(payload_uploads, {
-    fields: [_pages_v.version_heroImage],
-    references: [payload_uploads.id],
-    relationName: "version_heroImage",
-  }),
-  version_meta_image: one(payload_uploads, {
-    fields: [_pages_v.version_meta_image],
-    references: [payload_uploads.id],
-    relationName: "version_meta_image",
-  }),
-  version_folder: one(payload_folders, {
-    fields: [_pages_v.version_folder],
-    references: [payload_folders.id],
-    relationName: "version_folder",
-  }),
-}));
-export const relations_tags = relations(tags, () => ({}));
-export const relations_statuses = relations(statuses, () => ({}));
 export const relations_payload_uploads = relations(
   payload_uploads,
   ({ one }) => ({
@@ -3307,245 +1382,6 @@ export const relations_payload_uploads = relations(
       fields: [payload_uploads.folder],
       references: [payload_folders.id],
       relationName: "folder",
-    }),
-  }),
-);
-export const relations_private_uploads_rels = relations(
-  private_uploads_rels,
-  ({ one }) => ({
-    parent: one(private_uploads, {
-      fields: [private_uploads_rels.parent],
-      references: [private_uploads.id],
-      relationName: "_rels",
-    }),
-    usersID: one(users, {
-      fields: [private_uploads_rels.usersID],
-      references: [users.id],
-      relationName: "users",
-    }),
-  }),
-);
-export const relations_private_uploads = relations(
-  private_uploads,
-  ({ one, many }) => ({
-    folder: one(payload_folders, {
-      fields: [private_uploads.folder],
-      references: [payload_folders.id],
-      relationName: "folder",
-    }),
-    _rels: many(private_uploads_rels, {
-      relationName: "_rels",
-    }),
-  }),
-);
-export const relations_handbook = relations(handbook, ({ one }) => ({
-  tags: one(tags, {
-    fields: [handbook.tags],
-    references: [tags.id],
-    relationName: "tags",
-  }),
-}));
-export const relations_forms_blocks_checkbox = relations(
-  forms_blocks_checkbox,
-  ({ one }) => ({
-    _parentID: one(forms, {
-      fields: [forms_blocks_checkbox._parentID],
-      references: [forms.id],
-      relationName: "_blocks_checkbox",
-    }),
-  }),
-);
-export const relations_forms_blocks_country = relations(
-  forms_blocks_country,
-  ({ one }) => ({
-    _parentID: one(forms, {
-      fields: [forms_blocks_country._parentID],
-      references: [forms.id],
-      relationName: "_blocks_country",
-    }),
-  }),
-);
-export const relations_forms_blocks_email = relations(
-  forms_blocks_email,
-  ({ one }) => ({
-    _parentID: one(forms, {
-      fields: [forms_blocks_email._parentID],
-      references: [forms.id],
-      relationName: "_blocks_email",
-    }),
-  }),
-);
-export const relations_forms_blocks_message = relations(
-  forms_blocks_message,
-  ({ one }) => ({
-    _parentID: one(forms, {
-      fields: [forms_blocks_message._parentID],
-      references: [forms.id],
-      relationName: "_blocks_message",
-    }),
-  }),
-);
-export const relations_forms_blocks_number = relations(
-  forms_blocks_number,
-  ({ one }) => ({
-    _parentID: one(forms, {
-      fields: [forms_blocks_number._parentID],
-      references: [forms.id],
-      relationName: "_blocks_number",
-    }),
-  }),
-);
-export const relations_forms_blocks_select_options = relations(
-  forms_blocks_select_options,
-  ({ one }) => ({
-    _parentID: one(forms_blocks_select, {
-      fields: [forms_blocks_select_options._parentID],
-      references: [forms_blocks_select.id],
-      relationName: "options",
-    }),
-  }),
-);
-export const relations_forms_blocks_select = relations(
-  forms_blocks_select,
-  ({ one, many }) => ({
-    _parentID: one(forms, {
-      fields: [forms_blocks_select._parentID],
-      references: [forms.id],
-      relationName: "_blocks_select",
-    }),
-    options: many(forms_blocks_select_options, {
-      relationName: "options",
-    }),
-  }),
-);
-export const relations_forms_blocks_state = relations(
-  forms_blocks_state,
-  ({ one }) => ({
-    _parentID: one(forms, {
-      fields: [forms_blocks_state._parentID],
-      references: [forms.id],
-      relationName: "_blocks_state",
-    }),
-  }),
-);
-export const relations_forms_blocks_text = relations(
-  forms_blocks_text,
-  ({ one }) => ({
-    _parentID: one(forms, {
-      fields: [forms_blocks_text._parentID],
-      references: [forms.id],
-      relationName: "_blocks_text",
-    }),
-  }),
-);
-export const relations_forms_blocks_textarea = relations(
-  forms_blocks_textarea,
-  ({ one }) => ({
-    _parentID: one(forms, {
-      fields: [forms_blocks_textarea._parentID],
-      references: [forms.id],
-      relationName: "_blocks_textarea",
-    }),
-  }),
-);
-export const relations_forms_blocks_user_info_options = relations(
-  forms_blocks_user_info_options,
-  ({ one }) => ({
-    parent: one(forms_blocks_user_info, {
-      fields: [forms_blocks_user_info_options.parent],
-      references: [forms_blocks_user_info.id],
-      relationName: "options",
-    }),
-  }),
-);
-export const relations_forms_blocks_user_info = relations(
-  forms_blocks_user_info,
-  ({ one, many }) => ({
-    _parentID: one(forms, {
-      fields: [forms_blocks_user_info._parentID],
-      references: [forms.id],
-      relationName: "_blocks_userInfo",
-    }),
-    options: many(forms_blocks_user_info_options, {
-      relationName: "options",
-    }),
-  }),
-);
-export const relations_forms_blocks_phone = relations(
-  forms_blocks_phone,
-  ({ one }) => ({
-    _parentID: one(forms, {
-      fields: [forms_blocks_phone._parentID],
-      references: [forms.id],
-      relationName: "_blocks_phone",
-    }),
-  }),
-);
-export const relations_forms_emails = relations(forms_emails, ({ one }) => ({
-  _parentID: one(forms, {
-    fields: [forms_emails._parentID],
-    references: [forms.id],
-    relationName: "emails",
-  }),
-}));
-export const relations_forms = relations(forms, ({ many }) => ({
-  _blocks_checkbox: many(forms_blocks_checkbox, {
-    relationName: "_blocks_checkbox",
-  }),
-  _blocks_country: many(forms_blocks_country, {
-    relationName: "_blocks_country",
-  }),
-  _blocks_email: many(forms_blocks_email, {
-    relationName: "_blocks_email",
-  }),
-  _blocks_message: many(forms_blocks_message, {
-    relationName: "_blocks_message",
-  }),
-  _blocks_number: many(forms_blocks_number, {
-    relationName: "_blocks_number",
-  }),
-  _blocks_select: many(forms_blocks_select, {
-    relationName: "_blocks_select",
-  }),
-  _blocks_state: many(forms_blocks_state, {
-    relationName: "_blocks_state",
-  }),
-  _blocks_text: many(forms_blocks_text, {
-    relationName: "_blocks_text",
-  }),
-  _blocks_textarea: many(forms_blocks_textarea, {
-    relationName: "_blocks_textarea",
-  }),
-  _blocks_userInfo: many(forms_blocks_user_info, {
-    relationName: "_blocks_userInfo",
-  }),
-  _blocks_phone: many(forms_blocks_phone, {
-    relationName: "_blocks_phone",
-  }),
-  emails: many(forms_emails, {
-    relationName: "emails",
-  }),
-}));
-export const relations_form_submissions_submission_data = relations(
-  form_submissions_submission_data,
-  ({ one }) => ({
-    _parentID: one(form_submissions, {
-      fields: [form_submissions_submission_data._parentID],
-      references: [form_submissions.id],
-      relationName: "submissionData",
-    }),
-  }),
-);
-export const relations_form_submissions = relations(
-  form_submissions,
-  ({ one, many }) => ({
-    form: one(forms, {
-      fields: [form_submissions.form],
-      references: [forms.id],
-      relationName: "form",
-    }),
-    submissionData: many(form_submissions_submission_data, {
-      relationName: "submissionData",
     }),
   }),
 );
@@ -3604,75 +1440,25 @@ export const relations_payload_locked_documents_rels = relations(
       references: [admin_invitations.id],
       relationName: "admin-invitations",
     }),
-    tasksID: one(tasks, {
-      fields: [payload_locked_documents_rels.tasksID],
-      references: [tasks.id],
-      relationName: "tasks",
-    }),
-    jobsID: one(jobs, {
-      fields: [payload_locked_documents_rels.jobsID],
-      references: [jobs.id],
-      relationName: "jobs",
-    }),
     ordersID: one(orders, {
       fields: [payload_locked_documents_rels.ordersID],
       references: [orders.id],
       relationName: "orders",
-    }),
-    poolsID: one(pools, {
-      fields: [payload_locked_documents_rels.poolsID],
-      references: [pools.id],
-      relationName: "pools",
     }),
     profilesID: one(profiles, {
       fields: [payload_locked_documents_rels.profilesID],
       references: [profiles.id],
       relationName: "profiles",
     }),
-    proxiesID: one(proxies, {
-      fields: [payload_locked_documents_rels.proxiesID],
-      references: [proxies.id],
-      relationName: "proxies",
-    }),
-    pagesID: one(pages, {
-      fields: [payload_locked_documents_rels.pagesID],
-      references: [pages.id],
-      relationName: "pages",
-    }),
-    tagsID: one(tags, {
-      fields: [payload_locked_documents_rels.tagsID],
-      references: [tags.id],
-      relationName: "tags",
-    }),
-    statusesID: one(statuses, {
-      fields: [payload_locked_documents_rels.statusesID],
-      references: [statuses.id],
-      relationName: "statuses",
+    poolsID: one(pools, {
+      fields: [payload_locked_documents_rels.poolsID],
+      references: [pools.id],
+      relationName: "pools",
     }),
     "payload-uploadsID": one(payload_uploads, {
       fields: [payload_locked_documents_rels["payload-uploadsID"]],
       references: [payload_uploads.id],
       relationName: "payload-uploads",
-    }),
-    "private-uploadsID": one(private_uploads, {
-      fields: [payload_locked_documents_rels["private-uploadsID"]],
-      references: [private_uploads.id],
-      relationName: "private-uploads",
-    }),
-    handbookID: one(handbook, {
-      fields: [payload_locked_documents_rels.handbookID],
-      references: [handbook.id],
-      relationName: "handbook",
-    }),
-    formsID: one(forms, {
-      fields: [payload_locked_documents_rels.formsID],
-      references: [forms.id],
-      relationName: "forms",
-    }),
-    "form-submissionsID": one(form_submissions, {
-      fields: [payload_locked_documents_rels["form-submissionsID"]],
-      references: [form_submissions.id],
-      relationName: "form-submissions",
     }),
     "Audit-logID": one(audit_log, {
       fields: [payload_locked_documents_rels["Audit-logID"]],
@@ -3744,153 +1530,52 @@ export const relations_payload_query_presets = relations(
     }),
   }),
 );
-export const relations_global_footer_nav_items = relations(
-  global_footer_nav_items,
-  ({ one }) => ({
-    _parentID: one(global_footer, {
-      fields: [global_footer_nav_items._parentID],
-      references: [global_footer.id],
-      relationName: "navItems",
-    }),
-  }),
-);
-export const relations_global_footer_rels = relations(
-  global_footer_rels,
-  ({ one }) => ({
-    parent: one(global_footer, {
-      fields: [global_footer_rels.parent],
-      references: [global_footer.id],
-      relationName: "_rels",
-    }),
-    pagesID: one(pages, {
-      fields: [global_footer_rels.pagesID],
-      references: [pages.id],
-      relationName: "pages",
-    }),
-  }),
-);
-export const relations_global_footer = relations(global_footer, ({ many }) => ({
-  navItems: many(global_footer_nav_items, {
-    relationName: "navItems",
-  }),
-  _rels: many(global_footer_rels, {
-    relationName: "_rels",
-  }),
-}));
-export const relations_global_terms = relations(global_terms, () => ({}));
-export const relations_global_privacy = relations(global_privacy, () => ({}));
-export const relations_settings = relations(settings, () => ({}));
 
 type DatabaseSchema = {
-  enum_users_operator_role: typeof enum_users_operator_role;
+  enum_users_user_role: typeof enum_users_user_role;
   enum_users_role: typeof enum_users_role;
   enum_admin_invitations_role: typeof enum_admin_invitations_role;
-  enum_tasks_task_status: typeof enum_tasks_task_status;
-  enum_tasks_task_type: typeof enum_tasks_task_type;
-  enum_tasks_ticket_vendor: typeof enum_tasks_ticket_vendor;
-  enum_tasks_status: typeof enum_tasks_status;
-  enum__tasks_v_version_task_status: typeof enum__tasks_v_version_task_status;
-  enum__tasks_v_version_task_type: typeof enum__tasks_v_version_task_type;
-  enum__tasks_v_version_ticket_vendor: typeof enum__tasks_v_version_ticket_vendor;
-  enum__tasks_v_version_status: typeof enum__tasks_v_version_status;
-  enum_jobs_if_filter_collections: typeof enum_jobs_if_filter_collections;
-  enum_jobs_if_condition: typeof enum_jobs_if_condition;
-  enum_jobs_if_comparison_type: typeof enum_jobs_if_comparison_type;
-  enum_jobs_if_compared_collections: typeof enum_jobs_if_compared_collections;
-  enum_jobs_then_actions_action_type: typeof enum_jobs_then_actions_action_type;
-  enum_jobs_then_actions_event_type: typeof enum_jobs_then_actions_event_type;
-  enum_jobs_then_actions_target_collections: typeof enum_jobs_then_actions_target_collections;
-  enum_jobs_then_type: typeof enum_jobs_then_type;
-  enum_jobs_job_status: typeof enum_jobs_job_status;
-  enum_jobs_when_trigger: typeof enum_jobs_when_trigger;
-  enum_jobs_when_event_type: typeof enum_jobs_when_event_type;
-  enum_jobs_when_source_collections: typeof enum_jobs_when_source_collections;
-  enum_orders_event_tickets_parking_tickets_source: typeof enum_orders_event_tickets_parking_tickets_source;
-  enum_orders_event_tickets_parking_tickets_type: typeof enum_orders_event_tickets_parking_tickets_type;
-  enum_orders_event_tickets_parking_tickets_status: typeof enum_orders_event_tickets_parking_tickets_status;
-  enum_orders_event_tickets_marketplace: typeof enum_orders_event_tickets_marketplace;
+  enum_orders_parking_tickets_source: typeof enum_orders_parking_tickets_source;
+  enum_orders_parking_tickets_type: typeof enum_orders_parking_tickets_type;
+  enum_orders_parking_tickets_status: typeof enum_orders_parking_tickets_status;
   enum_orders_order_history_source: typeof enum_orders_order_history_source;
   enum_orders_order_history_type: typeof enum_orders_order_history_type;
   enum_orders_order_history_status: typeof enum_orders_order_history_status;
   enum_orders_order_status: typeof enum_orders_order_status;
+  enum_orders_marketplace: typeof enum_orders_marketplace;
   enum_orders_status: typeof enum_orders_status;
-  enum__orders_v_version_event_tickets_parking_tickets_source: typeof enum__orders_v_version_event_tickets_parking_tickets_source;
-  enum__orders_v_version_event_tickets_parking_tickets_type: typeof enum__orders_v_version_event_tickets_parking_tickets_type;
-  enum__orders_v_version_event_tickets_parking_tickets_status: typeof enum__orders_v_version_event_tickets_parking_tickets_status;
-  enum__orders_v_version_event_tickets_marketplace: typeof enum__orders_v_version_event_tickets_marketplace;
+  enum__orders_v_version_parking_tickets_source: typeof enum__orders_v_version_parking_tickets_source;
+  enum__orders_v_version_parking_tickets_type: typeof enum__orders_v_version_parking_tickets_type;
+  enum__orders_v_version_parking_tickets_status: typeof enum__orders_v_version_parking_tickets_status;
   enum__orders_v_version_order_history_source: typeof enum__orders_v_version_order_history_source;
   enum__orders_v_version_order_history_type: typeof enum__orders_v_version_order_history_type;
   enum__orders_v_version_order_history_status: typeof enum__orders_v_version_order_history_status;
   enum__orders_v_version_order_status: typeof enum__orders_v_version_order_status;
+  enum__orders_v_version_marketplace: typeof enum__orders_v_version_marketplace;
   enum__orders_v_version_status: typeof enum__orders_v_version_status;
   enum_pools_connection_config_auth_type: typeof enum_pools_connection_config_auth_type;
   enum_pools_pool_status: typeof enum_pools_pool_status;
-  enum_pages_status: typeof enum_pages_status;
-  enum__pages_v_version_status: typeof enum__pages_v_version_status;
-  enum_forms_blocks_email_width: typeof enum_forms_blocks_email_width;
-  enum_forms_blocks_text_width: typeof enum_forms_blocks_text_width;
-  enum_forms_blocks_user_info_options: typeof enum_forms_blocks_user_info_options;
-  enum_forms_blocks_user_info_width: typeof enum_forms_blocks_user_info_width;
-  enum_forms_blocks_phone_width: typeof enum_forms_blocks_phone_width;
-  enum_forms_confirmation_type: typeof enum_forms_confirmation_type;
   enum_audit_log_type: typeof enum_audit_log_type;
   enum_payload_query_presets_access_read_constraint: typeof enum_payload_query_presets_access_read_constraint;
   enum_payload_query_presets_access_update_constraint: typeof enum_payload_query_presets_access_update_constraint;
   enum_payload_query_presets_access_delete_constraint: typeof enum_payload_query_presets_access_delete_constraint;
   enum_payload_query_presets_related_collection: typeof enum_payload_query_presets_related_collection;
-  enum_global_footer_nav_items_link_type: typeof enum_global_footer_nav_items_link_type;
   users: typeof users;
   sessions: typeof sessions;
   accounts: typeof accounts;
   verifications: typeof verifications;
   passkeys: typeof passkeys;
   admin_invitations: typeof admin_invitations;
-  tasks: typeof tasks;
-  tasks_rels: typeof tasks_rels;
-  _tasks_v: typeof _tasks_v;
-  _tasks_v_rels: typeof _tasks_v_rels;
-  jobs_if: typeof jobs_if;
-  jobs_then_actions: typeof jobs_then_actions;
-  jobs_then: typeof jobs_then;
-  jobs: typeof jobs;
-  jobs_rels: typeof jobs_rels;
-  orders_event_tickets_parking_tickets: typeof orders_event_tickets_parking_tickets;
-  orders_event_tickets: typeof orders_event_tickets;
+  orders_parking_tickets: typeof orders_parking_tickets;
   orders_order_history: typeof orders_order_history;
   orders: typeof orders;
-  _orders_v_version_event_tickets_parking_tickets: typeof _orders_v_version_event_tickets_parking_tickets;
-  _orders_v_version_event_tickets: typeof _orders_v_version_event_tickets;
+  _orders_v_version_parking_tickets: typeof _orders_v_version_parking_tickets;
   _orders_v_version_order_history: typeof _orders_v_version_order_history;
   _orders_v: typeof _orders_v;
+  profiles: typeof profiles;
   pools_connection_config: typeof pools_connection_config;
   pools: typeof pools;
-  profiles: typeof profiles;
-  proxies: typeof proxies;
-  pages: typeof pages;
-  _pages_v: typeof _pages_v;
-  tags: typeof tags;
-  statuses: typeof statuses;
   payload_uploads: typeof payload_uploads;
-  private_uploads: typeof private_uploads;
-  private_uploads_rels: typeof private_uploads_rels;
-  handbook: typeof handbook;
-  forms_blocks_checkbox: typeof forms_blocks_checkbox;
-  forms_blocks_country: typeof forms_blocks_country;
-  forms_blocks_email: typeof forms_blocks_email;
-  forms_blocks_message: typeof forms_blocks_message;
-  forms_blocks_number: typeof forms_blocks_number;
-  forms_blocks_select_options: typeof forms_blocks_select_options;
-  forms_blocks_select: typeof forms_blocks_select;
-  forms_blocks_state: typeof forms_blocks_state;
-  forms_blocks_text: typeof forms_blocks_text;
-  forms_blocks_textarea: typeof forms_blocks_textarea;
-  forms_blocks_user_info_options: typeof forms_blocks_user_info_options;
-  forms_blocks_user_info: typeof forms_blocks_user_info;
-  forms_blocks_phone: typeof forms_blocks_phone;
-  forms_emails: typeof forms_emails;
-  forms: typeof forms;
-  form_submissions_submission_data: typeof form_submissions_submission_data;
-  form_submissions: typeof form_submissions;
   audit_log: typeof audit_log;
   payload_folders: typeof payload_folders;
   payload_locked_documents: typeof payload_locked_documents;
@@ -3900,64 +1585,22 @@ type DatabaseSchema = {
   payload_migrations: typeof payload_migrations;
   payload_query_presets: typeof payload_query_presets;
   payload_query_presets_rels: typeof payload_query_presets_rels;
-  global_footer_nav_items: typeof global_footer_nav_items;
-  global_footer: typeof global_footer;
-  global_footer_rels: typeof global_footer_rels;
-  global_terms: typeof global_terms;
-  global_privacy: typeof global_privacy;
-  settings: typeof settings;
   relations_users: typeof relations_users;
   relations_sessions: typeof relations_sessions;
   relations_accounts: typeof relations_accounts;
   relations_verifications: typeof relations_verifications;
   relations_passkeys: typeof relations_passkeys;
   relations_admin_invitations: typeof relations_admin_invitations;
-  relations_tasks_rels: typeof relations_tasks_rels;
-  relations_tasks: typeof relations_tasks;
-  relations__tasks_v_rels: typeof relations__tasks_v_rels;
-  relations__tasks_v: typeof relations__tasks_v;
-  relations_jobs_if: typeof relations_jobs_if;
-  relations_jobs_then_actions: typeof relations_jobs_then_actions;
-  relations_jobs_then: typeof relations_jobs_then;
-  relations_jobs_rels: typeof relations_jobs_rels;
-  relations_jobs: typeof relations_jobs;
-  relations_orders_event_tickets_parking_tickets: typeof relations_orders_event_tickets_parking_tickets;
-  relations_orders_event_tickets: typeof relations_orders_event_tickets;
+  relations_orders_parking_tickets: typeof relations_orders_parking_tickets;
   relations_orders_order_history: typeof relations_orders_order_history;
   relations_orders: typeof relations_orders;
-  relations__orders_v_version_event_tickets_parking_tickets: typeof relations__orders_v_version_event_tickets_parking_tickets;
-  relations__orders_v_version_event_tickets: typeof relations__orders_v_version_event_tickets;
+  relations__orders_v_version_parking_tickets: typeof relations__orders_v_version_parking_tickets;
   relations__orders_v_version_order_history: typeof relations__orders_v_version_order_history;
   relations__orders_v: typeof relations__orders_v;
+  relations_profiles: typeof relations_profiles;
   relations_pools_connection_config: typeof relations_pools_connection_config;
   relations_pools: typeof relations_pools;
-  relations_profiles: typeof relations_profiles;
-  relations_proxies: typeof relations_proxies;
-  relations_pages: typeof relations_pages;
-  relations__pages_v: typeof relations__pages_v;
-  relations_tags: typeof relations_tags;
-  relations_statuses: typeof relations_statuses;
   relations_payload_uploads: typeof relations_payload_uploads;
-  relations_private_uploads_rels: typeof relations_private_uploads_rels;
-  relations_private_uploads: typeof relations_private_uploads;
-  relations_handbook: typeof relations_handbook;
-  relations_forms_blocks_checkbox: typeof relations_forms_blocks_checkbox;
-  relations_forms_blocks_country: typeof relations_forms_blocks_country;
-  relations_forms_blocks_email: typeof relations_forms_blocks_email;
-  relations_forms_blocks_message: typeof relations_forms_blocks_message;
-  relations_forms_blocks_number: typeof relations_forms_blocks_number;
-  relations_forms_blocks_select_options: typeof relations_forms_blocks_select_options;
-  relations_forms_blocks_select: typeof relations_forms_blocks_select;
-  relations_forms_blocks_state: typeof relations_forms_blocks_state;
-  relations_forms_blocks_text: typeof relations_forms_blocks_text;
-  relations_forms_blocks_textarea: typeof relations_forms_blocks_textarea;
-  relations_forms_blocks_user_info_options: typeof relations_forms_blocks_user_info_options;
-  relations_forms_blocks_user_info: typeof relations_forms_blocks_user_info;
-  relations_forms_blocks_phone: typeof relations_forms_blocks_phone;
-  relations_forms_emails: typeof relations_forms_emails;
-  relations_forms: typeof relations_forms;
-  relations_form_submissions_submission_data: typeof relations_form_submissions_submission_data;
-  relations_form_submissions: typeof relations_form_submissions;
   relations_audit_log: typeof relations_audit_log;
   relations_payload_folders: typeof relations_payload_folders;
   relations_payload_locked_documents_rels: typeof relations_payload_locked_documents_rels;
@@ -3967,12 +1610,6 @@ type DatabaseSchema = {
   relations_payload_migrations: typeof relations_payload_migrations;
   relations_payload_query_presets_rels: typeof relations_payload_query_presets_rels;
   relations_payload_query_presets: typeof relations_payload_query_presets;
-  relations_global_footer_nav_items: typeof relations_global_footer_nav_items;
-  relations_global_footer_rels: typeof relations_global_footer_rels;
-  relations_global_footer: typeof relations_global_footer;
-  relations_global_terms: typeof relations_global_terms;
-  relations_global_privacy: typeof relations_global_privacy;
-  relations_settings: typeof relations_settings;
 };
 
 declare module "@payloadcms/db-postgres" {

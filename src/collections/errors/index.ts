@@ -2,8 +2,8 @@ import { getServerSideURL } from '@/lib/payload'
 
 import type { CollectionConfig } from 'payload'
 
-export const Orders: CollectionConfig = {
-  slug: 'orders',
+export const Errors: CollectionConfig = {
+  slug: 'errors',
   admin: {
     useAsTitle: 'orderNumber',
     group: 'Operation',
@@ -215,7 +215,7 @@ export const Orders: CollectionConfig = {
           fields: [
             {
               type: 'textarea',
-              name: 'handbook',
+              name: 'userHandbook',
             },
           ],
         },

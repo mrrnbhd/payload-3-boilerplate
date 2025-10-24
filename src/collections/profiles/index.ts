@@ -3,7 +3,7 @@ import type { CollectionConfig } from 'payload'
 export const Profiles: CollectionConfig = {
   slug: 'profiles',
   admin: {
-    group: 'Workflows',
+    group: 'Operation',
     useAsTitle: 'title',
   },
   fields: [

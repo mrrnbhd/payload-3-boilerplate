@@ -3,25 +3,15 @@ import { fileURLToPath } from 'node:url'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
-import { GlobalFooter, GlobalPrivacy, GlobalTerms } from './collections/global'
-import { Handbook } from './collections/handbook'
-import { Jobs } from './collections/jobs'
 import { Orders } from './collections/orders'
-import { Pages } from './collections/pages'
-import { Pools } from './collections/pools'
-import { Profiles } from './collections/profiles'
 import { Proxies } from './collections/proxies'
-import { Settings } from './collections/settings'
-import { Statuses } from './collections/statuses'
-import { Tags } from './collections/tags'
-import { Tasks } from './collections/tasks'
+import { Profiles } from './collections/profiles'
 import { PayloadUploads } from './collections/uploads/payload-uploads'
-import { PrivateUploads } from './collections/uploads/private-uploads'
 import { Users } from './collections/users'
-import { defaultLexical } from './fields/default-lexical'
 import { getEmailAdapter } from './lib/email-adapter'
 import { getServerSideURL } from './lib/payload'
 import { plugins } from './plugins'
+import { Errors } from './collections/errors'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -70,22 +60,7 @@ export default buildConfig({
     collectionSpecific: false,
   },
   email: getEmailAdapter(),
-  collections: [
-    Tasks,
-    Jobs,
-    Orders,
-    Pools,
-    Profiles,
-    Proxies,
-    Pages,
-    Users,
-    Tags,
-    Statuses,
-    PayloadUploads,
-    PrivateUploads,
-    Handbook,
-  ],
-  editor: defaultLexical,
+  collections: [Orders, Errors, Proxies, Profiles, Users, PayloadUploads],
   secret: process.env.PAYLOAD_SECRET,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
@@ -99,6 +74,5 @@ export default buildConfig({
   cors: [getServerSideURL()].filter(Boolean),
   sharp,
   plugins,
-  globals: [GlobalFooter, GlobalTerms, GlobalPrivacy, Settings],
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL,
 })

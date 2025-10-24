@@ -1,3 +1,5 @@
+import TicketerTemplate from '@/lib/email/email-template'
+
 import type { BeforeEmail } from '@payloadcms/plugin-form-builder/types'
 import { render } from '@react-email/render'
 import parse from 'html-react-parser'

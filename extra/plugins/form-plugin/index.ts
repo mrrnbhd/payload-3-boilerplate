@@ -61,7 +61,6 @@ const rowConfig: Record<
           ...defaultValue,
           admin: {
             ...defaultValue.admin,
-            width: '50%',
           },
         } as Field),
       },
@@ -140,7 +139,7 @@ const formPlugin: Plugin = formBuilderPlugin({
   formOverrides: {
     ...adminConfig,
     admin: {
-      group: 'Workflows',
+      group: 'Operation',
     },
     slug: 'forms',
     fields: fieldsTransformer,
@@ -154,7 +153,7 @@ const formPlugin: Plugin = formBuilderPlugin({
   formSubmissionOverrides: {
     ...adminConfig,
     admin: {
-      group: 'Workflows',
+      group: 'Operation',
     },
     labels: {
       singular: 'Form Submission',
