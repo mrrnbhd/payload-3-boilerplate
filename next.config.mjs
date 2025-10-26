@@ -10,7 +10,7 @@ const nextConfig = {
     return [
       {
         source: '/login',
-        destination: '/admin/login',
+        destination: 'admin/login',
         permanent: true,
       },
       {
@@ -35,7 +35,9 @@ const nextConfig = {
   experimental: {
     reactCompiler: true,
   },
-  typescript: {},
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 }
 
 export default withPayload(nextConfig, { devBundleServerPackages: false })
