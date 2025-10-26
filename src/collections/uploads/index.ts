@@ -17,8 +17,22 @@ export const Uploads: CollectionConfig = {
   },
   fields: [
     {
-      name: 'File Notes',
+      name: 'notes',
       type: 'textarea',
+      label: 'File Notes',
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'tags',
+      type: 'relationship',
+      label: 'File Tags',
+      relationTo: 'tags',
+      hasMany: true,
+      admin: {
+        position: 'sidebar',
+      },
     },
   ],
   upload: {
