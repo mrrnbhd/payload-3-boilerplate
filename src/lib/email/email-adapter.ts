@@ -11,9 +11,9 @@ export function getEmailAdapter() {
       transportOptions: {
         host: 'localhost',
         port: 2500,
-        secure: false, // Inbucket doesn't use SSL in local dev
+        secure: false,
         auth: {
-          user: 'test', // Inbucket doesn't require real auth
+          user: 'test',
           pass: 'test',
         },
         // Disable TLS for local development

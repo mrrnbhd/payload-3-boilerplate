@@ -1,14 +1,17 @@
 import { betterAuthPluginOptions } from '@/lib/auth/options'
 
+import { importExportPlugin } from '@payloadcms/plugin-import-export'
 import type { Plugin } from 'payload'
 import { auditorPlugin } from 'payload-auditor'
 import { betterAuthPlugin } from 'payload-auth/better-auth'
-import { s3StoragePluginPrivate, s3StoragePluginPublic } from './s3-storage-plugin'
+import { s3StoragePluginPublic } from './s3-storage-plugin'
 
 export const plugins: Plugin[] = [
   betterAuthPlugin(betterAuthPluginOptions),
+  importExportPlugin({
+    collections: ['orders', 'tags', 'users', 'uploads'],
+  }),
   s3StoragePluginPublic,
-  s3StoragePluginPrivate,
   auditorPlugin({
     enabled: true,
     collection: {
@@ -27,7 +30,7 @@ export const plugins: Plugin[] = [
       },
       trackCollections: [
         {
-          slug: 'tasks',
+          slug: 'users',
           hooks: {
             afterOperation: {
               create: {
@@ -49,7 +52,51 @@ export const plugins: Plugin[] = [
           },
         },
         {
-          slug: 'jobs',
+          slug: 'accounts',
+          hooks: {
+            afterOperation: {
+              create: {
+                enabled: true,
+              },
+              update: {
+                enabled: true,
+              },
+              delete: {
+                enabled: true,
+              },
+              deleteByID: {
+                enabled: true,
+              },
+              updateByID: {
+                enabled: true,
+              },
+            },
+          },
+        },
+        {
+          slug: 'verifications',
+          hooks: {
+            afterOperation: {
+              create: {
+                enabled: true,
+              },
+              update: {
+                enabled: true,
+              },
+              delete: {
+                enabled: true,
+              },
+              deleteByID: {
+                enabled: true,
+              },
+              updateByID: {
+                enabled: true,
+              },
+            },
+          },
+        },
+        {
+          slug: 'invitations',
           hooks: {
             afterOperation: {
               create: {
@@ -93,7 +140,51 @@ export const plugins: Plugin[] = [
           },
         },
         {
-          slug: 'accounts',
+          slug: 'uploads',
+          hooks: {
+            afterOperation: {
+              create: {
+                enabled: true,
+              },
+              update: {
+                enabled: true,
+              },
+              delete: {
+                enabled: true,
+              },
+              deleteByID: {
+                enabled: true,
+              },
+              updateByID: {
+                enabled: true,
+              },
+            },
+          },
+        },
+        {
+          slug: 'tags',
+          hooks: {
+            afterOperation: {
+              create: {
+                enabled: true,
+              },
+              update: {
+                enabled: true,
+              },
+              delete: {
+                enabled: true,
+              },
+              deleteByID: {
+                enabled: true,
+              },
+              updateByID: {
+                enabled: true,
+              },
+            },
+          },
+        },
+        {
+          slug: 'settings',
           hooks: {
             afterOperation: {
               create: {

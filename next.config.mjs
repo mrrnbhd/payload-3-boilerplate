@@ -6,6 +6,20 @@ const NEXT_PUBLIC_SERVER_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/login',
+        destination: '/admin/login',
+        permanent: true,
+      },
+      {
+        source: '/src',
+        destination: '/admin',
+        permanent: true,
+      },
+    ]
+  },
   images: {
     remotePatterns: [
       ...[NEXT_PUBLIC_SERVER_URL, 'https://tsmcaqxorqmxtnkqwmmq.supabase.co'].map((item) => {
@@ -21,9 +35,7 @@ const nextConfig = {
   experimental: {
     reactCompiler: true,
   },
-  typescript: {
-    ignoreBuildErrors: true, // handled by linting, in the future, use CI to check
-  },
+  typescript: {},
 }
 
 export default withPayload(nextConfig, { devBundleServerPackages: false })

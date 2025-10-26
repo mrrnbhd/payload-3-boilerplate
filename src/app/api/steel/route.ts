@@ -1,31 +1,6 @@
-import config from '@payload-config'
 import dotenv from 'dotenv'
-import type { Payload } from 'payload'
-import { getPayload } from 'payload'
 import puppeteer, { type Browser } from 'puppeteer-core'
 import Steel from 'steel-sdk'
-import { type JobProperties } from '@/app/(frontend)/(public)/jobs/types'
-
-type BrowserAction =
-  | 'Navigate to URL'
-  | 'Click Element'
-  | 'Hover Element'
-  | 'Scroll to Element'
-  | 'Fill Input'
-  | 'Type Text'
-  | 'Press Key'
-  | 'Upload File'
-  | 'Go Back'
-  | 'Go Forward'
-  | 'Refresh Page'
-  | 'Copy to Clipboard'
-  | 'Cut to Clipboard'
-  | 'Paste from Clipboard'
-  | 'Extract Data'
-  | 'Create PDF'
-  | 'Take Screenshot'
-
-const payload: Payload = await getPayload({ config })
 
 dotenv.config()
 
@@ -35,7 +10,7 @@ const client: Steel = new Steel({
   baseURL: 'https://steel-browser-production-8937.up.railway.app',
 })
 
-async function browser(automation: Partial<JobProperties>) {
+async function browser() {
   console.log('🚀 Steel + Puppeteer TypeScript Starter')
   console.log('='.repeat(60))
 
@@ -81,6 +56,7 @@ async function browser(automation: Partial<JobProperties>) {
     const fs = await import('fs')
     fs.writeFileSync('parkwhiz-search-results.png', screenshotBuffer)
     console.log('Screenshot saved as parkwhiz-search-results.png')
+
     // ============================================================
     // End of Automations
     // ============================================================

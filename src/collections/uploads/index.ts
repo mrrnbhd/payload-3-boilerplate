@@ -1,30 +1,23 @@
 import type { CollectionConfig } from 'payload'
 
-/** All media uploaded from Payload Admin*/
-export const PayloadUploads: CollectionConfig = {
-  slug: 'payload-uploads',
+export const Uploads: CollectionConfig = {
+  slug: 'uploads',
+  enableQueryPresets: true,
+  trash: true,
   folders: true,
   labels: {
     singular: 'File',
     plural: 'Files',
   },
-  enableQueryPresets: true,
-  trash: true,
   access: {
     read: () => true,
   },
   admin: {
     group: 'Operation',
-    description: 'All media uploaded from the admin panel.',
   },
   fields: [
     {
-      name: 'alt',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'caption',
+      name: 'File Notes',
       type: 'textarea',
     },
   ],

@@ -1,10 +1,9 @@
-import { TicketerLogoIcon } from '../icons'
-
 export default function AdminLogo() {
   return (
     <div className="admin-logo-container">
-      <TicketerLogoIcon className="admin-logo-icon" />
-      <span className="admin-logo-text">ticketer Admin Portal</span>
+      <span className="text-black dark:text-white">
+        <h2 className="">🎫 Ticketer</h2>
+      </span>
     </div>
   )
 }

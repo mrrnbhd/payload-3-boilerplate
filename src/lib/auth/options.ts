@@ -65,7 +65,6 @@ export const betterAuthOptions: BetterAuthOptions = {
       await sendVerificationEmail({ user, url, token })
     },
     onEmailVerification: async (user) => {
-      // update user.verified to true
       const config = await payloadConfig
       const payload = await getPayload({ config })
       if (isDev) console.log('✅ Update user verified to true: ', user.id)
@@ -89,11 +88,8 @@ export const betterAuthOptions: BetterAuthOptions = {
       sendDeleteAccountVerification: async ({ user, url, token }) => {
         await sendDeleteAccountVerification({ user, url, token })
       },
-      beforeDelete: async (_user) => {
-        // Perform actions before user deletion
-      },
+      beforeDelete: async (_user) => {},
       afterDelete: async (user) => {
-        // Perform cleanup after user deletion
         console.log('[afterDelete] user: ', user)
       },
     },
@@ -141,7 +137,7 @@ export const betterAuthPluginOptions: BetterAuthPluginOptions = {
   hidePluginCollections: true,
   collectionAdminGroup: 'Access',
   users: {
-    slug: 'users', // not required, this is the default anyways
+    slug: 'users',
     hidden: false,
     adminRoles: ['admin'],
     allowedFields: ['name'],
@@ -149,12 +145,44 @@ export const betterAuthPluginOptions: BetterAuthPluginOptions = {
   },
   accounts: {
     slug: 'accounts',
+    collectionOverrides: (defaults) => {
+      const prevConf = defaults.collection
+      return {
+        ...prevConf,
+        labels: {
+          singular: 'Account',
+          plural: 'Accounts',
+        },
+        enableQueryPresets: true,
+        folders: true,
+        trash: true,
+      }
+    },
   },
   sessions: {
     slug: 'sessions',
+    collectionOverrides: (defaults) => {
+      const prevConf = defaults.collection
+      return {
+        ...prevConf,
+        enableQueryPresets: true,
+        folders: true,
+        trash: true,
+      }
+    },
   },
   verifications: {
     slug: 'verifications',
+    collectionOverrides: (defaults) => {
+      const prevConf = defaults.collection
+      return {
+        ...prevConf,
+
+        enableQueryPresets: true,
+        folders: true,
+        trash: true,
+      }
+    },
   },
   adminInvitations: {
     sendInviteEmail: async ({ payload, email, url }) => {
@@ -171,6 +199,9 @@ export const betterAuthPluginOptions: BetterAuthPluginOptions = {
           singular: 'Invitation',
           plural: 'Invitations',
         },
+        enableQueryPresets: true,
+        folders: true,
+        trash: true,
       }
     },
   },

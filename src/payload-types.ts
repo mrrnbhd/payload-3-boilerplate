@@ -74,11 +74,11 @@ export interface Config {
     passkeys: Passkey;
     'admin-invitations': AdminInvitation;
     orders: Order;
-    errors: Error;
-    proxies: Proxy;
-    profiles: Profile;
-    'payload-uploads': PayloadUpload;
+    uploads: Upload;
+    tags: Tag;
+    exports: Export;
     'Audit-log': AuditLog;
+    'payload-jobs': PayloadJob;
     'payload-folders': FolderInterface;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -86,8 +86,20 @@ export interface Config {
     'payload-query-presets': PayloadQueryPreset;
   };
   collectionsJoins: {
+    tags: {
+      'Tag Links': 'orders';
+    };
     'payload-folders': {
-      documentsAndFolders: 'payload-folders' | 'payload-uploads';
+      documentsAndFolders:
+        | 'payload-folders'
+        | 'users'
+        | 'sessions'
+        | 'accounts'
+        | 'verifications'
+        | 'admin-invitations'
+        | 'orders'
+        | 'uploads'
+        | 'tags';
     };
   };
   collectionsSelect: {
@@ -98,11 +110,11 @@ export interface Config {
     passkeys: PasskeysSelect<false> | PasskeysSelect<true>;
     'admin-invitations': AdminInvitationsSelect<false> | AdminInvitationsSelect<true>;
     orders: OrdersSelect<false> | OrdersSelect<true>;
-    errors: ErrorsSelect<false> | ErrorsSelect<true>;
-    proxies: ProxiesSelect<false> | ProxiesSelect<true>;
-    profiles: ProfilesSelect<false> | ProfilesSelect<true>;
-    'payload-uploads': PayloadUploadsSelect<false> | PayloadUploadsSelect<true>;
+    uploads: UploadsSelect<false> | UploadsSelect<true>;
+    tags: TagsSelect<false> | TagsSelect<true>;
+    exports: ExportsSelect<false> | ExportsSelect<true>;
     'Audit-log': AuditLogSelect<false> | AuditLogSelect<true>;
+    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -112,14 +124,24 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    settings: Setting;
+  };
+  globalsSelect: {
+    settings: SettingsSelect<false> | SettingsSelect<true>;
+  };
   locale: null;
   user: User & {
     collection: 'users';
   };
   jobs: {
-    tasks: unknown;
+    tasks: {
+      createCollectionExport: TaskCreateCollectionExport;
+      inline: {
+        input: unknown;
+        output: unknown;
+      };
+    };
     workflows: unknown;
   };
 }
@@ -159,7 +181,6 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: string;
-  userRole?: ('User' | 'Admin') | null;
   /**
    * Users chosen display name
    */
@@ -215,6 +236,61 @@ export interface User {
    */
   banExpires?: string | null;
   verified?: boolean | null;
+  folder?: (string | null) | FolderInterface;
+  deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-folders".
+ */
+export interface FolderInterface {
+  id: string;
+  name: string;
+  folder?: (string | null) | FolderInterface;
+  documentsAndFolders?: {
+    docs?: (
+      | {
+          relationTo?: 'payload-folders';
+          value: string | FolderInterface;
+        }
+      | {
+          relationTo?: 'users';
+          value: string | User;
+        }
+      | {
+          relationTo?: 'sessions';
+          value: string | Session;
+        }
+      | {
+          relationTo?: 'accounts';
+          value: string | Account;
+        }
+      | {
+          relationTo?: 'verifications';
+          value: string | Verification;
+        }
+      | {
+          relationTo?: 'admin-invitations';
+          value: string | AdminInvitation;
+        }
+      | {
+          relationTo?: 'orders';
+          value: string | Order;
+        }
+      | {
+          relationTo?: 'uploads';
+          value: string | Upload;
+        }
+      | {
+          relationTo?: 'tags';
+          value: string | Tag;
+        }
+    )[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Sessions are active sessions for users. They are used to authenticate users with a session token
@@ -250,6 +326,8 @@ export interface Session {
    * The admin who is impersonating this session
    */
   impersonatedBy?: (string | null) | User;
+  folder?: (string | null) | FolderInterface;
+  deletedAt?: string | null;
 }
 /**
  * Accounts are used to store user accounts for authentication providers
@@ -301,6 +379,8 @@ export interface Account {
   password?: string | null;
   createdAt: string;
   updatedAt: string;
+  folder?: (string | null) | FolderInterface;
+  deletedAt?: string | null;
 }
 /**
  * Verifications are used to verify authentication requests
@@ -324,50 +404,8 @@ export interface Verification {
   expiresAt: string;
   createdAt: string;
   updatedAt: string;
-}
-/**
- * Passkeys are used to authenticate users
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "passkeys".
- */
-export interface Passkey {
-  id: string;
-  /**
-   * The name of the passkey
-   */
-  name?: string | null;
-  /**
-   * The public key of the passkey
-   */
-  publicKey: string;
-  /**
-   * The user that the passkey belongs to
-   */
-  user: string | User;
-  /**
-   * The unique identifier of the registered credential
-   */
-  credentialID: string;
-  /**
-   * The counter of the passkey
-   */
-  counter: number;
-  /**
-   * The type of device used to register the passkey
-   */
-  deviceType: string;
-  /**
-   * Whether the passkey is backed up
-   */
-  backedUp: boolean;
-  /**
-   * The transports used to register the passkey
-   */
-  transports: string;
-  createdAt: string;
-  aaguid?: string | null;
-  updatedAt: string;
+  folder?: (string | null) | FolderInterface;
+  deletedAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -378,8 +416,10 @@ export interface AdminInvitation {
   role: 'admin' | 'user';
   token: string;
   url?: string | null;
+  folder?: (string | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -387,129 +427,50 @@ export interface AdminInvitation {
  */
 export interface Order {
   id: string;
-  orderStatus?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Blocked' | 'Cancelled' | 'Archived') | null;
-  orderValue?: number | null;
   orderNumber?: number | null;
+  tags?: (string | Tag)[] | null;
+  status?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Error') | null;
   orderLink?: string | null;
-  marketplace?: ('Stubhub' | 'SeatGeek' | 'GoTickets') | null;
-  eventOrPerformerName?: string | null;
-  venueName?: string | null;
-  parkingTickets?:
-    | {
-        source?: ('SpotHero' | 'ParkWhiz' | 'ParkMobile' | 'AceParking') | null;
-        link?: string | null;
-        type?: 'Eticket' | null;
-        status?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Blocked' | 'Cancelled') | null;
-        parkingSpotLocation?: string | null;
-        projectedPurchasePrice?: number | null;
-        id?: string | null;
-      }[]
-    | null;
-  orderHistory?:
-    | {
-        source?: ('SpotHero' | 'ParkWhiz' | 'ParkMobile' | 'AceParking') | null;
-        link?: string | null;
-        type?: 'Eticket' | null;
-        status?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Blocked' | 'Cancelled') | null;
-        parkingSpotLocation?: string | null;
-        projectedPurchasePrice?: number | null;
-        id?: string | null;
-      }[]
-    | null;
-  orderNotes?: string | null;
-  handbook?: string | null;
+  value?: number | null;
+  event?: string | null;
+  venue?: string | null;
+  location?: string | null;
+  vendor?: ('SpotHero' | 'ParkWhiz' | 'ParkMobile' | 'AceParking') | null;
+  link?: string | null;
+  price?: number | null;
+  PDF?: (string | null) | Upload;
+  notes?: string | null;
+  folder?: (string | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
   _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "errors".
+ * via the `definition` "tags".
  */
-export interface Error {
+export interface Tag {
   id: string;
-  orderStatus?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Blocked' | 'Cancelled' | 'Archived') | null;
-  orderValue?: number | null;
-  orderNumber?: number | null;
-  orderLink?: string | null;
-  marketplace?: ('Stubhub' | 'SeatGeek' | 'GoTickets') | null;
-  eventOrPerformerName?: string | null;
-  venueName?: string | null;
-  parkingTickets?:
-    | {
-        source?: ('SpotHero' | 'ParkWhiz' | 'ParkMobile' | 'AceParking') | null;
-        link?: string | null;
-        type?: 'Eticket' | null;
-        status?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Blocked' | 'Cancelled') | null;
-        parkingSpotLocation?: string | null;
-        projectedPurchasePrice?: number | null;
-        id?: string | null;
-      }[]
-    | null;
-  orderHistory?:
-    | {
-        source?: ('SpotHero' | 'ParkWhiz' | 'ParkMobile' | 'AceParking') | null;
-        link?: string | null;
-        type?: 'Eticket' | null;
-        status?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Blocked' | 'Cancelled') | null;
-        parkingSpotLocation?: string | null;
-        projectedPurchasePrice?: number | null;
-        id?: string | null;
-      }[]
-    | null;
-  orderNotes?: string | null;
-  userHandbook?: string | null;
+  name: string;
+  description?: string | null;
+  'Tag Links'?: {
+    docs?: (string | Order)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  folder?: (string | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
+  deletedAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "proxies".
+ * via the `definition` "uploads".
  */
-export interface Proxy {
+export interface Upload {
   id: string;
-  proxyName: string;
-  proxystatus: 'active' | 'maintenance' | 'disabled';
-  connectionConfig?:
-    | {
-        provider?: string | null;
-        lastHealthCheck?: string | null;
-        host: string;
-        port?: number | null;
-        authType?: ('none' | 'usernamePassword' | 'ipWhitelist') | null;
-        credentials?: {
-          username?: string | null;
-          password?: string | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  healthStatus?: string | null;
-  userHandbook?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "profiles".
- */
-export interface Profile {
-  id: string;
-  title?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * All media uploaded from the admin panel.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-uploads".
- */
-export interface PayloadUpload {
-  id: string;
-  alt: string;
-  caption?: string | null;
+  'File Notes'?: string | null;
   prefix?: string | null;
   folder?: (string | null) | FolderInterface;
   updatedAt: string;
@@ -584,29 +545,85 @@ export interface PayloadUpload {
   };
 }
 /**
+ * Passkeys are used to authenticate users
+ *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-folders".
+ * via the `definition` "passkeys".
  */
-export interface FolderInterface {
+export interface Passkey {
   id: string;
-  name: string;
-  folder?: (string | null) | FolderInterface;
-  documentsAndFolders?: {
-    docs?: (
-      | {
-          relationTo?: 'payload-folders';
-          value: string | FolderInterface;
-        }
-      | {
-          relationTo?: 'payload-uploads';
-          value: string | PayloadUpload;
-        }
-    )[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
+  /**
+   * The name of the passkey
+   */
+  name?: string | null;
+  /**
+   * The public key of the passkey
+   */
+  publicKey: string;
+  /**
+   * The user that the passkey belongs to
+   */
+  user: string | User;
+  /**
+   * The unique identifier of the registered credential
+   */
+  credentialID: string;
+  /**
+   * The counter of the passkey
+   */
+  counter: number;
+  /**
+   * The type of device used to register the passkey
+   */
+  deviceType: string;
+  /**
+   * Whether the passkey is backed up
+   */
+  backedUp: boolean;
+  /**
+   * The transports used to register the passkey
+   */
+  transports: string;
+  createdAt: string;
+  aaguid?: string | null;
+  updatedAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "exports".
+ */
+export interface Export {
+  id: string;
+  name?: string | null;
+  format?: ('csv' | 'json') | null;
+  limit?: number | null;
+  page?: number | null;
+  sort?: string | null;
+  sortOrder?: ('asc' | 'desc') | null;
+  drafts?: ('yes' | 'no') | null;
+  selectionToUse?: ('currentSelection' | 'currentFilters' | 'all') | null;
+  fields?: string[] | null;
+  collectionSlug: string;
+  where?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -621,6 +638,98 @@ export interface AuditLog {
   userAgent?: string | null;
   hook?: string | null;
   type: 'info' | 'debug' | 'warning' | 'error' | 'audit' | 'security' | 'unknown';
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs".
+ */
+export interface PayloadJob {
+  id: string;
+  /**
+   * Input data provided to the job
+   */
+  input?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  taskStatus?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  completedAt?: string | null;
+  totalTried?: number | null;
+  /**
+   * If hasError is true this job will not be retried
+   */
+  hasError?: boolean | null;
+  /**
+   * If hasError is true, this is the error that caused it
+   */
+  error?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Task execution log
+   */
+  log?:
+    | {
+        executedAt: string;
+        completedAt: string;
+        taskSlug: 'inline' | 'createCollectionExport';
+        taskID: string;
+        input?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        output?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        state: 'failed' | 'succeeded';
+        error?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  taskSlug?: ('inline' | 'createCollectionExport') | null;
+  queue?: string | null;
+  waitUntil?: string | null;
+  processing?: boolean | null;
+  updatedAt: string;
   createdAt: string;
 }
 /**
@@ -659,24 +768,24 @@ export interface PayloadLockedDocument {
         value: string | Order;
       } | null)
     | ({
-        relationTo: 'errors';
-        value: string | Error;
+        relationTo: 'uploads';
+        value: string | Upload;
       } | null)
     | ({
-        relationTo: 'proxies';
-        value: string | Proxy;
+        relationTo: 'tags';
+        value: string | Tag;
       } | null)
     | ({
-        relationTo: 'profiles';
-        value: string | Profile;
-      } | null)
-    | ({
-        relationTo: 'payload-uploads';
-        value: string | PayloadUpload;
+        relationTo: 'exports';
+        value: string | Export;
       } | null)
     | ({
         relationTo: 'Audit-log';
         value: string | AuditLog;
+      } | null)
+    | ({
+        relationTo: 'payload-jobs';
+        value: string | PayloadJob;
       } | null)
     | ({
         relationTo: 'payload-folders';
@@ -764,7 +873,15 @@ export interface PayloadQueryPreset {
     | number
     | boolean
     | null;
-  relatedCollection: 'payload-uploads';
+  relatedCollection:
+    | 'users'
+    | 'sessions'
+    | 'accounts'
+    | 'verifications'
+    | 'admin-invitations'
+    | 'orders'
+    | 'uploads'
+    | 'tags';
   /**
    * This is a temporary field used to determine if updating the preset would remove the user's access to it. When `true`, this record will be deleted after running the preset's `validate` function.
    */
@@ -777,7 +894,6 @@ export interface PayloadQueryPreset {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
-  userRole?: T;
   name?: T;
   email?: T;
   emailVerified?: T;
@@ -794,6 +910,8 @@ export interface UsersSelect<T extends boolean = true> {
   banReason?: T;
   banExpires?: T;
   verified?: T;
+  folder?: T;
+  deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -808,6 +926,8 @@ export interface SessionsSelect<T extends boolean = true> {
   userAgent?: T;
   user?: T;
   impersonatedBy?: T;
+  folder?: T;
+  deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -826,6 +946,8 @@ export interface AccountsSelect<T extends boolean = true> {
   password?: T;
   createdAt?: T;
   updatedAt?: T;
+  folder?: T;
+  deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -837,6 +959,8 @@ export interface VerificationsSelect<T extends boolean = true> {
   expiresAt?: T;
   createdAt?: T;
   updatedAt?: T;
+  folder?: T;
+  deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -863,133 +987,41 @@ export interface AdminInvitationsSelect<T extends boolean = true> {
   role?: T;
   token?: T;
   url?: T;
+  folder?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "orders_select".
  */
 export interface OrdersSelect<T extends boolean = true> {
-  orderStatus?: T;
-  orderValue?: T;
   orderNumber?: T;
+  tags?: T;
+  status?: T;
   orderLink?: T;
-  marketplace?: T;
-  eventOrPerformerName?: T;
-  venueName?: T;
-  parkingTickets?:
-    | T
-    | {
-        source?: T;
-        link?: T;
-        type?: T;
-        status?: T;
-        parkingSpotLocation?: T;
-        projectedPurchasePrice?: T;
-        id?: T;
-      };
-  orderHistory?:
-    | T
-    | {
-        source?: T;
-        link?: T;
-        type?: T;
-        status?: T;
-        parkingSpotLocation?: T;
-        projectedPurchasePrice?: T;
-        id?: T;
-      };
-  orderNotes?: T;
-  handbook?: T;
+  value?: T;
+  event?: T;
+  venue?: T;
+  location?: T;
+  vendor?: T;
+  link?: T;
+  price?: T;
+  PDF?: T;
+  notes?: T;
+  folder?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
   _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "errors_select".
+ * via the `definition` "uploads_select".
  */
-export interface ErrorsSelect<T extends boolean = true> {
-  orderStatus?: T;
-  orderValue?: T;
-  orderNumber?: T;
-  orderLink?: T;
-  marketplace?: T;
-  eventOrPerformerName?: T;
-  venueName?: T;
-  parkingTickets?:
-    | T
-    | {
-        source?: T;
-        link?: T;
-        type?: T;
-        status?: T;
-        parkingSpotLocation?: T;
-        projectedPurchasePrice?: T;
-        id?: T;
-      };
-  orderHistory?:
-    | T
-    | {
-        source?: T;
-        link?: T;
-        type?: T;
-        status?: T;
-        parkingSpotLocation?: T;
-        projectedPurchasePrice?: T;
-        id?: T;
-      };
-  orderNotes?: T;
-  userHandbook?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "proxies_select".
- */
-export interface ProxiesSelect<T extends boolean = true> {
-  proxyName?: T;
-  proxystatus?: T;
-  connectionConfig?:
-    | T
-    | {
-        provider?: T;
-        lastHealthCheck?: T;
-        host?: T;
-        port?: T;
-        authType?: T;
-        credentials?:
-          | T
-          | {
-              username?: T;
-              password?: T;
-            };
-        id?: T;
-      };
-  healthStatus?: T;
-  userHandbook?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "profiles_select".
- */
-export interface ProfilesSelect<T extends boolean = true> {
-  title?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-uploads_select".
- */
-export interface PayloadUploadsSelect<T extends boolean = true> {
-  alt?: T;
-  caption?: T;
+export interface UploadsSelect<T extends boolean = true> {
+  'File Notes'?: T;
   prefix?: T;
   folder?: T;
   updatedAt?: T;
@@ -1081,6 +1113,47 @@ export interface PayloadUploadsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags_select".
+ */
+export interface TagsSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  'Tag Links'?: T;
+  folder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "exports_select".
+ */
+export interface ExportsSelect<T extends boolean = true> {
+  name?: T;
+  format?: T;
+  limit?: T;
+  page?: T;
+  sort?: T;
+  sortOrder?: T;
+  drafts?: T;
+  selectionToUse?: T;
+  fields?: T;
+  collectionSlug?: T;
+  where?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "Audit-log_select".
  */
 export interface AuditLogSelect<T extends boolean = true> {
@@ -1091,6 +1164,37 @@ export interface AuditLogSelect<T extends boolean = true> {
   userAgent?: T;
   hook?: T;
   type?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs_select".
+ */
+export interface PayloadJobsSelect<T extends boolean = true> {
+  input?: T;
+  taskStatus?: T;
+  completedAt?: T;
+  totalTried?: T;
+  hasError?: T;
+  error?: T;
+  log?:
+    | T
+    | {
+        executedAt?: T;
+        completedAt?: T;
+        taskSlug?: T;
+        taskID?: T;
+        input?: T;
+        output?: T;
+        state?: T;
+        error?: T;
+        id?: T;
+      };
+  taskSlug?: T;
+  queue?: T;
+  waitUntil?: T;
+  processing?: T;
+  updatedAt?: T;
   createdAt?: T;
 }
 /**
@@ -1171,6 +1275,57 @@ export interface PayloadQueryPresetsSelect<T extends boolean = true> {
   isTemp?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings".
+ */
+export interface Setting {
+  id: string;
+  browserProfiles?: (string | Upload)[] | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings_select".
+ */
+export interface SettingsSelect<T extends boolean = true> {
+  browserProfiles?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskCreateCollectionExport".
+ */
+export interface TaskCreateCollectionExport {
+  input: {
+    name?: string | null;
+    format?: ('csv' | 'json') | null;
+    limit?: number | null;
+    page?: number | null;
+    sort?: string | null;
+    sortOrder?: ('asc' | 'desc') | null;
+    drafts?: ('yes' | 'no') | null;
+    selectionToUse?: ('currentSelection' | 'currentFilters' | 'all') | null;
+    fields?: string[] | null;
+    collectionSlug: string;
+    where?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    user?: string | null;
+    userCollection?: string | null;
+    exportsCollection?: string | null;
+  };
+  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

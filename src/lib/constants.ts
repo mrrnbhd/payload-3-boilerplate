@@ -35,3 +35,5 @@ export const IMAGE_SIZES = {
 } as const
 
 export const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'admin@ticketer.com'
+
+export const unknownError = 'An unknown error occurred. Please try again later.'

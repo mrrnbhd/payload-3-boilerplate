@@ -6,282 +6,276 @@
  * and re-run `payload generate:db-schema` to regenerate this file.
  */
 
-import type {} from "@payloadcms/db-postgres";
+import type {} from '@payloadcms/db-postgres'
+import { relations } from '@payloadcms/db-postgres/drizzle'
 import {
-  pgTable,
-  index,
-  uniqueIndex,
+  type AnyPgColumn,
+  boolean,
   foreignKey,
+  index,
+  integer,
+  jsonb,
+  numeric,
+  pgEnum,
+  pgTable,
+  serial,
+  timestamp,
+  uniqueIndex,
   uuid,
   varchar,
-  boolean,
-  timestamp,
-  numeric,
-  integer,
-  type AnyPgColumn,
-  serial,
-  jsonb,
-  pgEnum,
-} from "@payloadcms/db-postgres/drizzle/pg-core";
-import { sql, relations } from "@payloadcms/db-postgres/drizzle";
-export const enum_users_user_role = pgEnum("enum_users_user_role", [
-  "User",
-  "Admin",
-]);
-export const enum_users_role = pgEnum("enum_users_role", ["Admin", "user"]);
-export const enum_admin_invitations_role = pgEnum(
-  "enum_admin_invitations_role",
-  ["Admin", "user"],
-);
-export const enum_orders_parking_tickets_source = pgEnum(
-  "enum_orders_parking_tickets_source",
-  ["SpotHero", "ParkWhiz", "ParkMobile", "AceParking"],
-);
-export const enum_orders_parking_tickets_type = pgEnum(
-  "enum_orders_parking_tickets_type",
-  ["Eticket"],
-);
-export const enum_orders_parking_tickets_status = pgEnum(
-  "enum_orders_parking_tickets_status",
-  ["Pending", "Purchased", "Fulfilled", "Blocked", "Cancelled"],
-);
-export const enum_orders_order_history_source = pgEnum(
-  "enum_orders_order_history_source",
-  ["SpotHero", "ParkWhiz", "ParkMobile", "AceParking"],
-);
-export const enum_orders_order_history_type = pgEnum(
-  "enum_orders_order_history_type",
-  ["Eticket"],
-);
-export const enum_orders_order_history_status = pgEnum(
-  "enum_orders_order_history_status",
-  ["Pending", "Purchased", "Fulfilled", "Blocked", "Cancelled"],
-);
-export const enum_orders_order_status = pgEnum("enum_orders_order_status", [
-  "Pending",
-  "Purchased",
-  "Fulfilled",
-  "Blocked",
-  "Cancelled",
-  "Archived",
-]);
-export const enum_orders_marketplace = pgEnum("enum_orders_marketplace", [
-  "Stubhub",
-  "SeatGeek",
-  "GoTickets",
-]);
-export const enum_orders_status = pgEnum("enum_orders_status", [
-  "draft",
-  "published",
-]);
+} from '@payloadcms/db-postgres/drizzle/pg-core'
+export const enum_users_user_role = pgEnum('enum_users_user_role', ['User', 'Admin'])
+export const enum_users_role = pgEnum('enum_users_role', ['Admin', 'user'])
+export const enum_admin_invitations_role = pgEnum('enum_admin_invitations_role', ['Admin', 'user'])
+export const enum_orders_parking_tickets_source = pgEnum('enum_orders_parking_tickets_source', [
+  'SpotHero',
+  'ParkWhiz',
+  'ParkMobile',
+  'AceParking',
+])
+export const enum_orders_parking_tickets_type = pgEnum('enum_orders_parking_tickets_type', [
+  'Eticket',
+])
+export const enum_orders_parking_tickets_status = pgEnum('enum_orders_parking_tickets_status', [
+  'Pending',
+  'Purchased',
+  'Fulfilled',
+  'Blocked',
+  'Cancelled',
+])
+export const enum_orders_order_history_source = pgEnum('enum_orders_order_history_source', [
+  'SpotHero',
+  'ParkWhiz',
+  'ParkMobile',
+  'AceParking',
+])
+export const enum_orders_order_history_type = pgEnum('enum_orders_order_history_type', ['Eticket'])
+export const enum_orders_order_history_status = pgEnum('enum_orders_order_history_status', [
+  'Pending',
+  'Purchased',
+  'Fulfilled',
+  'Blocked',
+  'Cancelled',
+])
+export const enum_orders_order_status = pgEnum('enum_orders_order_status', [
+  'Pending',
+  'Purchased',
+  'Fulfilled',
+  'Blocked',
+  'Cancelled',
+  'Archived',
+])
+export const enum_orders_marketplace = pgEnum('enum_orders_marketplace', [
+  'Stubhub',
+  'SeatGeek',
+  'GoTickets',
+])
+export const enum_orders_status = pgEnum('enum_orders_status', ['draft', 'published'])
 export const enum__orders_v_version_parking_tickets_source = pgEnum(
-  "enum__orders_v_version_parking_tickets_source",
-  ["SpotHero", "ParkWhiz", "ParkMobile", "AceParking"],
-);
+  'enum__orders_v_version_parking_tickets_source',
+  ['SpotHero', 'ParkWhiz', 'ParkMobile', 'AceParking']
+)
 export const enum__orders_v_version_parking_tickets_type = pgEnum(
-  "enum__orders_v_version_parking_tickets_type",
-  ["Eticket"],
-);
+  'enum__orders_v_version_parking_tickets_type',
+  ['Eticket']
+)
 export const enum__orders_v_version_parking_tickets_status = pgEnum(
-  "enum__orders_v_version_parking_tickets_status",
-  ["Pending", "Purchased", "Fulfilled", "Blocked", "Cancelled"],
-);
+  'enum__orders_v_version_parking_tickets_status',
+  ['Pending', 'Purchased', 'Fulfilled', 'Blocked', 'Cancelled']
+)
 export const enum__orders_v_version_order_history_source = pgEnum(
-  "enum__orders_v_version_order_history_source",
-  ["SpotHero", "ParkWhiz", "ParkMobile", "AceParking"],
-);
+  'enum__orders_v_version_order_history_source',
+  ['SpotHero', 'ParkWhiz', 'ParkMobile', 'AceParking']
+)
 export const enum__orders_v_version_order_history_type = pgEnum(
-  "enum__orders_v_version_order_history_type",
-  ["Eticket"],
-);
+  'enum__orders_v_version_order_history_type',
+  ['Eticket']
+)
 export const enum__orders_v_version_order_history_status = pgEnum(
-  "enum__orders_v_version_order_history_status",
-  ["Pending", "Purchased", "Fulfilled", "Blocked", "Cancelled"],
-);
-export const enum__orders_v_version_order_status = pgEnum(
-  "enum__orders_v_version_order_status",
-  ["Pending", "Purchased", "Fulfilled", "Blocked", "Cancelled", "Archived"],
-);
-export const enum__orders_v_version_marketplace = pgEnum(
-  "enum__orders_v_version_marketplace",
-  ["Stubhub", "SeatGeek", "GoTickets"],
-);
-export const enum__orders_v_version_status = pgEnum(
-  "enum__orders_v_version_status",
-  ["draft", "published"],
-);
+  'enum__orders_v_version_order_history_status',
+  ['Pending', 'Purchased', 'Fulfilled', 'Blocked', 'Cancelled']
+)
+export const enum__orders_v_version_order_status = pgEnum('enum__orders_v_version_order_status', [
+  'Pending',
+  'Purchased',
+  'Fulfilled',
+  'Blocked',
+  'Cancelled',
+  'Archived',
+])
+export const enum__orders_v_version_marketplace = pgEnum('enum__orders_v_version_marketplace', [
+  'Stubhub',
+  'SeatGeek',
+  'GoTickets',
+])
+export const enum__orders_v_version_status = pgEnum('enum__orders_v_version_status', [
+  'draft',
+  'published',
+])
 export const enum_pools_connection_config_auth_type = pgEnum(
-  "enum_pools_connection_config_auth_type",
-  ["none", "usernamePassword", "ipWhitelist"],
-);
-export const enum_pools_pool_status = pgEnum("enum_pools_pool_status", [
-  "active",
-  "maintenance",
-  "disabled",
-]);
-export const enum_audit_log_type = pgEnum("enum_audit_log_type", [
-  "info",
-  "debug",
-  "warning",
-  "error",
-  "audit",
-  "security",
-  "unknown",
-]);
+  'enum_pools_connection_config_auth_type',
+  ['none', 'usernamePassword', 'ipWhitelist']
+)
+export const enum_pools_pool_status = pgEnum('enum_pools_pool_status', [
+  'active',
+  'maintenance',
+  'disabled',
+])
+export const enum_audit_log_type = pgEnum('enum_audit_log_type', [
+  'info',
+  'debug',
+  'warning',
+  'error',
+  'audit',
+  'security',
+  'unknown',
+])
 export const enum_payload_query_presets_access_read_constraint = pgEnum(
-  "enum_payload_query_presets_access_read_constraint",
-  ["everyone", "onlyMe", "specificUsers"],
-);
+  'enum_payload_query_presets_access_read_constraint',
+  ['everyone', 'onlyMe', 'specificUsers']
+)
 export const enum_payload_query_presets_access_update_constraint = pgEnum(
-  "enum_payload_query_presets_access_update_constraint",
-  ["everyone", "onlyMe", "specificUsers"],
-);
+  'enum_payload_query_presets_access_update_constraint',
+  ['everyone', 'onlyMe', 'specificUsers']
+)
 export const enum_payload_query_presets_access_delete_constraint = pgEnum(
-  "enum_payload_query_presets_access_delete_constraint",
-  ["everyone", "onlyMe", "specificUsers"],
-);
+  'enum_payload_query_presets_access_delete_constraint',
+  ['everyone', 'onlyMe', 'specificUsers']
+)
 export const enum_payload_query_presets_related_collection = pgEnum(
-  "enum_payload_query_presets_related_collection",
-  ["payload-uploads"],
-);
+  'enum_payload_query_presets_related_collection',
+  ['uploads']
+)
 
 export const users = pgTable(
-  "users",
+  'users',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    userRole: enum_users_user_role("user_role"),
-    name: varchar("name"),
-    email: varchar("email").notNull(),
-    emailVerified: boolean("email_verified").notNull().default(false),
-    image: varchar("image"),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    id: uuid('id').defaultRandom().primaryKey(),
+    userRole: enum_users_user_role('user_role'),
+    name: varchar('name'),
+    email: varchar('email').notNull(),
+    emailVerified: boolean('email_verified').notNull().default(false),
+    image: varchar('image'),
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    username: varchar("username"),
-    displayUsername: varchar("display_username"),
-    normalizedEmail: varchar("normalized_email"),
-    phoneNumber: varchar("phone_number"),
-    phoneNumberVerified: boolean("phone_number_verified").default(false),
-    role: enum_users_role("role").default("user"),
-    banned: boolean("banned").default(false),
-    banReason: varchar("ban_reason"),
-    banExpires: timestamp("ban_expires", {
-      mode: "string",
+    username: varchar('username'),
+    displayUsername: varchar('display_username'),
+    normalizedEmail: varchar('normalized_email'),
+    phoneNumber: varchar('phone_number'),
+    phoneNumberVerified: boolean('phone_number_verified').default(false),
+    role: enum_users_role('role').default('user'),
+    banned: boolean('banned').default(false),
+    banReason: varchar('ban_reason'),
+    banExpires: timestamp('ban_expires', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     }),
-    verified: boolean("verified"),
+    verified: boolean('verified'),
   },
   (columns) => ({
-    users_email_idx: uniqueIndex("users_email_idx").on(columns.email),
-    users_created_at_idx: index("users_created_at_idx").on(columns.createdAt),
-    users_updated_at_idx: index("users_updated_at_idx").on(columns.updatedAt),
-    users_username_idx: uniqueIndex("users_username_idx").on(columns.username),
-    users_normalized_email_idx: uniqueIndex("users_normalized_email_idx").on(
-      columns.normalizedEmail,
+    users_email_idx: uniqueIndex('users_email_idx').on(columns.email),
+    users_created_at_idx: index('users_created_at_idx').on(columns.createdAt),
+    users_updated_at_idx: index('users_updated_at_idx').on(columns.updatedAt),
+    users_username_idx: uniqueIndex('users_username_idx').on(columns.username),
+    users_normalized_email_idx: uniqueIndex('users_normalized_email_idx').on(
+      columns.normalizedEmail
     ),
-    users_phone_number_idx: uniqueIndex("users_phone_number_idx").on(
-      columns.phoneNumber,
-    ),
-  }),
-);
+    users_phone_number_idx: uniqueIndex('users_phone_number_idx').on(columns.phoneNumber),
+  })
+)
 
 export const sessions = pgTable(
-  "sessions",
+  'sessions',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    expiresAt: timestamp("expires_at", {
-      mode: "string",
+    id: uuid('id').defaultRandom().primaryKey(),
+    expiresAt: timestamp('expires_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     }).notNull(),
-    token: varchar("token").notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    token: varchar('token').notNull(),
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    ipAddress: varchar("ip_address"),
-    userAgent: varchar("user_agent"),
-    user: uuid("user_id")
+    ipAddress: varchar('ip_address'),
+    userAgent: varchar('user_agent'),
+    user: uuid('user_id')
       .notNull()
       .references(() => users.id, {
-        onDelete: "set null",
+        onDelete: 'set null',
       }),
-    impersonatedBy: uuid("impersonated_by_id").references(() => users.id, {
-      onDelete: "set null",
+    impersonatedBy: uuid('impersonated_by_id').references(() => users.id, {
+      onDelete: 'set null',
     }),
   },
   (columns) => ({
-    sessions_token_idx: uniqueIndex("sessions_token_idx").on(columns.token),
-    sessions_created_at_idx: index("sessions_created_at_idx").on(
-      columns.createdAt,
-    ),
-    sessions_updated_at_idx: index("sessions_updated_at_idx").on(
-      columns.updatedAt,
-    ),
-    sessions_user_idx: index("sessions_user_idx").on(columns.user),
-    sessions_impersonated_by_idx: index("sessions_impersonated_by_idx").on(
-      columns.impersonatedBy,
-    ),
-  }),
-);
+    sessions_token_idx: uniqueIndex('sessions_token_idx').on(columns.token),
+    sessions_created_at_idx: index('sessions_created_at_idx').on(columns.createdAt),
+    sessions_updated_at_idx: index('sessions_updated_at_idx').on(columns.updatedAt),
+    sessions_user_idx: index('sessions_user_idx').on(columns.user),
+    sessions_impersonated_by_idx: index('sessions_impersonated_by_idx').on(columns.impersonatedBy),
+  })
+)
 
 export const accounts = pgTable(
-  "accounts",
+  'accounts',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    accountId: varchar("account_id").notNull(),
-    providerId: varchar("provider_id").notNull(),
-    user: uuid("user_id")
+    id: uuid('id').defaultRandom().primaryKey(),
+    accountId: varchar('account_id').notNull(),
+    providerId: varchar('provider_id').notNull(),
+    user: uuid('user_id')
       .notNull()
       .references(() => users.id, {
-        onDelete: "set null",
+        onDelete: 'set null',
       }),
-    accessToken: varchar("access_token"),
-    refreshToken: varchar("refresh_token"),
-    idToken: varchar("id_token"),
-    accessTokenExpiresAt: timestamp("access_token_expires_at", {
-      mode: "string",
+    accessToken: varchar('access_token'),
+    refreshToken: varchar('refresh_token'),
+    idToken: varchar('id_token'),
+    accessTokenExpiresAt: timestamp('access_token_expires_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     }),
-    refreshTokenExpiresAt: timestamp("refresh_token_expires_at", {
-      mode: "string",
+    refreshTokenExpiresAt: timestamp('refresh_token_expires_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     }),
-    scope: varchar("scope"),
-    password: varchar("password"),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    scope: varchar('scope'),
+    password: varchar('password'),
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
@@ -289,45 +283,39 @@ export const accounts = pgTable(
       .notNull(),
   },
   (columns) => ({
-    accounts_account_id_idx: index("accounts_account_id_idx").on(
-      columns.accountId,
+    accounts_account_id_idx: index('accounts_account_id_idx').on(columns.accountId),
+    accounts_user_idx: index('accounts_user_idx').on(columns.user),
+    accounts_access_token_expires_at_idx: index('accounts_access_token_expires_at_idx').on(
+      columns.accessTokenExpiresAt
     ),
-    accounts_user_idx: index("accounts_user_idx").on(columns.user),
-    accounts_access_token_expires_at_idx: index(
-      "accounts_access_token_expires_at_idx",
-    ).on(columns.accessTokenExpiresAt),
-    accounts_refresh_token_expires_at_idx: index(
-      "accounts_refresh_token_expires_at_idx",
-    ).on(columns.refreshTokenExpiresAt),
-    accounts_created_at_idx: index("accounts_created_at_idx").on(
-      columns.createdAt,
+    accounts_refresh_token_expires_at_idx: index('accounts_refresh_token_expires_at_idx').on(
+      columns.refreshTokenExpiresAt
     ),
-    accounts_updated_at_idx: index("accounts_updated_at_idx").on(
-      columns.updatedAt,
-    ),
-  }),
-);
+    accounts_created_at_idx: index('accounts_created_at_idx').on(columns.createdAt),
+    accounts_updated_at_idx: index('accounts_updated_at_idx').on(columns.updatedAt),
+  })
+)
 
 export const verifications = pgTable(
-  "verifications",
+  'verifications',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    identifier: varchar("identifier").notNull(),
-    value: varchar("value").notNull(),
-    expiresAt: timestamp("expires_at", {
-      mode: "string",
+    id: uuid('id').defaultRandom().primaryKey(),
+    identifier: varchar('identifier').notNull(),
+    value: varchar('value').notNull(),
+    expiresAt: timestamp('expires_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     }).notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
@@ -335,47 +323,39 @@ export const verifications = pgTable(
       .notNull(),
   },
   (columns) => ({
-    verifications_identifier_idx: index("verifications_identifier_idx").on(
-      columns.identifier,
-    ),
-    verifications_expires_at_idx: index("verifications_expires_at_idx").on(
-      columns.expiresAt,
-    ),
-    verifications_created_at_idx: index("verifications_created_at_idx").on(
-      columns.createdAt,
-    ),
-    verifications_updated_at_idx: index("verifications_updated_at_idx").on(
-      columns.updatedAt,
-    ),
-  }),
-);
+    verifications_identifier_idx: index('verifications_identifier_idx').on(columns.identifier),
+    verifications_expires_at_idx: index('verifications_expires_at_idx').on(columns.expiresAt),
+    verifications_created_at_idx: index('verifications_created_at_idx').on(columns.createdAt),
+    verifications_updated_at_idx: index('verifications_updated_at_idx').on(columns.updatedAt),
+  })
+)
 
 export const passkeys = pgTable(
-  "passkeys",
+  'passkeys',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    name: varchar("name"),
-    publicKey: varchar("public_key").notNull(),
-    user: uuid("user_id")
+    id: uuid('id').defaultRandom().primaryKey(),
+    name: varchar('name'),
+    publicKey: varchar('public_key').notNull(),
+    user: uuid('user_id')
       .notNull()
       .references(() => users.id, {
-        onDelete: "set null",
+        onDelete: 'set null',
       }),
-    credentialID: varchar("credential_i_d").notNull(),
-    counter: numeric("counter").notNull(),
-    deviceType: varchar("device_type").notNull(),
-    backedUp: boolean("backed_up").notNull().default(false),
-    transports: varchar("transports").notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    credentialID: varchar('credential_i_d').notNull(),
+    counter: numeric('counter').notNull(),
+    deviceType: varchar('device_type').notNull(),
+    backedUp: boolean('backed_up').notNull().default(false),
+    transports: varchar('transports').notNull(),
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    aaguid: varchar("aaguid"),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+    aaguid: varchar('aaguid'),
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
@@ -383,31 +363,27 @@ export const passkeys = pgTable(
       .notNull(),
   },
   (columns) => ({
-    passkeys_public_key_idx: index("passkeys_public_key_idx").on(
-      columns.publicKey,
-    ),
-    passkeys_user_idx: index("passkeys_user_idx").on(columns.user),
-    passkeys_updated_at_idx: index("passkeys_updated_at_idx").on(
-      columns.updatedAt,
-    ),
-  }),
-);
+    passkeys_public_key_idx: index('passkeys_public_key_idx').on(columns.publicKey),
+    passkeys_user_idx: index('passkeys_user_idx').on(columns.user),
+    passkeys_updated_at_idx: index('passkeys_updated_at_idx').on(columns.updatedAt),
+  })
+)
 
 export const admin_invitations = pgTable(
-  "admin_invitations",
+  'admin_invitations',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    role: enum_admin_invitations_role("role").notNull().default("admin"),
-    token: varchar("token").notNull(),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+    id: uuid('id').defaultRandom().primaryKey(),
+    role: enum_admin_invitations_role('role').notNull().default('admin'),
+    token: varchar('token').notNull(),
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
@@ -415,251 +391,226 @@ export const admin_invitations = pgTable(
       .notNull(),
   },
   (columns) => ({
-    admin_invitations_token_idx: index("admin_invitations_token_idx").on(
-      columns.token,
+    admin_invitations_token_idx: index('admin_invitations_token_idx').on(columns.token),
+    admin_invitations_updated_at_idx: index('admin_invitations_updated_at_idx').on(
+      columns.updatedAt
     ),
-    admin_invitations_updated_at_idx: index(
-      "admin_invitations_updated_at_idx",
-    ).on(columns.updatedAt),
-    admin_invitations_created_at_idx: index(
-      "admin_invitations_created_at_idx",
-    ).on(columns.createdAt),
-  }),
-);
+    admin_invitations_created_at_idx: index('admin_invitations_created_at_idx').on(
+      columns.createdAt
+    ),
+  })
+)
 
 export const orders_parking_tickets = pgTable(
-  "orders_parking_tickets",
+  'orders_parking_tickets',
   {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    id: varchar("id").primaryKey(),
-    source: enum_orders_parking_tickets_source("source"),
-    link: varchar("link"),
-    type: enum_orders_parking_tickets_type("type"),
-    status: enum_orders_parking_tickets_status("status"),
-    parkingSpotLocation: varchar("parking_spot_location"),
-    projectedPurchasePrice: numeric("projected_purchase_price"),
+    _order: integer('_order').notNull(),
+    _parentID: uuid('_parent_id').notNull(),
+    id: varchar('id').primaryKey(),
+    source: enum_orders_parking_tickets_source('source'),
+    link: varchar('link'),
+    type: enum_orders_parking_tickets_type('type'),
+    status: enum_orders_parking_tickets_status('status'),
+    parkingSpotLocation: varchar('parking_spot_location'),
+    projectedPurchasePrice: numeric('projected_purchase_price'),
   },
   (columns) => ({
-    _orderIdx: index("orders_parking_tickets_order_idx").on(columns._order),
-    _parentIDIdx: index("orders_parking_tickets_parent_id_idx").on(
-      columns._parentID,
-    ),
+    _orderIdx: index('orders_parking_tickets_order_idx').on(columns._order),
+    _parentIDIdx: index('orders_parking_tickets_parent_id_idx').on(columns._parentID),
     _parentIDFk: foreignKey({
-      columns: [columns["_parentID"]],
+      columns: [columns['_parentID']],
       foreignColumns: [orders.id],
-      name: "orders_parking_tickets_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
+      name: 'orders_parking_tickets_parent_id_fk',
+    }).onDelete('cascade'),
+  })
+)
 
 export const orders_order_history = pgTable(
-  "orders_order_history",
+  'orders_order_history',
   {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    id: varchar("id").primaryKey(),
-    source: enum_orders_order_history_source("source"),
-    link: varchar("link"),
-    type: enum_orders_order_history_type("type"),
-    status: enum_orders_order_history_status("status"),
-    parkingSpotLocation: varchar("parking_spot_location"),
-    projectedPurchasePrice: numeric("projected_purchase_price"),
+    _order: integer('_order').notNull(),
+    _parentID: uuid('_parent_id').notNull(),
+    id: varchar('id').primaryKey(),
+    source: enum_orders_order_history_source('source'),
+    link: varchar('link'),
+    type: enum_orders_order_history_type('type'),
+    status: enum_orders_order_history_status('status'),
+    parkingSpotLocation: varchar('parking_spot_location'),
+    projectedPurchasePrice: numeric('projected_purchase_price'),
   },
   (columns) => ({
-    _orderIdx: index("orders_order_history_order_idx").on(columns._order),
-    _parentIDIdx: index("orders_order_history_parent_id_idx").on(
-      columns._parentID,
-    ),
+    _orderIdx: index('orders_order_history_order_idx').on(columns._order),
+    _parentIDIdx: index('orders_order_history_parent_id_idx').on(columns._parentID),
     _parentIDFk: foreignKey({
-      columns: [columns["_parentID"]],
+      columns: [columns['_parentID']],
       foreignColumns: [orders.id],
-      name: "orders_order_history_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
+      name: 'orders_order_history_parent_id_fk',
+    }).onDelete('cascade'),
+  })
+)
 
 export const orders = pgTable(
-  "orders",
+  'orders',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    orderStatus: enum_orders_order_status("order_status"),
-    orderValue: numeric("order_value"),
-    orderNumber: numeric("order_number"),
-    orderLink: varchar("order_link"),
-    marketplace: enum_orders_marketplace("marketplace"),
-    eventOrPerformerName: varchar("event_or_performer_name"),
-    venueName: varchar("venue_name"),
-    orderNotes: varchar("order_notes"),
-    handbook: varchar("handbook"),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+    id: uuid('id').defaultRandom().primaryKey(),
+    orderStatus: enum_orders_order_status('order_status'),
+    orderValue: numeric('order_value'),
+    orderNumber: numeric('order_number'),
+    orderLink: varchar('order_link'),
+    marketplace: enum_orders_marketplace('marketplace'),
+    eventOrPerformerName: varchar('event_or_performer_name'),
+    venueName: varchar('venue_name'),
+    orderNotes: varchar('order_notes'),
+    handbook: varchar('handbook'),
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    _status: enum_orders_status("_status").default("draft"),
+    _status: enum_orders_status('_status').default('draft'),
   },
   (columns) => ({
-    orders_updated_at_idx: index("orders_updated_at_idx").on(columns.updatedAt),
-    orders_created_at_idx: index("orders_created_at_idx").on(columns.createdAt),
-    orders__status_idx: index("orders__status_idx").on(columns._status),
-  }),
-);
+    orders_updated_at_idx: index('orders_updated_at_idx').on(columns.updatedAt),
+    orders_created_at_idx: index('orders_created_at_idx').on(columns.createdAt),
+    orders__status_idx: index('orders__status_idx').on(columns._status),
+  })
+)
 
 export const _orders_v_version_parking_tickets = pgTable(
-  "_orders_v_version_parking_tickets",
+  '_orders_v_version_parking_tickets',
   {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    id: uuid("id").defaultRandom().primaryKey(),
-    source: enum__orders_v_version_parking_tickets_source("source"),
-    link: varchar("link"),
-    type: enum__orders_v_version_parking_tickets_type("type"),
-    status: enum__orders_v_version_parking_tickets_status("status"),
-    parkingSpotLocation: varchar("parking_spot_location"),
-    projectedPurchasePrice: numeric("projected_purchase_price"),
-    _uuid: varchar("_uuid"),
+    _order: integer('_order').notNull(),
+    _parentID: uuid('_parent_id').notNull(),
+    id: uuid('id').defaultRandom().primaryKey(),
+    source: enum__orders_v_version_parking_tickets_source('source'),
+    link: varchar('link'),
+    type: enum__orders_v_version_parking_tickets_type('type'),
+    status: enum__orders_v_version_parking_tickets_status('status'),
+    parkingSpotLocation: varchar('parking_spot_location'),
+    projectedPurchasePrice: numeric('projected_purchase_price'),
+    _uuid: varchar('_uuid'),
   },
   (columns) => ({
-    _orderIdx: index("_orders_v_version_parking_tickets_order_idx").on(
-      columns._order,
-    ),
-    _parentIDIdx: index("_orders_v_version_parking_tickets_parent_id_idx").on(
-      columns._parentID,
-    ),
+    _orderIdx: index('_orders_v_version_parking_tickets_order_idx').on(columns._order),
+    _parentIDIdx: index('_orders_v_version_parking_tickets_parent_id_idx').on(columns._parentID),
     _parentIDFk: foreignKey({
-      columns: [columns["_parentID"]],
+      columns: [columns['_parentID']],
       foreignColumns: [_orders_v.id],
-      name: "_orders_v_version_parking_tickets_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
+      name: '_orders_v_version_parking_tickets_parent_id_fk',
+    }).onDelete('cascade'),
+  })
+)
 
 export const _orders_v_version_order_history = pgTable(
-  "_orders_v_version_order_history",
+  '_orders_v_version_order_history',
   {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    id: uuid("id").defaultRandom().primaryKey(),
-    source: enum__orders_v_version_order_history_source("source"),
-    link: varchar("link"),
-    type: enum__orders_v_version_order_history_type("type"),
-    status: enum__orders_v_version_order_history_status("status"),
-    parkingSpotLocation: varchar("parking_spot_location"),
-    projectedPurchasePrice: numeric("projected_purchase_price"),
-    _uuid: varchar("_uuid"),
+    _order: integer('_order').notNull(),
+    _parentID: uuid('_parent_id').notNull(),
+    id: uuid('id').defaultRandom().primaryKey(),
+    source: enum__orders_v_version_order_history_source('source'),
+    link: varchar('link'),
+    type: enum__orders_v_version_order_history_type('type'),
+    status: enum__orders_v_version_order_history_status('status'),
+    parkingSpotLocation: varchar('parking_spot_location'),
+    projectedPurchasePrice: numeric('projected_purchase_price'),
+    _uuid: varchar('_uuid'),
   },
   (columns) => ({
-    _orderIdx: index("_orders_v_version_order_history_order_idx").on(
-      columns._order,
-    ),
-    _parentIDIdx: index("_orders_v_version_order_history_parent_id_idx").on(
-      columns._parentID,
-    ),
+    _orderIdx: index('_orders_v_version_order_history_order_idx').on(columns._order),
+    _parentIDIdx: index('_orders_v_version_order_history_parent_id_idx').on(columns._parentID),
     _parentIDFk: foreignKey({
-      columns: [columns["_parentID"]],
+      columns: [columns['_parentID']],
       foreignColumns: [_orders_v.id],
-      name: "_orders_v_version_order_history_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
+      name: '_orders_v_version_order_history_parent_id_fk',
+    }).onDelete('cascade'),
+  })
+)
 
 export const _orders_v = pgTable(
-  "_orders_v",
+  '_orders_v',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    parent: uuid("parent_id").references(() => orders.id, {
-      onDelete: "set null",
+    id: uuid('id').defaultRandom().primaryKey(),
+    parent: uuid('parent_id').references(() => orders.id, {
+      onDelete: 'set null',
     }),
-    version_orderStatus: enum__orders_v_version_order_status(
-      "version_order_status",
-    ),
-    version_orderValue: numeric("version_order_value"),
-    version_orderNumber: numeric("version_order_number"),
-    version_orderLink: varchar("version_order_link"),
-    version_marketplace: enum__orders_v_version_marketplace(
-      "version_marketplace",
-    ),
-    version_eventOrPerformerName: varchar("version_event_or_performer_name"),
-    version_venueName: varchar("version_venue_name"),
-    version_orderNotes: varchar("version_order_notes"),
-    version_handbook: varchar("version_handbook"),
-    version_updatedAt: timestamp("version_updated_at", {
-      mode: "string",
+    version_orderStatus: enum__orders_v_version_order_status('version_order_status'),
+    version_orderValue: numeric('version_order_value'),
+    version_orderNumber: numeric('version_order_number'),
+    version_orderLink: varchar('version_order_link'),
+    version_marketplace: enum__orders_v_version_marketplace('version_marketplace'),
+    version_eventOrPerformerName: varchar('version_event_or_performer_name'),
+    version_venueName: varchar('version_venue_name'),
+    version_orderNotes: varchar('version_order_notes'),
+    version_handbook: varchar('version_handbook'),
+    version_updatedAt: timestamp('version_updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     }),
-    version_createdAt: timestamp("version_created_at", {
-      mode: "string",
+    version_createdAt: timestamp('version_created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     }),
-    version__status:
-      enum__orders_v_version_status("version__status").default("draft"),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    version__status: enum__orders_v_version_status('version__status').default('draft'),
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    latest: boolean("latest"),
-    autosave: boolean("autosave"),
+    latest: boolean('latest'),
+    autosave: boolean('autosave'),
   },
   (columns) => ({
-    _orders_v_parent_idx: index("_orders_v_parent_idx").on(columns.parent),
-    _orders_v_version_version_updated_at_idx: index(
-      "_orders_v_version_version_updated_at_idx",
-    ).on(columns.version_updatedAt),
-    _orders_v_version_version_created_at_idx: index(
-      "_orders_v_version_version_created_at_idx",
-    ).on(columns.version_createdAt),
-    _orders_v_version_version__status_idx: index(
-      "_orders_v_version_version__status_idx",
-    ).on(columns.version__status),
-    _orders_v_created_at_idx: index("_orders_v_created_at_idx").on(
-      columns.createdAt,
+    _orders_v_parent_idx: index('_orders_v_parent_idx').on(columns.parent),
+    _orders_v_version_version_updated_at_idx: index('_orders_v_version_version_updated_at_idx').on(
+      columns.version_updatedAt
     ),
-    _orders_v_updated_at_idx: index("_orders_v_updated_at_idx").on(
-      columns.updatedAt,
+    _orders_v_version_version_created_at_idx: index('_orders_v_version_version_created_at_idx').on(
+      columns.version_createdAt
     ),
-    _orders_v_latest_idx: index("_orders_v_latest_idx").on(columns.latest),
-    _orders_v_autosave_idx: index("_orders_v_autosave_idx").on(
-      columns.autosave,
+    _orders_v_version_version__status_idx: index('_orders_v_version_version__status_idx').on(
+      columns.version__status
     ),
-  }),
-);
+    _orders_v_created_at_idx: index('_orders_v_created_at_idx').on(columns.createdAt),
+    _orders_v_updated_at_idx: index('_orders_v_updated_at_idx').on(columns.updatedAt),
+    _orders_v_latest_idx: index('_orders_v_latest_idx').on(columns.latest),
+    _orders_v_autosave_idx: index('_orders_v_autosave_idx').on(columns.autosave),
+  })
+)
 
 export const profiles = pgTable(
-  "profiles",
+  'profiles',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    title: varchar("title"),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+    id: uuid('id').defaultRandom().primaryKey(),
+    title: varchar('title'),
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
@@ -667,67 +618,56 @@ export const profiles = pgTable(
       .notNull(),
   },
   (columns) => ({
-    profiles_updated_at_idx: index("profiles_updated_at_idx").on(
-      columns.updatedAt,
-    ),
-    profiles_created_at_idx: index("profiles_created_at_idx").on(
-      columns.createdAt,
-    ),
-  }),
-);
+    profiles_updated_at_idx: index('profiles_updated_at_idx').on(columns.updatedAt),
+    profiles_created_at_idx: index('profiles_created_at_idx').on(columns.createdAt),
+  })
+)
 
 export const pools_connection_config = pgTable(
-  "pools_connection_config",
+  'pools_connection_config',
   {
-    _order: integer("_order").notNull(),
-    _parentID: uuid("_parent_id").notNull(),
-    id: varchar("id").primaryKey(),
-    provider: varchar("provider"),
-    lastHealthCheck: timestamp("last_health_check", {
-      mode: "string",
+    _order: integer('_order').notNull(),
+    _parentID: uuid('_parent_id').notNull(),
+    id: varchar('id').primaryKey(),
+    provider: varchar('provider'),
+    lastHealthCheck: timestamp('last_health_check', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     }),
-    host: varchar("host").notNull(),
-    port: numeric("port"),
-    authType:
-      enum_pools_connection_config_auth_type("auth_type").default(
-        "usernamePassword",
-      ),
-    credentials_username: varchar("credentials_username"),
-    credentials_password: varchar("credentials_password"),
+    host: varchar('host').notNull(),
+    port: numeric('port'),
+    authType: enum_pools_connection_config_auth_type('auth_type').default('usernamePassword'),
+    credentials_username: varchar('credentials_username'),
+    credentials_password: varchar('credentials_password'),
   },
   (columns) => ({
-    _orderIdx: index("pools_connection_config_order_idx").on(columns._order),
-    _parentIDIdx: index("pools_connection_config_parent_id_idx").on(
-      columns._parentID,
-    ),
+    _orderIdx: index('pools_connection_config_order_idx').on(columns._order),
+    _parentIDIdx: index('pools_connection_config_parent_id_idx').on(columns._parentID),
     _parentIDFk: foreignKey({
-      columns: [columns["_parentID"]],
+      columns: [columns['_parentID']],
       foreignColumns: [pools.id],
-      name: "pools_connection_config_parent_id_fk",
-    }).onDelete("cascade"),
-  }),
-);
+      name: 'pools_connection_config_parent_id_fk',
+    }).onDelete('cascade'),
+  })
+)
 
 export const pools = pgTable(
-  "pools",
+  'pools',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    poolName: varchar("pool_name").notNull(),
-    poolStatus: enum_pools_pool_status("pool_status")
-      .notNull()
-      .default("active"),
-    userHandbook: varchar("user_handbook"),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+    id: uuid('id').defaultRandom().primaryKey(),
+    poolName: varchar('pool_name').notNull(),
+    poolStatus: enum_pools_pool_status('pool_status').notNull().default('active'),
+    userHandbook: varchar('user_handbook'),
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
@@ -735,178 +675,165 @@ export const pools = pgTable(
       .notNull(),
   },
   (columns) => ({
-    pools_updated_at_idx: index("pools_updated_at_idx").on(columns.updatedAt),
-    pools_created_at_idx: index("pools_created_at_idx").on(columns.createdAt),
-  }),
-);
+    pools_updated_at_idx: index('pools_updated_at_idx').on(columns.updatedAt),
+    pools_created_at_idx: index('pools_created_at_idx').on(columns.createdAt),
+  })
+)
 
 export const payload_uploads = pgTable(
-  "payload_uploads",
+  'payload_uploads',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    alt: varchar("alt").notNull(),
-    caption: varchar("caption"),
-    prefix: varchar("prefix").default("payload-uploads"),
-    folder: uuid("folder_id").references(() => payload_folders.id, {
-      onDelete: "set null",
+    id: uuid('id').defaultRandom().primaryKey(),
+    alt: varchar('alt').notNull(),
+    caption: varchar('caption'),
+    prefix: varchar('prefix').default('uploads'),
+    folder: uuid('folder_id').references(() => payload_folders.id, {
+      onDelete: 'set null',
     }),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    deletedAt: timestamp("deleted_at", {
-      mode: "string",
+    deletedAt: timestamp('deleted_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     }),
-    url: varchar("url"),
-    thumbnailURL: varchar("thumbnail_u_r_l"),
-    filename: varchar("filename"),
-    mimeType: varchar("mime_type"),
-    filesize: numeric("filesize"),
-    width: numeric("width"),
-    height: numeric("height"),
-    focalX: numeric("focal_x"),
-    focalY: numeric("focal_y"),
-    sizes_thumbnail_url: varchar("sizes_thumbnail_url"),
-    sizes_thumbnail_width: numeric("sizes_thumbnail_width"),
-    sizes_thumbnail_height: numeric("sizes_thumbnail_height"),
-    sizes_thumbnail_mimeType: varchar("sizes_thumbnail_mime_type"),
-    sizes_thumbnail_filesize: numeric("sizes_thumbnail_filesize"),
-    sizes_thumbnail_filename: varchar("sizes_thumbnail_filename"),
-    sizes_square_url: varchar("sizes_square_url"),
-    sizes_square_width: numeric("sizes_square_width"),
-    sizes_square_height: numeric("sizes_square_height"),
-    sizes_square_mimeType: varchar("sizes_square_mime_type"),
-    sizes_square_filesize: numeric("sizes_square_filesize"),
-    sizes_square_filename: varchar("sizes_square_filename"),
-    sizes_small_url: varchar("sizes_small_url"),
-    sizes_small_width: numeric("sizes_small_width"),
-    sizes_small_height: numeric("sizes_small_height"),
-    sizes_small_mimeType: varchar("sizes_small_mime_type"),
-    sizes_small_filesize: numeric("sizes_small_filesize"),
-    sizes_small_filename: varchar("sizes_small_filename"),
-    sizes_medium_url: varchar("sizes_medium_url"),
-    sizes_medium_width: numeric("sizes_medium_width"),
-    sizes_medium_height: numeric("sizes_medium_height"),
-    sizes_medium_mimeType: varchar("sizes_medium_mime_type"),
-    sizes_medium_filesize: numeric("sizes_medium_filesize"),
-    sizes_medium_filename: varchar("sizes_medium_filename"),
-    sizes_large_url: varchar("sizes_large_url"),
-    sizes_large_width: numeric("sizes_large_width"),
-    sizes_large_height: numeric("sizes_large_height"),
-    sizes_large_mimeType: varchar("sizes_large_mime_type"),
-    sizes_large_filesize: numeric("sizes_large_filesize"),
-    sizes_large_filename: varchar("sizes_large_filename"),
-    sizes_xlarge_url: varchar("sizes_xlarge_url"),
-    sizes_xlarge_width: numeric("sizes_xlarge_width"),
-    sizes_xlarge_height: numeric("sizes_xlarge_height"),
-    sizes_xlarge_mimeType: varchar("sizes_xlarge_mime_type"),
-    sizes_xlarge_filesize: numeric("sizes_xlarge_filesize"),
-    sizes_xlarge_filename: varchar("sizes_xlarge_filename"),
-    sizes_og_url: varchar("sizes_og_url"),
-    sizes_og_width: numeric("sizes_og_width"),
-    sizes_og_height: numeric("sizes_og_height"),
-    sizes_og_mimeType: varchar("sizes_og_mime_type"),
-    sizes_og_filesize: numeric("sizes_og_filesize"),
-    sizes_og_filename: varchar("sizes_og_filename"),
+    url: varchar('url'),
+    thumbnailURL: varchar('thumbnail_u_r_l'),
+    filename: varchar('filename'),
+    mimeType: varchar('mime_type'),
+    filesize: numeric('filesize'),
+    width: numeric('width'),
+    height: numeric('height'),
+    focalX: numeric('focal_x'),
+    focalY: numeric('focal_y'),
+    sizes_thumbnail_url: varchar('sizes_thumbnail_url'),
+    sizes_thumbnail_width: numeric('sizes_thumbnail_width'),
+    sizes_thumbnail_height: numeric('sizes_thumbnail_height'),
+    sizes_thumbnail_mimeType: varchar('sizes_thumbnail_mime_type'),
+    sizes_thumbnail_filesize: numeric('sizes_thumbnail_filesize'),
+    sizes_thumbnail_filename: varchar('sizes_thumbnail_filename'),
+    sizes_square_url: varchar('sizes_square_url'),
+    sizes_square_width: numeric('sizes_square_width'),
+    sizes_square_height: numeric('sizes_square_height'),
+    sizes_square_mimeType: varchar('sizes_square_mime_type'),
+    sizes_square_filesize: numeric('sizes_square_filesize'),
+    sizes_square_filename: varchar('sizes_square_filename'),
+    sizes_small_url: varchar('sizes_small_url'),
+    sizes_small_width: numeric('sizes_small_width'),
+    sizes_small_height: numeric('sizes_small_height'),
+    sizes_small_mimeType: varchar('sizes_small_mime_type'),
+    sizes_small_filesize: numeric('sizes_small_filesize'),
+    sizes_small_filename: varchar('sizes_small_filename'),
+    sizes_medium_url: varchar('sizes_medium_url'),
+    sizes_medium_width: numeric('sizes_medium_width'),
+    sizes_medium_height: numeric('sizes_medium_height'),
+    sizes_medium_mimeType: varchar('sizes_medium_mime_type'),
+    sizes_medium_filesize: numeric('sizes_medium_filesize'),
+    sizes_medium_filename: varchar('sizes_medium_filename'),
+    sizes_large_url: varchar('sizes_large_url'),
+    sizes_large_width: numeric('sizes_large_width'),
+    sizes_large_height: numeric('sizes_large_height'),
+    sizes_large_mimeType: varchar('sizes_large_mime_type'),
+    sizes_large_filesize: numeric('sizes_large_filesize'),
+    sizes_large_filename: varchar('sizes_large_filename'),
+    sizes_xlarge_url: varchar('sizes_xlarge_url'),
+    sizes_xlarge_width: numeric('sizes_xlarge_width'),
+    sizes_xlarge_height: numeric('sizes_xlarge_height'),
+    sizes_xlarge_mimeType: varchar('sizes_xlarge_mime_type'),
+    sizes_xlarge_filesize: numeric('sizes_xlarge_filesize'),
+    sizes_xlarge_filename: varchar('sizes_xlarge_filename'),
+    sizes_og_url: varchar('sizes_og_url'),
+    sizes_og_width: numeric('sizes_og_width'),
+    sizes_og_height: numeric('sizes_og_height'),
+    sizes_og_mimeType: varchar('sizes_og_mime_type'),
+    sizes_og_filesize: numeric('sizes_og_filesize'),
+    sizes_og_filename: varchar('sizes_og_filename'),
   },
   (columns) => ({
-    payload_uploads_folder_idx: index("payload_uploads_folder_idx").on(
-      columns.folder,
-    ),
-    payload_uploads_updated_at_idx: index("payload_uploads_updated_at_idx").on(
-      columns.updatedAt,
-    ),
-    payload_uploads_created_at_idx: index("payload_uploads_created_at_idx").on(
-      columns.createdAt,
-    ),
-    payload_uploads_deleted_at_idx: index("payload_uploads_deleted_at_idx").on(
-      columns.deletedAt,
-    ),
-    payload_uploads_filename_idx: uniqueIndex(
-      "payload_uploads_filename_idx",
-    ).on(columns.filename),
+    payload_uploads_folder_idx: index('payload_uploads_folder_idx').on(columns.folder),
+    payload_uploads_updated_at_idx: index('payload_uploads_updated_at_idx').on(columns.updatedAt),
+    payload_uploads_created_at_idx: index('payload_uploads_created_at_idx').on(columns.createdAt),
+    payload_uploads_deleted_at_idx: index('payload_uploads_deleted_at_idx').on(columns.deletedAt),
+    payload_uploads_filename_idx: uniqueIndex('payload_uploads_filename_idx').on(columns.filename),
     payload_uploads_sizes_thumbnail_sizes_thumbnail_filename_idx: index(
-      "payload_uploads_sizes_thumbnail_sizes_thumbnail_filename_idx",
+      'payload_uploads_sizes_thumbnail_sizes_thumbnail_filename_idx'
     ).on(columns.sizes_thumbnail_filename),
     payload_uploads_sizes_square_sizes_square_filename_idx: index(
-      "payload_uploads_sizes_square_sizes_square_filename_idx",
+      'payload_uploads_sizes_square_sizes_square_filename_idx'
     ).on(columns.sizes_square_filename),
     payload_uploads_sizes_small_sizes_small_filename_idx: index(
-      "payload_uploads_sizes_small_sizes_small_filename_idx",
+      'payload_uploads_sizes_small_sizes_small_filename_idx'
     ).on(columns.sizes_small_filename),
     payload_uploads_sizes_medium_sizes_medium_filename_idx: index(
-      "payload_uploads_sizes_medium_sizes_medium_filename_idx",
+      'payload_uploads_sizes_medium_sizes_medium_filename_idx'
     ).on(columns.sizes_medium_filename),
     payload_uploads_sizes_large_sizes_large_filename_idx: index(
-      "payload_uploads_sizes_large_sizes_large_filename_idx",
+      'payload_uploads_sizes_large_sizes_large_filename_idx'
     ).on(columns.sizes_large_filename),
     payload_uploads_sizes_xlarge_sizes_xlarge_filename_idx: index(
-      "payload_uploads_sizes_xlarge_sizes_xlarge_filename_idx",
+      'payload_uploads_sizes_xlarge_sizes_xlarge_filename_idx'
     ).on(columns.sizes_xlarge_filename),
     payload_uploads_sizes_og_sizes_og_filename_idx: index(
-      "payload_uploads_sizes_og_sizes_og_filename_idx",
+      'payload_uploads_sizes_og_sizes_og_filename_idx'
     ).on(columns.sizes_og_filename),
-  }),
-);
+  })
+)
 
 export const audit_log = pgTable(
-  "audit_log",
+  'audit_log',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    operation: varchar("operation").notNull(),
-    collection: varchar("collection").notNull(),
-    documentId: varchar("document_id"),
-    user: uuid("user_id")
+    id: uuid('id').defaultRandom().primaryKey(),
+    operation: varchar('operation').notNull(),
+    collection: varchar('collection').notNull(),
+    documentId: varchar('document_id'),
+    user: uuid('user_id')
       .notNull()
       .references(() => users.id, {
-        onDelete: "set null",
+        onDelete: 'set null',
       }),
-    userAgent: varchar("user_agent"),
-    hook: varchar("hook"),
-    type: enum_audit_log_type("type").notNull().default("info"),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    userAgent: varchar('user_agent'),
+    hook: varchar('hook'),
+    type: enum_audit_log_type('type').notNull().default('info'),
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     }).notNull(),
   },
   (columns) => ({
-    audit_log_user_idx: index("audit_log_user_idx").on(columns.user),
-  }),
-);
+    audit_log_user_idx: index('audit_log_user_idx').on(columns.user),
+  })
+)
 
 export const payload_folders = pgTable(
-  "payload_folders",
+  'payload_folders',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    name: varchar("name").notNull(),
-    folder: uuid("folder_id").references(
-      (): AnyPgColumn => payload_folders.id,
-      {
-        onDelete: "set null",
-      },
-    ),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+    id: uuid('id').defaultRandom().primaryKey(),
+    name: varchar('name').notNull(),
+    folder: uuid('folder_id').references((): AnyPgColumn => payload_folders.id, {
+      onDelete: 'set null',
+    }),
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
@@ -914,35 +841,27 @@ export const payload_folders = pgTable(
       .notNull(),
   },
   (columns) => ({
-    payload_folders_name_idx: index("payload_folders_name_idx").on(
-      columns.name,
-    ),
-    payload_folders_folder_idx: index("payload_folders_folder_idx").on(
-      columns.folder,
-    ),
-    payload_folders_updated_at_idx: index("payload_folders_updated_at_idx").on(
-      columns.updatedAt,
-    ),
-    payload_folders_created_at_idx: index("payload_folders_created_at_idx").on(
-      columns.createdAt,
-    ),
-  }),
-);
+    payload_folders_name_idx: index('payload_folders_name_idx').on(columns.name),
+    payload_folders_folder_idx: index('payload_folders_folder_idx').on(columns.folder),
+    payload_folders_updated_at_idx: index('payload_folders_updated_at_idx').on(columns.updatedAt),
+    payload_folders_created_at_idx: index('payload_folders_created_at_idx').on(columns.createdAt),
+  })
+)
 
 export const payload_locked_documents = pgTable(
-  "payload_locked_documents",
+  'payload_locked_documents',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    globalSlug: varchar("global_slug"),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+    id: uuid('id').defaultRandom().primaryKey(),
+    globalSlug: varchar('global_slug'),
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
@@ -950,163 +869,161 @@ export const payload_locked_documents = pgTable(
       .notNull(),
   },
   (columns) => ({
-    payload_locked_documents_global_slug_idx: index(
-      "payload_locked_documents_global_slug_idx",
-    ).on(columns.globalSlug),
-    payload_locked_documents_updated_at_idx: index(
-      "payload_locked_documents_updated_at_idx",
-    ).on(columns.updatedAt),
-    payload_locked_documents_created_at_idx: index(
-      "payload_locked_documents_created_at_idx",
-    ).on(columns.createdAt),
-  }),
-);
+    payload_locked_documents_global_slug_idx: index('payload_locked_documents_global_slug_idx').on(
+      columns.globalSlug
+    ),
+    payload_locked_documents_updated_at_idx: index('payload_locked_documents_updated_at_idx').on(
+      columns.updatedAt
+    ),
+    payload_locked_documents_created_at_idx: index('payload_locked_documents_created_at_idx').on(
+      columns.createdAt
+    ),
+  })
+)
 
 export const payload_locked_documents_rels = pgTable(
-  "payload_locked_documents_rels",
+  'payload_locked_documents_rels',
   {
-    id: serial("id").primaryKey(),
-    order: integer("order"),
-    parent: uuid("parent_id").notNull(),
-    path: varchar("path").notNull(),
-    usersID: uuid("users_id"),
-    sessionsID: uuid("sessions_id"),
-    accountsID: uuid("accounts_id"),
-    verificationsID: uuid("verifications_id"),
-    passkeysID: uuid("passkeys_id"),
-    "admin-invitationsID": uuid("admin_invitations_id"),
-    ordersID: uuid("orders_id"),
-    profilesID: uuid("profiles_id"),
-    poolsID: uuid("pools_id"),
-    "payload-uploadsID": uuid("payload_uploads_id"),
-    "Audit-logID": uuid("audit_log_id"),
-    "payload-foldersID": uuid("payload_folders_id"),
+    id: serial('id').primaryKey(),
+    order: integer('order'),
+    parent: uuid('parent_id').notNull(),
+    path: varchar('path').notNull(),
+    usersID: uuid('users_id'),
+    sessionsID: uuid('sessions_id'),
+    accountsID: uuid('accounts_id'),
+    verificationsID: uuid('verifications_id'),
+    passkeysID: uuid('passkeys_id'),
+    'admin-invitationsID': uuid('admin_invitations_id'),
+    ordersID: uuid('orders_id'),
+    profilesID: uuid('profiles_id'),
+    poolsID: uuid('pools_id'),
+    uploadsID: uuid('payload_uploads_id'),
+    'Audit-logID': uuid('audit_log_id'),
+    'payload-foldersID': uuid('payload_folders_id'),
   },
   (columns) => ({
-    order: index("payload_locked_documents_rels_order_idx").on(columns.order),
-    parentIdx: index("payload_locked_documents_rels_parent_idx").on(
-      columns.parent,
-    ),
-    pathIdx: index("payload_locked_documents_rels_path_idx").on(columns.path),
+    order: index('payload_locked_documents_rels_order_idx').on(columns.order),
+    parentIdx: index('payload_locked_documents_rels_parent_idx').on(columns.parent),
+    pathIdx: index('payload_locked_documents_rels_path_idx').on(columns.path),
     payload_locked_documents_rels_users_id_idx: index(
-      "payload_locked_documents_rels_users_id_idx",
+      'payload_locked_documents_rels_users_id_idx'
     ).on(columns.usersID),
     payload_locked_documents_rels_sessions_id_idx: index(
-      "payload_locked_documents_rels_sessions_id_idx",
+      'payload_locked_documents_rels_sessions_id_idx'
     ).on(columns.sessionsID),
     payload_locked_documents_rels_accounts_id_idx: index(
-      "payload_locked_documents_rels_accounts_id_idx",
+      'payload_locked_documents_rels_accounts_id_idx'
     ).on(columns.accountsID),
     payload_locked_documents_rels_verifications_id_idx: index(
-      "payload_locked_documents_rels_verifications_id_idx",
+      'payload_locked_documents_rels_verifications_id_idx'
     ).on(columns.verificationsID),
     payload_locked_documents_rels_passkeys_id_idx: index(
-      "payload_locked_documents_rels_passkeys_id_idx",
+      'payload_locked_documents_rels_passkeys_id_idx'
     ).on(columns.passkeysID),
     payload_locked_documents_rels_admin_invitations_id_idx: index(
-      "payload_locked_documents_rels_admin_invitations_id_idx",
-    ).on(columns["admin-invitationsID"]),
+      'payload_locked_documents_rels_admin_invitations_id_idx'
+    ).on(columns['admin-invitationsID']),
     payload_locked_documents_rels_orders_id_idx: index(
-      "payload_locked_documents_rels_orders_id_idx",
+      'payload_locked_documents_rels_orders_id_idx'
     ).on(columns.ordersID),
     payload_locked_documents_rels_profiles_id_idx: index(
-      "payload_locked_documents_rels_profiles_id_idx",
+      'payload_locked_documents_rels_profiles_id_idx'
     ).on(columns.profilesID),
     payload_locked_documents_rels_pools_id_idx: index(
-      "payload_locked_documents_rels_pools_id_idx",
+      'payload_locked_documents_rels_pools_id_idx'
     ).on(columns.poolsID),
     payload_locked_documents_rels_payload_uploads_id_idx: index(
-      "payload_locked_documents_rels_payload_uploads_id_idx",
-    ).on(columns["payload-uploadsID"]),
+      'payload_locked_documents_rels_payload_uploads_id_idx'
+    ).on(columns['uploadsID']),
     payload_locked_documents_rels_audit_log_id_idx: index(
-      "payload_locked_documents_rels_audit_log_id_idx",
-    ).on(columns["Audit-logID"]),
+      'payload_locked_documents_rels_audit_log_id_idx'
+    ).on(columns['Audit-logID']),
     payload_locked_documents_rels_payload_folders_id_idx: index(
-      "payload_locked_documents_rels_payload_folders_id_idx",
-    ).on(columns["payload-foldersID"]),
+      'payload_locked_documents_rels_payload_folders_id_idx'
+    ).on(columns['payload-foldersID']),
     parentFk: foreignKey({
-      columns: [columns["parent"]],
+      columns: [columns['parent']],
       foreignColumns: [payload_locked_documents.id],
-      name: "payload_locked_documents_rels_parent_fk",
-    }).onDelete("cascade"),
+      name: 'payload_locked_documents_rels_parent_fk',
+    }).onDelete('cascade'),
     usersIdFk: foreignKey({
-      columns: [columns["usersID"]],
+      columns: [columns['usersID']],
       foreignColumns: [users.id],
-      name: "payload_locked_documents_rels_users_fk",
-    }).onDelete("cascade"),
+      name: 'payload_locked_documents_rels_users_fk',
+    }).onDelete('cascade'),
     sessionsIdFk: foreignKey({
-      columns: [columns["sessionsID"]],
+      columns: [columns['sessionsID']],
       foreignColumns: [sessions.id],
-      name: "payload_locked_documents_rels_sessions_fk",
-    }).onDelete("cascade"),
+      name: 'payload_locked_documents_rels_sessions_fk',
+    }).onDelete('cascade'),
     accountsIdFk: foreignKey({
-      columns: [columns["accountsID"]],
+      columns: [columns['accountsID']],
       foreignColumns: [accounts.id],
-      name: "payload_locked_documents_rels_accounts_fk",
-    }).onDelete("cascade"),
+      name: 'payload_locked_documents_rels_accounts_fk',
+    }).onDelete('cascade'),
     verificationsIdFk: foreignKey({
-      columns: [columns["verificationsID"]],
+      columns: [columns['verificationsID']],
       foreignColumns: [verifications.id],
-      name: "payload_locked_documents_rels_verifications_fk",
-    }).onDelete("cascade"),
+      name: 'payload_locked_documents_rels_verifications_fk',
+    }).onDelete('cascade'),
     passkeysIdFk: foreignKey({
-      columns: [columns["passkeysID"]],
+      columns: [columns['passkeysID']],
       foreignColumns: [passkeys.id],
-      name: "payload_locked_documents_rels_passkeys_fk",
-    }).onDelete("cascade"),
-    "admin-invitationsIdFk": foreignKey({
-      columns: [columns["admin-invitationsID"]],
+      name: 'payload_locked_documents_rels_passkeys_fk',
+    }).onDelete('cascade'),
+    'admin-invitationsIdFk': foreignKey({
+      columns: [columns['admin-invitationsID']],
       foreignColumns: [admin_invitations.id],
-      name: "payload_locked_documents_rels_admin_invitations_fk",
-    }).onDelete("cascade"),
+      name: 'payload_locked_documents_rels_admin_invitations_fk',
+    }).onDelete('cascade'),
     ordersIdFk: foreignKey({
-      columns: [columns["ordersID"]],
+      columns: [columns['ordersID']],
       foreignColumns: [orders.id],
-      name: "payload_locked_documents_rels_orders_fk",
-    }).onDelete("cascade"),
+      name: 'payload_locked_documents_rels_orders_fk',
+    }).onDelete('cascade'),
     profilesIdFk: foreignKey({
-      columns: [columns["profilesID"]],
+      columns: [columns['profilesID']],
       foreignColumns: [profiles.id],
-      name: "payload_locked_documents_rels_profiles_fk",
-    }).onDelete("cascade"),
+      name: 'payload_locked_documents_rels_profiles_fk',
+    }).onDelete('cascade'),
     poolsIdFk: foreignKey({
-      columns: [columns["poolsID"]],
+      columns: [columns['poolsID']],
       foreignColumns: [pools.id],
-      name: "payload_locked_documents_rels_pools_fk",
-    }).onDelete("cascade"),
-    "payload-uploadsIdFk": foreignKey({
-      columns: [columns["payload-uploadsID"]],
+      name: 'payload_locked_documents_rels_pools_fk',
+    }).onDelete('cascade'),
+    uploadsIdFk: foreignKey({
+      columns: [columns['uploadsID']],
       foreignColumns: [payload_uploads.id],
-      name: "payload_locked_documents_rels_payload_uploads_fk",
-    }).onDelete("cascade"),
-    "Audit-logIdFk": foreignKey({
-      columns: [columns["Audit-logID"]],
+      name: 'payload_locked_documents_rels_payload_uploads_fk',
+    }).onDelete('cascade'),
+    'Audit-logIdFk': foreignKey({
+      columns: [columns['Audit-logID']],
       foreignColumns: [audit_log.id],
-      name: "payload_locked_documents_rels_audit_log_fk",
-    }).onDelete("cascade"),
-    "payload-foldersIdFk": foreignKey({
-      columns: [columns["payload-foldersID"]],
+      name: 'payload_locked_documents_rels_audit_log_fk',
+    }).onDelete('cascade'),
+    'payload-foldersIdFk': foreignKey({
+      columns: [columns['payload-foldersID']],
       foreignColumns: [payload_folders.id],
-      name: "payload_locked_documents_rels_payload_folders_fk",
-    }).onDelete("cascade"),
-  }),
-);
+      name: 'payload_locked_documents_rels_payload_folders_fk',
+    }).onDelete('cascade'),
+  })
+)
 
 export const payload_preferences = pgTable(
-  "payload_preferences",
+  'payload_preferences',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    key: varchar("key"),
-    value: jsonb("value"),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+    id: uuid('id').defaultRandom().primaryKey(),
+    key: varchar('key'),
+    value: jsonb('value'),
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
@@ -1114,62 +1031,60 @@ export const payload_preferences = pgTable(
       .notNull(),
   },
   (columns) => ({
-    payload_preferences_key_idx: index("payload_preferences_key_idx").on(
-      columns.key,
+    payload_preferences_key_idx: index('payload_preferences_key_idx').on(columns.key),
+    payload_preferences_updated_at_idx: index('payload_preferences_updated_at_idx').on(
+      columns.updatedAt
     ),
-    payload_preferences_updated_at_idx: index(
-      "payload_preferences_updated_at_idx",
-    ).on(columns.updatedAt),
-    payload_preferences_created_at_idx: index(
-      "payload_preferences_created_at_idx",
-    ).on(columns.createdAt),
-  }),
-);
+    payload_preferences_created_at_idx: index('payload_preferences_created_at_idx').on(
+      columns.createdAt
+    ),
+  })
+)
 
 export const payload_preferences_rels = pgTable(
-  "payload_preferences_rels",
+  'payload_preferences_rels',
   {
-    id: serial("id").primaryKey(),
-    order: integer("order"),
-    parent: uuid("parent_id").notNull(),
-    path: varchar("path").notNull(),
-    usersID: uuid("users_id"),
+    id: serial('id').primaryKey(),
+    order: integer('order'),
+    parent: uuid('parent_id').notNull(),
+    path: varchar('path').notNull(),
+    usersID: uuid('users_id'),
   },
   (columns) => ({
-    order: index("payload_preferences_rels_order_idx").on(columns.order),
-    parentIdx: index("payload_preferences_rels_parent_idx").on(columns.parent),
-    pathIdx: index("payload_preferences_rels_path_idx").on(columns.path),
-    payload_preferences_rels_users_id_idx: index(
-      "payload_preferences_rels_users_id_idx",
-    ).on(columns.usersID),
+    order: index('payload_preferences_rels_order_idx').on(columns.order),
+    parentIdx: index('payload_preferences_rels_parent_idx').on(columns.parent),
+    pathIdx: index('payload_preferences_rels_path_idx').on(columns.path),
+    payload_preferences_rels_users_id_idx: index('payload_preferences_rels_users_id_idx').on(
+      columns.usersID
+    ),
     parentFk: foreignKey({
-      columns: [columns["parent"]],
+      columns: [columns['parent']],
       foreignColumns: [payload_preferences.id],
-      name: "payload_preferences_rels_parent_fk",
-    }).onDelete("cascade"),
+      name: 'payload_preferences_rels_parent_fk',
+    }).onDelete('cascade'),
     usersIdFk: foreignKey({
-      columns: [columns["usersID"]],
+      columns: [columns['usersID']],
       foreignColumns: [users.id],
-      name: "payload_preferences_rels_users_fk",
-    }).onDelete("cascade"),
-  }),
-);
+      name: 'payload_preferences_rels_users_fk',
+    }).onDelete('cascade'),
+  })
+)
 
 export const payload_migrations = pgTable(
-  "payload_migrations",
+  'payload_migrations',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    name: varchar("name"),
-    batch: numeric("batch"),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+    id: uuid('id').defaultRandom().primaryKey(),
+    name: varchar('name'),
+    batch: numeric('batch'),
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
@@ -1177,48 +1092,43 @@ export const payload_migrations = pgTable(
       .notNull(),
   },
   (columns) => ({
-    payload_migrations_updated_at_idx: index(
-      "payload_migrations_updated_at_idx",
-    ).on(columns.updatedAt),
-    payload_migrations_created_at_idx: index(
-      "payload_migrations_created_at_idx",
-    ).on(columns.createdAt),
-  }),
-);
+    payload_migrations_updated_at_idx: index('payload_migrations_updated_at_idx').on(
+      columns.updatedAt
+    ),
+    payload_migrations_created_at_idx: index('payload_migrations_created_at_idx').on(
+      columns.createdAt
+    ),
+  })
+)
 
 export const payload_query_presets = pgTable(
-  "payload_query_presets",
+  'payload_query_presets',
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    title: varchar("title").notNull(),
-    isShared: boolean("is_shared").default(false),
-    access_read_constraint: enum_payload_query_presets_access_read_constraint(
-      "access_read_constraint",
-    ).default("onlyMe"),
-    access_update_constraint:
-      enum_payload_query_presets_access_update_constraint(
-        "access_update_constraint",
-      ).default("onlyMe"),
-    access_delete_constraint:
-      enum_payload_query_presets_access_delete_constraint(
-        "access_delete_constraint",
-      ).default("onlyMe"),
-    where: jsonb("where"),
-    columns: jsonb("columns"),
+    id: uuid('id').defaultRandom().primaryKey(),
+    title: varchar('title').notNull(),
+    isShared: boolean('is_shared').default(false),
+    access_read_constraint:
+      enum_payload_query_presets_access_read_constraint('access_read_constraint').default('onlyMe'),
+    access_update_constraint: enum_payload_query_presets_access_update_constraint(
+      'access_update_constraint'
+    ).default('onlyMe'),
+    access_delete_constraint: enum_payload_query_presets_access_delete_constraint(
+      'access_delete_constraint'
+    ).default('onlyMe'),
+    where: jsonb('where'),
+    columns: jsonb('columns'),
     relatedCollection:
-      enum_payload_query_presets_related_collection(
-        "related_collection",
-      ).notNull(),
-    isTemp: boolean("is_temp"),
-    updatedAt: timestamp("updated_at", {
-      mode: "string",
+      enum_payload_query_presets_related_collection('related_collection').notNull(),
+    isTemp: boolean('is_temp'),
+    updatedAt: timestamp('updated_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
       .defaultNow()
       .notNull(),
-    createdAt: timestamp("created_at", {
-      mode: "string",
+    createdAt: timestamp('created_at', {
+      mode: 'string',
       withTimezone: true,
       precision: 3,
     })
@@ -1226,394 +1136,365 @@ export const payload_query_presets = pgTable(
       .notNull(),
   },
   (columns) => ({
-    payload_query_presets_updated_at_idx: index(
-      "payload_query_presets_updated_at_idx",
-    ).on(columns.updatedAt),
-    payload_query_presets_created_at_idx: index(
-      "payload_query_presets_created_at_idx",
-    ).on(columns.createdAt),
-  }),
-);
+    payload_query_presets_updated_at_idx: index('payload_query_presets_updated_at_idx').on(
+      columns.updatedAt
+    ),
+    payload_query_presets_created_at_idx: index('payload_query_presets_created_at_idx').on(
+      columns.createdAt
+    ),
+  })
+)
 
 export const payload_query_presets_rels = pgTable(
-  "payload_query_presets_rels",
+  'payload_query_presets_rels',
   {
-    id: serial("id").primaryKey(),
-    order: integer("order"),
-    parent: uuid("parent_id").notNull(),
-    path: varchar("path").notNull(),
-    usersID: uuid("users_id"),
+    id: serial('id').primaryKey(),
+    order: integer('order'),
+    parent: uuid('parent_id').notNull(),
+    path: varchar('path').notNull(),
+    usersID: uuid('users_id'),
   },
   (columns) => ({
-    order: index("payload_query_presets_rels_order_idx").on(columns.order),
-    parentIdx: index("payload_query_presets_rels_parent_idx").on(
-      columns.parent,
+    order: index('payload_query_presets_rels_order_idx').on(columns.order),
+    parentIdx: index('payload_query_presets_rels_parent_idx').on(columns.parent),
+    pathIdx: index('payload_query_presets_rels_path_idx').on(columns.path),
+    payload_query_presets_rels_users_id_idx: index('payload_query_presets_rels_users_id_idx').on(
+      columns.usersID
     ),
-    pathIdx: index("payload_query_presets_rels_path_idx").on(columns.path),
-    payload_query_presets_rels_users_id_idx: index(
-      "payload_query_presets_rels_users_id_idx",
-    ).on(columns.usersID),
     parentFk: foreignKey({
-      columns: [columns["parent"]],
+      columns: [columns['parent']],
       foreignColumns: [payload_query_presets.id],
-      name: "payload_query_presets_rels_parent_fk",
-    }).onDelete("cascade"),
+      name: 'payload_query_presets_rels_parent_fk',
+    }).onDelete('cascade'),
     usersIdFk: foreignKey({
-      columns: [columns["usersID"]],
+      columns: [columns['usersID']],
       foreignColumns: [users.id],
-      name: "payload_query_presets_rels_users_fk",
-    }).onDelete("cascade"),
-  }),
-);
+      name: 'payload_query_presets_rels_users_fk',
+    }).onDelete('cascade'),
+  })
+)
 
-export const relations_users = relations(users, () => ({}));
+export const relations_users = relations(users, () => ({}))
 export const relations_sessions = relations(sessions, ({ one }) => ({
   user: one(users, {
     fields: [sessions.user],
     references: [users.id],
-    relationName: "user",
+    relationName: 'user',
   }),
   impersonatedBy: one(users, {
     fields: [sessions.impersonatedBy],
     references: [users.id],
-    relationName: "impersonatedBy",
+    relationName: 'impersonatedBy',
   }),
-}));
+}))
 export const relations_accounts = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.user],
     references: [users.id],
-    relationName: "user",
+    relationName: 'user',
   }),
-}));
-export const relations_verifications = relations(verifications, () => ({}));
+}))
+export const relations_verifications = relations(verifications, () => ({}))
 export const relations_passkeys = relations(passkeys, ({ one }) => ({
   user: one(users, {
     fields: [passkeys.user],
     references: [users.id],
-    relationName: "user",
+    relationName: 'user',
   }),
-}));
-export const relations_admin_invitations = relations(
-  admin_invitations,
-  () => ({}),
-);
-export const relations_orders_parking_tickets = relations(
-  orders_parking_tickets,
-  ({ one }) => ({
-    _parentID: one(orders, {
-      fields: [orders_parking_tickets._parentID],
-      references: [orders.id],
-      relationName: "parkingTickets",
-    }),
+}))
+export const relations_admin_invitations = relations(admin_invitations, () => ({}))
+export const relations_orders_parking_tickets = relations(orders_parking_tickets, ({ one }) => ({
+  _parentID: one(orders, {
+    fields: [orders_parking_tickets._parentID],
+    references: [orders.id],
+    relationName: 'parkingTickets',
   }),
-);
-export const relations_orders_order_history = relations(
-  orders_order_history,
-  ({ one }) => ({
-    _parentID: one(orders, {
-      fields: [orders_order_history._parentID],
-      references: [orders.id],
-      relationName: "orderHistory",
-    }),
+}))
+export const relations_orders_order_history = relations(orders_order_history, ({ one }) => ({
+  _parentID: one(orders, {
+    fields: [orders_order_history._parentID],
+    references: [orders.id],
+    relationName: 'orderHistory',
   }),
-);
+}))
 export const relations_orders = relations(orders, ({ many }) => ({
   parkingTickets: many(orders_parking_tickets, {
-    relationName: "parkingTickets",
+    relationName: 'parkingTickets',
   }),
   orderHistory: many(orders_order_history, {
-    relationName: "orderHistory",
+    relationName: 'orderHistory',
   }),
-}));
+}))
 export const relations__orders_v_version_parking_tickets = relations(
   _orders_v_version_parking_tickets,
   ({ one }) => ({
     _parentID: one(_orders_v, {
       fields: [_orders_v_version_parking_tickets._parentID],
       references: [_orders_v.id],
-      relationName: "version_parkingTickets",
+      relationName: 'version_parkingTickets',
     }),
-  }),
-);
+  })
+)
 export const relations__orders_v_version_order_history = relations(
   _orders_v_version_order_history,
   ({ one }) => ({
     _parentID: one(_orders_v, {
       fields: [_orders_v_version_order_history._parentID],
       references: [_orders_v.id],
-      relationName: "version_orderHistory",
+      relationName: 'version_orderHistory',
     }),
-  }),
-);
+  })
+)
 export const relations__orders_v = relations(_orders_v, ({ one, many }) => ({
   parent: one(orders, {
     fields: [_orders_v.parent],
     references: [orders.id],
-    relationName: "parent",
+    relationName: 'parent',
   }),
   version_parkingTickets: many(_orders_v_version_parking_tickets, {
-    relationName: "version_parkingTickets",
+    relationName: 'version_parkingTickets',
   }),
   version_orderHistory: many(_orders_v_version_order_history, {
-    relationName: "version_orderHistory",
+    relationName: 'version_orderHistory',
   }),
-}));
-export const relations_profiles = relations(profiles, () => ({}));
-export const relations_pools_connection_config = relations(
-  pools_connection_config,
-  ({ one }) => ({
-    _parentID: one(pools, {
-      fields: [pools_connection_config._parentID],
-      references: [pools.id],
-      relationName: "connectionConfig",
-    }),
+}))
+export const relations_profiles = relations(profiles, () => ({}))
+export const relations_pools_connection_config = relations(pools_connection_config, ({ one }) => ({
+  _parentID: one(pools, {
+    fields: [pools_connection_config._parentID],
+    references: [pools.id],
+    relationName: 'connectionConfig',
   }),
-);
+}))
 export const relations_pools = relations(pools, ({ many }) => ({
   connectionConfig: many(pools_connection_config, {
-    relationName: "connectionConfig",
+    relationName: 'connectionConfig',
   }),
-}));
-export const relations_payload_uploads = relations(
-  payload_uploads,
-  ({ one }) => ({
-    folder: one(payload_folders, {
-      fields: [payload_uploads.folder],
-      references: [payload_folders.id],
-      relationName: "folder",
-    }),
+}))
+export const relations_payload_uploads = relations(payload_uploads, ({ one }) => ({
+  folder: one(payload_folders, {
+    fields: [payload_uploads.folder],
+    references: [payload_folders.id],
+    relationName: 'folder',
   }),
-);
+}))
 export const relations_audit_log = relations(audit_log, ({ one }) => ({
   user: one(users, {
     fields: [audit_log.user],
     references: [users.id],
-    relationName: "user",
+    relationName: 'user',
   }),
-}));
-export const relations_payload_folders = relations(
-  payload_folders,
-  ({ one }) => ({
-    folder: one(payload_folders, {
-      fields: [payload_folders.folder],
-      references: [payload_folders.id],
-      relationName: "folder",
-    }),
+}))
+export const relations_payload_folders = relations(payload_folders, ({ one }) => ({
+  folder: one(payload_folders, {
+    fields: [payload_folders.folder],
+    references: [payload_folders.id],
+    relationName: 'folder',
   }),
-);
+}))
 export const relations_payload_locked_documents_rels = relations(
   payload_locked_documents_rels,
   ({ one }) => ({
     parent: one(payload_locked_documents, {
       fields: [payload_locked_documents_rels.parent],
       references: [payload_locked_documents.id],
-      relationName: "_rels",
+      relationName: '_rels',
     }),
     usersID: one(users, {
       fields: [payload_locked_documents_rels.usersID],
       references: [users.id],
-      relationName: "users",
+      relationName: 'users',
     }),
     sessionsID: one(sessions, {
       fields: [payload_locked_documents_rels.sessionsID],
       references: [sessions.id],
-      relationName: "sessions",
+      relationName: 'sessions',
     }),
     accountsID: one(accounts, {
       fields: [payload_locked_documents_rels.accountsID],
       references: [accounts.id],
-      relationName: "accounts",
+      relationName: 'accounts',
     }),
     verificationsID: one(verifications, {
       fields: [payload_locked_documents_rels.verificationsID],
       references: [verifications.id],
-      relationName: "verifications",
+      relationName: 'verifications',
     }),
     passkeysID: one(passkeys, {
       fields: [payload_locked_documents_rels.passkeysID],
       references: [passkeys.id],
-      relationName: "passkeys",
+      relationName: 'passkeys',
     }),
-    "admin-invitationsID": one(admin_invitations, {
-      fields: [payload_locked_documents_rels["admin-invitationsID"]],
+    'admin-invitationsID': one(admin_invitations, {
+      fields: [payload_locked_documents_rels['admin-invitationsID']],
       references: [admin_invitations.id],
-      relationName: "admin-invitations",
+      relationName: 'admin-invitations',
     }),
     ordersID: one(orders, {
       fields: [payload_locked_documents_rels.ordersID],
       references: [orders.id],
-      relationName: "orders",
+      relationName: 'orders',
     }),
     profilesID: one(profiles, {
       fields: [payload_locked_documents_rels.profilesID],
       references: [profiles.id],
-      relationName: "profiles",
+      relationName: 'profiles',
     }),
     poolsID: one(pools, {
       fields: [payload_locked_documents_rels.poolsID],
       references: [pools.id],
-      relationName: "pools",
+      relationName: 'pools',
     }),
-    "payload-uploadsID": one(payload_uploads, {
-      fields: [payload_locked_documents_rels["payload-uploadsID"]],
+    uploadsID: one(payload_uploads, {
+      fields: [payload_locked_documents_rels['uploadsID']],
       references: [payload_uploads.id],
-      relationName: "payload-uploads",
+      relationName: 'uploads',
     }),
-    "Audit-logID": one(audit_log, {
-      fields: [payload_locked_documents_rels["Audit-logID"]],
+    'Audit-logID': one(audit_log, {
+      fields: [payload_locked_documents_rels['Audit-logID']],
       references: [audit_log.id],
-      relationName: "Audit-log",
+      relationName: 'Audit-log',
     }),
-    "payload-foldersID": one(payload_folders, {
-      fields: [payload_locked_documents_rels["payload-foldersID"]],
+    'payload-foldersID': one(payload_folders, {
+      fields: [payload_locked_documents_rels['payload-foldersID']],
       references: [payload_folders.id],
-      relationName: "payload-folders",
+      relationName: 'payload-folders',
     }),
-  }),
-);
+  })
+)
 export const relations_payload_locked_documents = relations(
   payload_locked_documents,
   ({ many }) => ({
     _rels: many(payload_locked_documents_rels, {
-      relationName: "_rels",
+      relationName: '_rels',
     }),
-  }),
-);
+  })
+)
 export const relations_payload_preferences_rels = relations(
   payload_preferences_rels,
   ({ one }) => ({
     parent: one(payload_preferences, {
       fields: [payload_preferences_rels.parent],
       references: [payload_preferences.id],
-      relationName: "_rels",
+      relationName: '_rels',
     }),
     usersID: one(users, {
       fields: [payload_preferences_rels.usersID],
       references: [users.id],
-      relationName: "users",
+      relationName: 'users',
     }),
+  })
+)
+export const relations_payload_preferences = relations(payload_preferences, ({ many }) => ({
+  _rels: many(payload_preferences_rels, {
+    relationName: '_rels',
   }),
-);
-export const relations_payload_preferences = relations(
-  payload_preferences,
-  ({ many }) => ({
-    _rels: many(payload_preferences_rels, {
-      relationName: "_rels",
-    }),
-  }),
-);
-export const relations_payload_migrations = relations(
-  payload_migrations,
-  () => ({}),
-);
+}))
+export const relations_payload_migrations = relations(payload_migrations, () => ({}))
 export const relations_payload_query_presets_rels = relations(
   payload_query_presets_rels,
   ({ one }) => ({
     parent: one(payload_query_presets, {
       fields: [payload_query_presets_rels.parent],
       references: [payload_query_presets.id],
-      relationName: "_rels",
+      relationName: '_rels',
     }),
     usersID: one(users, {
       fields: [payload_query_presets_rels.usersID],
       references: [users.id],
-      relationName: "users",
+      relationName: 'users',
     }),
+  })
+)
+export const relations_payload_query_presets = relations(payload_query_presets, ({ many }) => ({
+  _rels: many(payload_query_presets_rels, {
+    relationName: '_rels',
   }),
-);
-export const relations_payload_query_presets = relations(
-  payload_query_presets,
-  ({ many }) => ({
-    _rels: many(payload_query_presets_rels, {
-      relationName: "_rels",
-    }),
-  }),
-);
+}))
 
 type DatabaseSchema = {
-  enum_users_user_role: typeof enum_users_user_role;
-  enum_users_role: typeof enum_users_role;
-  enum_admin_invitations_role: typeof enum_admin_invitations_role;
-  enum_orders_parking_tickets_source: typeof enum_orders_parking_tickets_source;
-  enum_orders_parking_tickets_type: typeof enum_orders_parking_tickets_type;
-  enum_orders_parking_tickets_status: typeof enum_orders_parking_tickets_status;
-  enum_orders_order_history_source: typeof enum_orders_order_history_source;
-  enum_orders_order_history_type: typeof enum_orders_order_history_type;
-  enum_orders_order_history_status: typeof enum_orders_order_history_status;
-  enum_orders_order_status: typeof enum_orders_order_status;
-  enum_orders_marketplace: typeof enum_orders_marketplace;
-  enum_orders_status: typeof enum_orders_status;
-  enum__orders_v_version_parking_tickets_source: typeof enum__orders_v_version_parking_tickets_source;
-  enum__orders_v_version_parking_tickets_type: typeof enum__orders_v_version_parking_tickets_type;
-  enum__orders_v_version_parking_tickets_status: typeof enum__orders_v_version_parking_tickets_status;
-  enum__orders_v_version_order_history_source: typeof enum__orders_v_version_order_history_source;
-  enum__orders_v_version_order_history_type: typeof enum__orders_v_version_order_history_type;
-  enum__orders_v_version_order_history_status: typeof enum__orders_v_version_order_history_status;
-  enum__orders_v_version_order_status: typeof enum__orders_v_version_order_status;
-  enum__orders_v_version_marketplace: typeof enum__orders_v_version_marketplace;
-  enum__orders_v_version_status: typeof enum__orders_v_version_status;
-  enum_pools_connection_config_auth_type: typeof enum_pools_connection_config_auth_type;
-  enum_pools_pool_status: typeof enum_pools_pool_status;
-  enum_audit_log_type: typeof enum_audit_log_type;
-  enum_payload_query_presets_access_read_constraint: typeof enum_payload_query_presets_access_read_constraint;
-  enum_payload_query_presets_access_update_constraint: typeof enum_payload_query_presets_access_update_constraint;
-  enum_payload_query_presets_access_delete_constraint: typeof enum_payload_query_presets_access_delete_constraint;
-  enum_payload_query_presets_related_collection: typeof enum_payload_query_presets_related_collection;
-  users: typeof users;
-  sessions: typeof sessions;
-  accounts: typeof accounts;
-  verifications: typeof verifications;
-  passkeys: typeof passkeys;
-  admin_invitations: typeof admin_invitations;
-  orders_parking_tickets: typeof orders_parking_tickets;
-  orders_order_history: typeof orders_order_history;
-  orders: typeof orders;
-  _orders_v_version_parking_tickets: typeof _orders_v_version_parking_tickets;
-  _orders_v_version_order_history: typeof _orders_v_version_order_history;
-  _orders_v: typeof _orders_v;
-  profiles: typeof profiles;
-  pools_connection_config: typeof pools_connection_config;
-  pools: typeof pools;
-  payload_uploads: typeof payload_uploads;
-  audit_log: typeof audit_log;
-  payload_folders: typeof payload_folders;
-  payload_locked_documents: typeof payload_locked_documents;
-  payload_locked_documents_rels: typeof payload_locked_documents_rels;
-  payload_preferences: typeof payload_preferences;
-  payload_preferences_rels: typeof payload_preferences_rels;
-  payload_migrations: typeof payload_migrations;
-  payload_query_presets: typeof payload_query_presets;
-  payload_query_presets_rels: typeof payload_query_presets_rels;
-  relations_users: typeof relations_users;
-  relations_sessions: typeof relations_sessions;
-  relations_accounts: typeof relations_accounts;
-  relations_verifications: typeof relations_verifications;
-  relations_passkeys: typeof relations_passkeys;
-  relations_admin_invitations: typeof relations_admin_invitations;
-  relations_orders_parking_tickets: typeof relations_orders_parking_tickets;
-  relations_orders_order_history: typeof relations_orders_order_history;
-  relations_orders: typeof relations_orders;
-  relations__orders_v_version_parking_tickets: typeof relations__orders_v_version_parking_tickets;
-  relations__orders_v_version_order_history: typeof relations__orders_v_version_order_history;
-  relations__orders_v: typeof relations__orders_v;
-  relations_profiles: typeof relations_profiles;
-  relations_pools_connection_config: typeof relations_pools_connection_config;
-  relations_pools: typeof relations_pools;
-  relations_payload_uploads: typeof relations_payload_uploads;
-  relations_audit_log: typeof relations_audit_log;
-  relations_payload_folders: typeof relations_payload_folders;
-  relations_payload_locked_documents_rels: typeof relations_payload_locked_documents_rels;
-  relations_payload_locked_documents: typeof relations_payload_locked_documents;
-  relations_payload_preferences_rels: typeof relations_payload_preferences_rels;
-  relations_payload_preferences: typeof relations_payload_preferences;
-  relations_payload_migrations: typeof relations_payload_migrations;
-  relations_payload_query_presets_rels: typeof relations_payload_query_presets_rels;
-  relations_payload_query_presets: typeof relations_payload_query_presets;
-};
+  enum_users_user_role: typeof enum_users_user_role
+  enum_users_role: typeof enum_users_role
+  enum_admin_invitations_role: typeof enum_admin_invitations_role
+  enum_orders_parking_tickets_source: typeof enum_orders_parking_tickets_source
+  enum_orders_parking_tickets_type: typeof enum_orders_parking_tickets_type
+  enum_orders_parking_tickets_status: typeof enum_orders_parking_tickets_status
+  enum_orders_order_history_source: typeof enum_orders_order_history_source
+  enum_orders_order_history_type: typeof enum_orders_order_history_type
+  enum_orders_order_history_status: typeof enum_orders_order_history_status
+  enum_orders_order_status: typeof enum_orders_order_status
+  enum_orders_marketplace: typeof enum_orders_marketplace
+  enum_orders_status: typeof enum_orders_status
+  enum__orders_v_version_parking_tickets_source: typeof enum__orders_v_version_parking_tickets_source
+  enum__orders_v_version_parking_tickets_type: typeof enum__orders_v_version_parking_tickets_type
+  enum__orders_v_version_parking_tickets_status: typeof enum__orders_v_version_parking_tickets_status
+  enum__orders_v_version_order_history_source: typeof enum__orders_v_version_order_history_source
+  enum__orders_v_version_order_history_type: typeof enum__orders_v_version_order_history_type
+  enum__orders_v_version_order_history_status: typeof enum__orders_v_version_order_history_status
+  enum__orders_v_version_order_status: typeof enum__orders_v_version_order_status
+  enum__orders_v_version_marketplace: typeof enum__orders_v_version_marketplace
+  enum__orders_v_version_status: typeof enum__orders_v_version_status
+  enum_pools_connection_config_auth_type: typeof enum_pools_connection_config_auth_type
+  enum_pools_pool_status: typeof enum_pools_pool_status
+  enum_audit_log_type: typeof enum_audit_log_type
+  enum_payload_query_presets_access_read_constraint: typeof enum_payload_query_presets_access_read_constraint
+  enum_payload_query_presets_access_update_constraint: typeof enum_payload_query_presets_access_update_constraint
+  enum_payload_query_presets_access_delete_constraint: typeof enum_payload_query_presets_access_delete_constraint
+  enum_payload_query_presets_related_collection: typeof enum_payload_query_presets_related_collection
+  users: typeof users
+  sessions: typeof sessions
+  accounts: typeof accounts
+  verifications: typeof verifications
+  passkeys: typeof passkeys
+  admin_invitations: typeof admin_invitations
+  orders_parking_tickets: typeof orders_parking_tickets
+  orders_order_history: typeof orders_order_history
+  orders: typeof orders
+  _orders_v_version_parking_tickets: typeof _orders_v_version_parking_tickets
+  _orders_v_version_order_history: typeof _orders_v_version_order_history
+  _orders_v: typeof _orders_v
+  profiles: typeof profiles
+  pools_connection_config: typeof pools_connection_config
+  pools: typeof pools
+  payload_uploads: typeof payload_uploads
+  audit_log: typeof audit_log
+  payload_folders: typeof payload_folders
+  payload_locked_documents: typeof payload_locked_documents
+  payload_locked_documents_rels: typeof payload_locked_documents_rels
+  payload_preferences: typeof payload_preferences
+  payload_preferences_rels: typeof payload_preferences_rels
+  payload_migrations: typeof payload_migrations
+  payload_query_presets: typeof payload_query_presets
+  payload_query_presets_rels: typeof payload_query_presets_rels
+  relations_users: typeof relations_users
+  relations_sessions: typeof relations_sessions
+  relations_accounts: typeof relations_accounts
+  relations_verifications: typeof relations_verifications
+  relations_passkeys: typeof relations_passkeys
+  relations_admin_invitations: typeof relations_admin_invitations
+  relations_orders_parking_tickets: typeof relations_orders_parking_tickets
+  relations_orders_order_history: typeof relations_orders_order_history
+  relations_orders: typeof relations_orders
+  relations__orders_v_version_parking_tickets: typeof relations__orders_v_version_parking_tickets
+  relations__orders_v_version_order_history: typeof relations__orders_v_version_order_history
+  relations__orders_v: typeof relations__orders_v
+  relations_profiles: typeof relations_profiles
+  relations_pools_connection_config: typeof relations_pools_connection_config
+  relations_pools: typeof relations_pools
+  relations_payload_uploads: typeof relations_payload_uploads
+  relations_audit_log: typeof relations_audit_log
+  relations_payload_folders: typeof relations_payload_folders
+  relations_payload_locked_documents_rels: typeof relations_payload_locked_documents_rels
+  relations_payload_locked_documents: typeof relations_payload_locked_documents
+  relations_payload_preferences_rels: typeof relations_payload_preferences_rels
+  relations_payload_preferences: typeof relations_payload_preferences
+  relations_payload_migrations: typeof relations_payload_migrations
+  relations_payload_query_presets_rels: typeof relations_payload_query_presets_rels
+  relations_payload_query_presets: typeof relations_payload_query_presets
+}
 
-declare module "@payloadcms/db-postgres" {
+declare module '@payloadcms/db-postgres' {
   export interface GeneratedDatabaseSchema {
-    schema: DatabaseSchema;
+    schema: DatabaseSchema
   }
 }

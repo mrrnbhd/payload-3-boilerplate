@@ -5,7 +5,6 @@ import { render } from '@react-email/render'
 import parse from 'html-react-parser'
 
 const beforeEmail: BeforeEmail = (emailsToSend, _beforeChangeParams) => {
-  // modify the emails in any way before they are sent
   return Promise.all(
     emailsToSend.map(async (email) => ({
       ...email,

@@ -4,14 +4,13 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { Orders } from './collections/orders'
-import { Proxies } from './collections/proxies'
-import { Profiles } from './collections/profiles'
-import { PayloadUploads } from './collections/uploads/payload-uploads'
+import { Settings } from './collections/settings'
+import { Tags } from './collections/tags'
+import { Uploads } from './collections/uploads'
 import { Users } from './collections/users'
-import { getEmailAdapter } from './lib/email-adapter'
+import { getEmailAdapter } from './lib/email/email-adapter'
 import { getServerSideURL } from './lib/payload'
 import { plugins } from './plugins'
-import { Errors } from './collections/errors'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -60,7 +59,8 @@ export default buildConfig({
     collectionSpecific: false,
   },
   email: getEmailAdapter(),
-  collections: [Orders, Errors, Proxies, Profiles, Users, PayloadUploads],
+  collections: [Orders, Uploads, Tags, Users],
+  globals: [Settings],
   secret: process.env.PAYLOAD_SECRET,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

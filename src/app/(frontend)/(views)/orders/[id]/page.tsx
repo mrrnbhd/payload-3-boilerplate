@@ -1,47 +1,30 @@
-import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 
 import { RefreshRouteOnSave } from '@/hooks/refresh-route-on-save'
 import config from '@payload-config'
-import { getPayload } from 'payload'
+import { getPayload, type PaginatedDocs } from 'payload'
 import type { Order } from '@/payload-types'
+import { columns } from './columns'
+import { DataTable } from './table'
 
-interface OrderParams {
-  params: Promise<{
-    id?: string
-  }>
-}
-
-export default async function Orders({ params: paramsPromise }: OrderParams) {
-  const { id = 'index' } = await paramsPromise
-
+export default async function Orders() {
   const payload = await getPayload({ config })
 
-  const order = await payload.find({
+  const orders: PaginatedDocs<Order> = await payload.find({
     collection: 'orders',
     draft: true,
     trash: true,
-    depth: 3,
-    limit: 1,
-    where: {
-      id: {
-        equals: id,
-      },
-    },
+    limit: 0,
   })
 
-  const data = order?.docs?.[0] as null | Order
-
-  if (data === null) {
-    return notFound()
-  }
-
   return (
-    <div className="m-5">
-      <RefreshRouteOnSave />
-      <div>
-        <p>Automation Panel Placeholder</p>
+    <Suspense>
+      <div className="m-0 p-5">
+        <RefreshRouteOnSave />
+        <br />
+        <DataTable data={orders.docs} columns={columns}></DataTable>
       </div>
-    </div>
+    </Suspense>
   )
 }
 

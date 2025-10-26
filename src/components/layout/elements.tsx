@@ -72,18 +72,12 @@ const HeaderPrimitive = ({
 
 type LayoutHeaderProps = Omit<HeaderPrimitiveProps, 'variant'>
 
-/**
- * A layout header with a badge, h1 title, and description.
- */
 const LayoutHeader = (props: LayoutHeaderProps) => {
   return <HeaderPrimitive {...props} variant="layout" />
 }
 
 type SectionHeaderProps = Omit<HeaderPrimitiveProps, 'variant'>
 
-/**
- * A section header with a badge, h2 title, and description.
- */
 const SectionHeader = (props: SectionHeaderProps) => {
   return <HeaderPrimitive {...props} variant="section" />
 }
@@ -93,15 +87,11 @@ type SectionHorizontalProps = {
   title: string
   description: string | ReactNode
   media: ReactNode
-  /** Whether the media is on the left or right of the content */
   variant: 'left' | 'right'
   className?: string
   container?: boolean
 }
 
-/**
- * A row with content and media horizontally aligned.
- */
 const SectionHorizontal = ({ container = true, ...props }: SectionHorizontalProps) => {
   const slug = slugify(
     `${props.title}-${props.description ? (typeof props.description === 'string' ? props.description.slice(0, 20) : '') : ''}`
@@ -219,9 +209,6 @@ const SectionGrid = ({
   )
 }
 
-/**
- * Individual content item for vertical row layout.
- */
 const SectionGridItem = ({ badge, title, description, media }: SectionGridChildProps) => {
   const slug = slugify(title)
   return (
@@ -245,7 +232,6 @@ const SectionGridItem = ({ badge, title, description, media }: SectionGridChildP
 interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'default' | 'muted'
   asChild?: boolean
-  /** Only applied if variant is "muted" */
   rootClassName?: string
 }
 
@@ -288,19 +274,11 @@ type FullWidthImageProps = {
   image?: StaticImageData
   alt?: string
   glowEffectColors?: string[]
-  /** Defaults to the alt text */
   caption?: false | string
-  /**
-   * Whether to show the caption as visible text below the image.
-   * If false, the caption is only visible in Reader Mode.
-   */
   showCaption?: boolean
   zoom?: boolean
 }
 
-/**
- * A large full-width image section with a glow effect.
- */
 const FullWidthImage = ({
   image,
   glowEffectColors = ['#0894FF', '#C959DD', '#FF2E54', '#0894FF'],
@@ -365,9 +343,6 @@ type VideoMediaProps = {
   title?: string
 }
 
-/**
- * Vimeo video media element with configurable playback options.
- */
 const VideoMedia = ({
   src,
   autoplay = true,
@@ -378,7 +353,6 @@ const VideoMedia = ({
   autopause = true,
   title = 'Video content',
 }: VideoMediaProps) => {
-  // Build query parameters based on props
   const queryParams = new URLSearchParams()
   if (autoplay) queryParams.append('autoplay', '1')
   if (loop) queryParams.append('loop', '1')
@@ -387,7 +361,6 @@ const VideoMedia = ({
   if (background) queryParams.append('background', '1')
   if (autopause) queryParams.append('autopause', '1')
 
-  // throw if is not a valid url
   if (!src.startsWith('https://')) {
     throw new Error('Invalid video URL')
   }
@@ -425,7 +398,6 @@ type ImageMediaProps = {
     | [`from-${string}`, `via-${string}`, `to-${string}`]
     | [`from-${string}`, `to-${string}`]
   children?: ReactNode
-  /** Whether to show a zoomable image via `react-medium-image-zoom` */
   zoom?: boolean
 }
 

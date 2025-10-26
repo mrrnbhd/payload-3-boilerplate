@@ -29,7 +29,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/providers/steel-browser.js"
+    "src/components/layout/steel-browser.js"
   ],
   "exclude": ["node_modules", "src/lib/email"]
 }

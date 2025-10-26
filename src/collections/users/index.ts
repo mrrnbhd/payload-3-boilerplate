@@ -2,6 +2,10 @@ import type { CollectionConfig } from 'payload'
 
 export const Users: CollectionConfig = {
   slug: 'users',
+  auth: true,
+  enableQueryPresets: true,
+  trash: true,
+  folders: true,
   labels: {
     singular: 'User',
     plural: 'Users',
@@ -10,13 +14,5 @@ export const Users: CollectionConfig = {
     useAsTitle: 'email',
     group: 'Access',
   },
-
-  auth: true,
-  fields: [
-    {
-      type: 'select',
-      name: 'userRole',
-      options: ['User', 'Admin'],
-    },
-  ],
+  fields: [],
 }

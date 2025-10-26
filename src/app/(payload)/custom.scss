@@ -7,6 +7,11 @@
   }
 }
 
+.no-flash {
+  -webkit-font-smoothing: antialiased;
+  backface-visibility: hidden;
+}
+
 [data-theme="light"] {
   .admin-logo {
     fill: #000;
