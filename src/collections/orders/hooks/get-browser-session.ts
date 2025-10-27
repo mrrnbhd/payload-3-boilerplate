@@ -8,7 +8,7 @@ const client: Steel = new Steel({
   steelAPIKey: STEEL_API_KEY,
   baseURL: process.env.STEEL_PRIVATE_URL,
 })
-
+//
 export const getBrowserSession: CollectionBeforeChangeHook = async ({ data, operation }) => {
   if (operation === 'create' && !data.sessionURL) {
     try {
