@@ -8,11 +8,11 @@ const NEXT_PUBLIC_SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL
 const nextConfig = {
   async redirects() {
     return [
-      {
-        source: '/admin/login',
-        destination: '/login',
-        permanent: true,
-      },
+      // {
+      //   source: '/admin/login',
+      //   destination: '/login',
+      //   permanent: true,
+      // },
       {
         source: '/',
         destination: '/admin',
