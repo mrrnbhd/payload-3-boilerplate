@@ -472,6 +472,7 @@ export interface File {
   id: string;
   notes?: string | null;
   tags?: (string | Tag)[] | null;
+  prefix?: string | null;
   folder?: (string | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -1023,6 +1024,7 @@ export interface OrdersSelect<T extends boolean = true> {
 export interface FilesSelect<T extends boolean = true> {
   notes?: T;
   tags?: T;
+  prefix?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
