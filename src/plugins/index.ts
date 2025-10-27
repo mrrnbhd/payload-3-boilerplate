@@ -4,14 +4,14 @@ import { importExportPlugin } from '@payloadcms/plugin-import-export'
 import type { Plugin } from 'payload'
 import { auditorPlugin } from 'payload-auditor'
 import { betterAuthPlugin } from 'payload-auth/better-auth'
-import { s3StoragePluginPublic } from './s3-storage-plugin'
+import { s3StoragePluginPrivate } from './s3-storage-plugin'
 
 export const plugins: Plugin[] = [
   betterAuthPlugin(betterAuthPluginOptions),
   importExportPlugin({
     collections: ['orders', 'tags', 'users', 'uploads'],
   }),
-  s3StoragePluginPublic,
+  s3StoragePluginPrivate,
   auditorPlugin({
     enabled: true,
     collection: {

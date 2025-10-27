@@ -3,10 +3,10 @@ import { fileURLToPath } from 'node:url'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
+import { Files } from './collections/files'
 import { Orders } from './collections/orders'
 import { Settings } from './collections/settings'
 import { Tags } from './collections/tags'
-import { Uploads } from './collections/uploads'
 import { Users } from './collections/users'
 import { getEmailAdapter } from './lib/email/email-adapter'
 import { getServerSideURL } from './lib/payload'
@@ -59,7 +59,7 @@ export default buildConfig({
     collectionSpecific: false,
   },
   email: getEmailAdapter(),
-  collections: [Orders, Uploads, Tags, Users],
+  collections: [Orders, Files, Tags, Users],
   globals: [Settings],
   secret: process.env.PAYLOAD_SECRET,
   typescript: {

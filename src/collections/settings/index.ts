@@ -11,7 +11,7 @@ export const Settings: GlobalConfig = {
   fields: [
     {
       type: 'upload',
-      relationTo: 'uploads',
+      relationTo: 'files',
       name: 'browserProfiles',
       hasMany: true,
     },

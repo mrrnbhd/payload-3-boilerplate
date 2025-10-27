@@ -1,4 +1,4 @@
-import { type MigrateUpArgs, type MigrateDownArgs, sql } from '@payloadcms/db-postgres'
+import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
@@ -18,7 +18,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum_payload_query_presets_access_read_constraint" AS ENUM('everyone', 'onlyMe', 'specificUsers');
   CREATE TYPE "public"."enum_payload_query_presets_access_update_constraint" AS ENUM('everyone', 'onlyMe', 'specificUsers');
   CREATE TYPE "public"."enum_payload_query_presets_access_delete_constraint" AS ENUM('everyone', 'onlyMe', 'specificUsers');
-  CREATE TYPE "public"."enum_payload_query_presets_related_collection" AS ENUM('users', 'sessions', 'accounts', 'verifications', 'admin-invitations', 'orders', 'uploads', 'tags');
+  CREATE TYPE "public"."enum_payload_query_presets_related_collection" AS ENUM('users', 'sessions', 'accounts', 'verifications', 'admin-invitations', 'orders', 'files', 'tags');
   CREATE TABLE "users" (
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"name" varchar,
@@ -172,10 +172,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"tags_id" uuid
   );
   
-  CREATE TABLE "uploads" (
+  CREATE TABLE "files" (
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-  	"file_notes" varchar,
-  	"prefix" varchar DEFAULT 'uploads',
+  	"notes" varchar,
   	"folder_id" uuid,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
@@ -231,6 +230,14 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"sizes_og_mime_type" varchar,
   	"sizes_og_filesize" numeric,
   	"sizes_og_filename" varchar
+  );
+  
+  CREATE TABLE "files_rels" (
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"order" integer,
+  	"parent_id" uuid NOT NULL,
+  	"path" varchar NOT NULL,
+  	"tags_id" uuid
   );
   
   CREATE TABLE "tags" (
@@ -343,7 +350,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"passkeys_id" uuid,
   	"admin_invitations_id" uuid,
   	"orders_id" uuid,
-  	"uploads_id" uuid,
+  	"files_id" uuid,
   	"tags_id" uuid,
   	"exports_id" uuid,
   	"audit_log_id" uuid,
@@ -409,7 +416,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"order" integer,
   	"parent_id" uuid NOT NULL,
   	"path" varchar NOT NULL,
-  	"uploads_id" uuid
+  	"files_id" uuid
   );
   
   ALTER TABLE "users" ADD CONSTRAINT "users_folder_id_payload_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."payload_folders"("id") ON DELETE set null ON UPDATE no action;
@@ -421,16 +428,18 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "verifications" ADD CONSTRAINT "verifications_folder_id_payload_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."payload_folders"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "passkeys" ADD CONSTRAINT "passkeys_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "admin_invitations" ADD CONSTRAINT "admin_invitations_folder_id_payload_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."payload_folders"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "orders" ADD CONSTRAINT "orders_pdf_id_uploads_id_fk" FOREIGN KEY ("pdf_id") REFERENCES "public"."uploads"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "orders" ADD CONSTRAINT "orders_pdf_id_files_id_fk" FOREIGN KEY ("pdf_id") REFERENCES "public"."files"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "orders" ADD CONSTRAINT "orders_folder_id_payload_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."payload_folders"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "orders_rels" ADD CONSTRAINT "orders_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."orders"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "orders_rels" ADD CONSTRAINT "orders_rels_tags_fk" FOREIGN KEY ("tags_id") REFERENCES "public"."tags"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_orders_v" ADD CONSTRAINT "_orders_v_parent_id_orders_id_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."orders"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "_orders_v" ADD CONSTRAINT "_orders_v_version_pdf_id_uploads_id_fk" FOREIGN KEY ("version_pdf_id") REFERENCES "public"."uploads"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "_orders_v" ADD CONSTRAINT "_orders_v_version_pdf_id_files_id_fk" FOREIGN KEY ("version_pdf_id") REFERENCES "public"."files"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "_orders_v" ADD CONSTRAINT "_orders_v_version_folder_id_payload_folders_id_fk" FOREIGN KEY ("version_folder_id") REFERENCES "public"."payload_folders"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "_orders_v_rels" ADD CONSTRAINT "_orders_v_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."_orders_v"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_orders_v_rels" ADD CONSTRAINT "_orders_v_rels_tags_fk" FOREIGN KEY ("tags_id") REFERENCES "public"."tags"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "uploads" ADD CONSTRAINT "uploads_folder_id_payload_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."payload_folders"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "files" ADD CONSTRAINT "files_folder_id_payload_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."payload_folders"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "files_rels" ADD CONSTRAINT "files_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."files"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "files_rels" ADD CONSTRAINT "files_rels_tags_fk" FOREIGN KEY ("tags_id") REFERENCES "public"."tags"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "tags" ADD CONSTRAINT "tags_folder_id_payload_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."payload_folders"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "exports_texts" ADD CONSTRAINT "exports_texts_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."exports"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "audit_log" ADD CONSTRAINT "audit_log_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
@@ -444,7 +453,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_passkeys_fk" FOREIGN KEY ("passkeys_id") REFERENCES "public"."passkeys"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_admin_invitations_fk" FOREIGN KEY ("admin_invitations_id") REFERENCES "public"."admin_invitations"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_orders_fk" FOREIGN KEY ("orders_id") REFERENCES "public"."orders"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_uploads_fk" FOREIGN KEY ("uploads_id") REFERENCES "public"."uploads"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_files_fk" FOREIGN KEY ("files_id") REFERENCES "public"."files"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_tags_fk" FOREIGN KEY ("tags_id") REFERENCES "public"."tags"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_exports_fk" FOREIGN KEY ("exports_id") REFERENCES "public"."exports"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_audit_log_fk" FOREIGN KEY ("audit_log_id") REFERENCES "public"."audit_log"("id") ON DELETE cascade ON UPDATE no action;
@@ -455,7 +464,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "payload_query_presets_rels" ADD CONSTRAINT "payload_query_presets_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."payload_query_presets"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_query_presets_rels" ADD CONSTRAINT "payload_query_presets_rels_users_fk" FOREIGN KEY ("users_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "settings_rels" ADD CONSTRAINT "settings_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."settings"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "settings_rels" ADD CONSTRAINT "settings_rels_uploads_fk" FOREIGN KEY ("uploads_id") REFERENCES "public"."uploads"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "settings_rels" ADD CONSTRAINT "settings_rels_files_fk" FOREIGN KEY ("files_id") REFERENCES "public"."files"("id") ON DELETE cascade ON UPDATE no action;
   CREATE UNIQUE INDEX "users_email_idx" ON "users" USING btree ("email");
   CREATE INDEX "users_created_at_idx" ON "users" USING btree ("created_at");
   CREATE INDEX "users_updated_at_idx" ON "users" USING btree ("updated_at");
@@ -518,18 +527,22 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "_orders_v_rels_parent_idx" ON "_orders_v_rels" USING btree ("parent_id");
   CREATE INDEX "_orders_v_rels_path_idx" ON "_orders_v_rels" USING btree ("path");
   CREATE INDEX "_orders_v_rels_tags_id_idx" ON "_orders_v_rels" USING btree ("tags_id");
-  CREATE INDEX "uploads_folder_idx" ON "uploads" USING btree ("folder_id");
-  CREATE INDEX "uploads_updated_at_idx" ON "uploads" USING btree ("updated_at");
-  CREATE INDEX "uploads_created_at_idx" ON "uploads" USING btree ("created_at");
-  CREATE INDEX "uploads_deleted_at_idx" ON "uploads" USING btree ("deleted_at");
-  CREATE UNIQUE INDEX "uploads_filename_idx" ON "uploads" USING btree ("filename");
-  CREATE INDEX "uploads_sizes_thumbnail_sizes_thumbnail_filename_idx" ON "uploads" USING btree ("sizes_thumbnail_filename");
-  CREATE INDEX "uploads_sizes_square_sizes_square_filename_idx" ON "uploads" USING btree ("sizes_square_filename");
-  CREATE INDEX "uploads_sizes_small_sizes_small_filename_idx" ON "uploads" USING btree ("sizes_small_filename");
-  CREATE INDEX "uploads_sizes_medium_sizes_medium_filename_idx" ON "uploads" USING btree ("sizes_medium_filename");
-  CREATE INDEX "uploads_sizes_large_sizes_large_filename_idx" ON "uploads" USING btree ("sizes_large_filename");
-  CREATE INDEX "uploads_sizes_xlarge_sizes_xlarge_filename_idx" ON "uploads" USING btree ("sizes_xlarge_filename");
-  CREATE INDEX "uploads_sizes_og_sizes_og_filename_idx" ON "uploads" USING btree ("sizes_og_filename");
+  CREATE INDEX "files_folder_idx" ON "files" USING btree ("folder_id");
+  CREATE INDEX "files_updated_at_idx" ON "files" USING btree ("updated_at");
+  CREATE INDEX "files_created_at_idx" ON "files" USING btree ("created_at");
+  CREATE INDEX "files_deleted_at_idx" ON "files" USING btree ("deleted_at");
+  CREATE UNIQUE INDEX "files_filename_idx" ON "files" USING btree ("filename");
+  CREATE INDEX "files_sizes_thumbnail_sizes_thumbnail_filename_idx" ON "files" USING btree ("sizes_thumbnail_filename");
+  CREATE INDEX "files_sizes_square_sizes_square_filename_idx" ON "files" USING btree ("sizes_square_filename");
+  CREATE INDEX "files_sizes_small_sizes_small_filename_idx" ON "files" USING btree ("sizes_small_filename");
+  CREATE INDEX "files_sizes_medium_sizes_medium_filename_idx" ON "files" USING btree ("sizes_medium_filename");
+  CREATE INDEX "files_sizes_large_sizes_large_filename_idx" ON "files" USING btree ("sizes_large_filename");
+  CREATE INDEX "files_sizes_xlarge_sizes_xlarge_filename_idx" ON "files" USING btree ("sizes_xlarge_filename");
+  CREATE INDEX "files_sizes_og_sizes_og_filename_idx" ON "files" USING btree ("sizes_og_filename");
+  CREATE INDEX "files_rels_order_idx" ON "files_rels" USING btree ("order");
+  CREATE INDEX "files_rels_parent_idx" ON "files_rels" USING btree ("parent_id");
+  CREATE INDEX "files_rels_path_idx" ON "files_rels" USING btree ("path");
+  CREATE INDEX "files_rels_tags_id_idx" ON "files_rels" USING btree ("tags_id");
   CREATE INDEX "tags_folder_idx" ON "tags" USING btree ("folder_id");
   CREATE INDEX "tags_updated_at_idx" ON "tags" USING btree ("updated_at");
   CREATE INDEX "tags_created_at_idx" ON "tags" USING btree ("created_at");
@@ -567,7 +580,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "payload_locked_documents_rels_passkeys_id_idx" ON "payload_locked_documents_rels" USING btree ("passkeys_id");
   CREATE INDEX "payload_locked_documents_rels_admin_invitations_id_idx" ON "payload_locked_documents_rels" USING btree ("admin_invitations_id");
   CREATE INDEX "payload_locked_documents_rels_orders_id_idx" ON "payload_locked_documents_rels" USING btree ("orders_id");
-  CREATE INDEX "payload_locked_documents_rels_uploads_id_idx" ON "payload_locked_documents_rels" USING btree ("uploads_id");
+  CREATE INDEX "payload_locked_documents_rels_files_id_idx" ON "payload_locked_documents_rels" USING btree ("files_id");
   CREATE INDEX "payload_locked_documents_rels_tags_id_idx" ON "payload_locked_documents_rels" USING btree ("tags_id");
   CREATE INDEX "payload_locked_documents_rels_exports_id_idx" ON "payload_locked_documents_rels" USING btree ("exports_id");
   CREATE INDEX "payload_locked_documents_rels_audit_log_id_idx" ON "payload_locked_documents_rels" USING btree ("audit_log_id");
@@ -591,7 +604,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "settings_rels_order_idx" ON "settings_rels" USING btree ("order");
   CREATE INDEX "settings_rels_parent_idx" ON "settings_rels" USING btree ("parent_id");
   CREATE INDEX "settings_rels_path_idx" ON "settings_rels" USING btree ("path");
-  CREATE INDEX "settings_rels_uploads_id_idx" ON "settings_rels" USING btree ("uploads_id");`)
+  CREATE INDEX "settings_rels_files_id_idx" ON "settings_rels" USING btree ("files_id");`)
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
@@ -606,7 +619,8 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "orders_rels" CASCADE;
   DROP TABLE "_orders_v" CASCADE;
   DROP TABLE "_orders_v_rels" CASCADE;
-  DROP TABLE "uploads" CASCADE;
+  DROP TABLE "files" CASCADE;
+  DROP TABLE "files_rels" CASCADE;
   DROP TABLE "tags" CASCADE;
   DROP TABLE "exports" CASCADE;
   DROP TABLE "exports_texts" CASCADE;

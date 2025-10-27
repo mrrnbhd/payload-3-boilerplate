@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
-export const Uploads: CollectionConfig = {
-  slug: 'uploads',
+export const Files: CollectionConfig = {
+  slug: 'files',
   enableQueryPresets: true,
   trash: true,
   folders: true,

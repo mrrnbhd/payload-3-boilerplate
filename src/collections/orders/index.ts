@@ -158,7 +158,7 @@ export const Orders: CollectionConfig = {
       type: 'upload',
       name: 'PDF',
       label: 'Purchase PDF',
-      relationTo: 'uploads',
+      relationTo: 'files',
     },
     {
       type: 'textarea',
