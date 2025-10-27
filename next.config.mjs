@@ -13,11 +13,11 @@ const nextConfig = {
       //   destination: '/login',
       //   permanent: true,
       // },
-      {
-        source: '/',
-        destination: '/admin',
-        permanent: true,
-      },
+      // {
+      //   source: '/',
+      //   destination: '/admin',
+      //   permanent: true,
+      // },
     ]
   },
   images: {
