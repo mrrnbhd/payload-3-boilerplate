@@ -5,7 +5,7 @@ const STEEL_API_KEY = process.env.STEEL_API_KEY ?? 'No Steel Browser API key fou
 
 const client: Steel = new Steel({
   steelAPIKey: STEEL_API_KEY,
-  baseURL: process.env.STEEL_PRIVATE_URL,
+  baseURL: `http://${process.env.STEEL_PRIVATE_URL}`,
 })
 //
 export const getBrowserSession: CollectionBeforeChangeHook = async ({ data, operation }) => {
