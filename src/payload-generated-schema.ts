@@ -406,6 +406,7 @@ export const orders = pgTable(
   "orders",
   {
     id: uuid("id").defaultRandom().primaryKey(),
+    sessionURL: varchar("session_u_r_l"),
     orderNumber: numeric("order_number", { mode: "number" }),
     status: enum_orders_status("status"),
     orderLink: varchar("order_link"),
@@ -488,6 +489,7 @@ export const _orders_v = pgTable(
     parent: uuid("parent_id").references(() => orders.id, {
       onDelete: "set null",
     }),
+    version_sessionURL: varchar("version_session_u_r_l"),
     version_orderNumber: numeric("version_order_number", { mode: "number" }),
     version_status: enum__orders_v_version_status("version_status"),
     version_orderLink: varchar("version_order_link"),
@@ -595,6 +597,7 @@ export const files = pgTable(
   {
     id: uuid("id").defaultRandom().primaryKey(),
     notes: varchar("notes"),
+    prefix: varchar("prefix").default("files"),
     folder: uuid("folder_id").references(() => payload_folders.id, {
       onDelete: "set null",
     }),
