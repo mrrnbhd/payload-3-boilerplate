@@ -1,5 +1,3 @@
-import { getServerSideURL } from '@/lib/payload'
-
 import type { CollectionConfig } from 'payload'
 
 export const Orders: CollectionConfig = {
@@ -26,8 +24,8 @@ export const Orders: CollectionConfig = {
     useAsTitle: 'orderNumber',
     group: 'Operation',
     livePreview: {
-      url: ({ data }) => {
-        return `${getServerSideURL()}/orders/${data.id}?draft=true`
+      url: () => {
+        return `https://ticketer-browser.up.railway.app/ui`
       },
     },
   },
