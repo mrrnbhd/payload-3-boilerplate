@@ -142,6 +142,8 @@ export const betterAuthPluginOptions: BetterAuthPluginOptions = {
     adminRoles: ['admin'],
     allowedFields: ['name'],
     roles: ['admin', 'user'],
+    defaultRole: 'admin',
+    defaultAdminRole: 'admin',
   },
   accounts: {
     slug: 'accounts',
