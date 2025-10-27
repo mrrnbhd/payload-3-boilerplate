@@ -26,9 +26,7 @@ export const Orders: CollectionConfig = {
     group: 'Operation',
     livePreview: {
       url: ({ data }) => {
-        if (data?.sessionURL) {
-          return `${data.sessionURL}`
-        }
+        return data.sessionURL || ''
       },
     },
   },
