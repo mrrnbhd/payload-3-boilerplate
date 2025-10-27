@@ -1,4 +1,0 @@
-[build]
-[build.secrets]
-PAYLOAD_SECRET = "{{.PAYLOAD_SECRET}}"
-DATABASE_URL = "{{.DATABASE_URL}}"
