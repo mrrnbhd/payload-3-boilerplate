@@ -40,13 +40,6 @@ export const Orders: CollectionConfig = {
   },
   fields: [
     {
-      type: 'text',
-      name: 'sessionURL',
-      admin: {
-        hidden: true,
-      },
-    },
-    {
       type: 'row',
       admin: {},
       fields: [
