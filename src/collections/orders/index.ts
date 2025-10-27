@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { createBrowserSession } from './hooks/create-browser-session-with-url'
 
 export const Orders: CollectionConfig = {
   slug: 'orders',
@@ -25,11 +26,11 @@ export const Orders: CollectionConfig = {
     group: 'Operation',
     livePreview: {
       url: () => {
-        return `https://ticketer-browser.up.railway.app/ui`
+        const sessionURL = createBrowserSession()
+        return sessionURL
       },
     },
   },
-  hooks: {},
   versions: {
     drafts: {
       autosave: {
@@ -38,6 +39,13 @@ export const Orders: CollectionConfig = {
     },
   },
   fields: [
+    {
+      type: 'text',
+      name: 'sessionURL',
+      admin: {
+        hidden: true,
+      },
+    },
     {
       type: 'row',
       admin: {},

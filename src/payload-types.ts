@@ -427,6 +427,7 @@ export interface AdminInvitation {
  */
 export interface Order {
   id: string;
+  sessionURL?: string | null;
   orderNumber?: number | null;
   tags?: (string | Tag)[] | null;
   status?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Error') | null;
@@ -998,6 +999,7 @@ export interface AdminInvitationsSelect<T extends boolean = true> {
  * via the `definition` "orders_select".
  */
 export interface OrdersSelect<T extends boolean = true> {
+  sessionURL?: T;
   orderNumber?: T;
   tags?: T;
   status?: T;
