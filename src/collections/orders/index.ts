@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { createBrowserSession } from './hooks/create-browser-session-with-url'
+import { getBrowserSession } from './hooks/get-browser-session'
 
 export const Orders: CollectionConfig = {
   slug: 'orders',
@@ -25,9 +25,10 @@ export const Orders: CollectionConfig = {
     useAsTitle: 'orderNumber',
     group: 'Operation',
     livePreview: {
-      url: () => {
-        const sessionURL = createBrowserSession()
-        return sessionURL
+      url: ({ data }) => {
+        if (data?.sessionURL) {
+          return `${data.sessionURL}`
+        }
       },
     },
   },
@@ -38,7 +39,17 @@ export const Orders: CollectionConfig = {
       },
     },
   },
+  hooks: {
+    beforeChange: [getBrowserSession],
+  },
   fields: [
+    {
+      type: 'text',
+      name: 'sessionURL',
+      admin: {
+        hidden: true,
+      },
+    },
     {
       type: 'row',
       admin: {},
