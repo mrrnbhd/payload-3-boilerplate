@@ -1,4 +1,3 @@
-// ./hooks/get-browser-session.ts
 import type { CollectionBeforeChangeHook } from 'payload'
 import Steel from 'steel-sdk'
 
