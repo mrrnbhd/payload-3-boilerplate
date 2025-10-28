@@ -9,11 +9,20 @@ const client: Steel = new Steel({
 })
 //
 export const getBrowserSession: CollectionBeforeChangeHook = async ({ data, operation }) => {
-  if (operation === 'create' && !data.sessionURL) {
+  if (operation === 'create' && !data.sessionURL && data.status !== 'Fulfilled') {
     try {
       console.log('\nCreating Steel session...')
 
-      const session = await client.sessions.create({})
+      const session = await client.sessions.create({
+        sessionId: data.orderNumber,
+        solveCaptcha: true,
+        stealthConfig: {
+          humanizeInteractions: true,
+        },
+        deviceConfig: {
+          device: 'mobile',
+        },
+      })
 
       console.log(
         `\x1b[1;93mSteel Session created!\x1b[0m\n` +
