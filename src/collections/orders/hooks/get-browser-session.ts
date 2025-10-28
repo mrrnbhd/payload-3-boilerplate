@@ -1,7 +1,8 @@
-import type { CollectionBeforeChangeHook } from 'payload'
+import type { CollectionAfterChangeHook } from 'payload'
+import puppeteer from 'puppeteer-core'
 import Steel from 'steel-sdk'
 
-export const getBrowserSession: CollectionBeforeChangeHook = async ({ data }) => {
+export const getBrowserSession: CollectionAfterChangeHook = async ({ data }) => {
   if (
     !data.sessionURL &&
     !['Purchased', 'Fulfilled', 'Error'].includes(data.status) &&
@@ -39,6 +40,15 @@ export const getBrowserSession: CollectionBeforeChangeHook = async ({ data }) =>
         `\x1b[1;93mSteel Session created for Order: ${data.orderNumber}!\x1b[0m\n` +
           `View session at \x1b[1;37m${session.sessionViewerUrl}\x1b[0m`
       )
+
+      if (data.purchaseLink) {
+        const browser = await puppeteer.connect({
+          browserWSEndpoint: `wss://connect.steel.dev?apiKey=${process.env.STEEL_API_KEY}&sessionId=${session.id}`,
+        })
+
+        const page = await browser.newPage()
+        await page.goto(data.purchaseLink)
+      }
 
       data.sessionURL = session.sessionViewerUrl
     } catch (error) {
