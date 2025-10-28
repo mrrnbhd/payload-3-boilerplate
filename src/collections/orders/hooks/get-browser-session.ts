@@ -1,24 +1,31 @@
 import type { CollectionBeforeChangeHook } from 'payload'
 import Steel from 'steel-sdk'
 
-const STEEL_API_KEY = process.env.STEEL_API_KEY ?? 'No Steel Browser API key found'
-
-const client: Steel = new Steel({
-  steelAPIKey: STEEL_API_KEY,
-  baseURL: `https://${process.env.STEEL_URL}`,
-})
-//
 export const getBrowserSession: CollectionBeforeChangeHook = async ({ data }) => {
   if (
     !data.sessionURL &&
     !['Purchased', 'Fulfilled', 'Error'].includes(data.status) &&
     data.orderNumber
   ) {
+    const STEEL_API_KEY = process.env.STEEL_API_KEY
+    const STEEL_URL = process.env.STEEL_URL
+
+    if (!STEEL_API_KEY || !STEEL_URL) {
+      console.error(
+        'STEEL_API_KEY or STEEL_URL env variables are missing. Skipping session creation.'
+      )
+      return data
+    }
+
     try {
-      console.log('\nCreating Steel session...')
+      console.log(`\nCreating Steel session for Order: ${data.orderNumber}...`)
+
+      const client: Steel = new Steel({
+        steelAPIKey: STEEL_API_KEY,
+        baseURL: `https://${STEEL_URL}`,
+      })
 
       const session = await client.sessions.create({
-        sessionId: data.orderNumber,
         solveCaptcha: true,
         stealthConfig: {
           humanizeInteractions: true,
@@ -29,13 +36,18 @@ export const getBrowserSession: CollectionBeforeChangeHook = async ({ data }) =>
       })
 
       console.log(
-        `\x1b[1;93mSteel Session created!\x1b[0m\n` +
+        `\x1b[1;93mSteel Session created for Order: ${data.orderNumber}!\x1b[0m\n` +
           `View session at \x1b[1;37m${session.sessionViewerUrl}\x1b[0m`
       )
+
       data.sessionURL = session.sessionViewerUrl
     } catch (error) {
-      console.error('An error occurred creating Steel session:', error)
+      console.error(
+        `An error occurred creating Steel session for Order ${data.orderNumber}:`,
+        error
+      )
     }
   }
+
   return data
 }
