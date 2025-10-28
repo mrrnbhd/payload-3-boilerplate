@@ -55,6 +55,7 @@ export const Orders: CollectionConfig = {
         {
           type: 'number',
           name: 'orderNumber',
+          required: true,
           admin: {
             width: '40%',
           },

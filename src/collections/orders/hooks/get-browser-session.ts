@@ -9,26 +9,33 @@ const client: Steel = new Steel({
 })
 //
 export const getBrowserSession: CollectionBeforeChangeHook = async ({ data, operation }) => {
-  if (operation === 'create' && !data.sessionURL && data.status !== 'Fulfilled') {
+  if (
+    operation === 'create' &&
+    !data.sessionURL &&
+    data.status !== 'Fulfilled' &&
+    data.orderNumber
+  ) {
     try {
-      console.log('\nCreating Steel session...')
+      if (data.status !== 'Purchased') {
+        console.log('\nCreating Steel session...')
 
-      const session = await client.sessions.create({
-        sessionId: data.orderNumber,
-        solveCaptcha: true,
-        stealthConfig: {
-          humanizeInteractions: true,
-        },
-        deviceConfig: {
-          device: 'mobile',
-        },
-      })
+        const session = await client.sessions.create({
+          sessionId: data.orderNumber,
+          solveCaptcha: true,
+          stealthConfig: {
+            humanizeInteractions: true,
+          },
+          deviceConfig: {
+            device: 'mobile',
+          },
+        })
 
-      console.log(
-        `\x1b[1;93mSteel Session created!\x1b[0m\n` +
-          `View session at \x1b[1;37m${session.sessionViewerUrl}\x1b[0m`
-      )
-      data.sessionURL = session.sessionViewerUrl
+        console.log(
+          `\x1b[1;93mSteel Session created!\x1b[0m\n` +
+            `View session at \x1b[1;37m${session.sessionViewerUrl}\x1b[0m`
+        )
+        data.sessionURL = session.sessionViewerUrl
+      }
     } catch (error) {
       console.error('An error occurred creating Steel session:', error)
     }
