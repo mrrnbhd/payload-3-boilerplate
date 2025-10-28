@@ -11,7 +11,7 @@ const client: Steel = new Steel({
 export const getBrowserSession: CollectionBeforeChangeHook = async ({ data }) => {
   if (
     !data.sessionURL &&
-    !['Purchased', 'Fulfilled', 'Failure'].includes(data.status) &&
+    !['Purchased', 'Fulfilled', 'Error'].includes(data.status) &&
     data.orderNumber
   ) {
     try {
