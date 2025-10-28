@@ -26,7 +26,16 @@ export const Orders: CollectionConfig = {
     group: 'Operation',
     livePreview: {
       url: ({ data }) => {
-        return data.sessionURL || 'https://ticketer.up.railway.app/'
+        if (data.sessionURL) {
+          try {
+            const url = new URL(data.sessionURL)
+            url.searchParams.set('doc_id', data.id || Date.now())
+            return url.toString()
+          } catch (e) {
+            return data.sessionURL
+          }
+        }
+        return 'https://ticketer.up.railway.app/'
       },
     },
   },
