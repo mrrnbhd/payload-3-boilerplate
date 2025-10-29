@@ -136,6 +136,8 @@ export interface Config {
   };
   jobs: {
     tasks: {
+      'purchase-task': TaskPurchaseTask;
+      'fulfillment-task': TaskFulfillmentTask;
       createCollectionExport: TaskCreateCollectionExport;
       inline: {
         input: unknown;
@@ -427,18 +429,24 @@ export interface AdminInvitation {
  */
 export interface Order {
   id: string;
-  sessionURL?: string | null;
-  orderNumber?: number | null;
   tags?: (string | Tag)[] | null;
-  status?: ('Pending' | 'Purchased' | 'Fulfilled' | 'Error') | null;
-  orderLink?: string | null;
+  /**
+   * Adds this order to the automated purchase and fulfillment queue.
+   */
+  purchaseAndFulfill?: boolean | null;
+  /**
+   * Displays the browser automation tool inside the preview panel.
+   */
+  browserView?: boolean | null;
+  fulfillmentStatus?: ('Pending' | 'Queued' | 'Running' | 'Purchased' | 'Fulfilled' | 'Error') | null;
+  orderNumber: number;
   value?: number | null;
+  orderLink?: string | null;
+  price?: number | null;
+  purchaseLink?: string | null;
   event?: string | null;
   venue?: string | null;
   location?: string | null;
-  vendor?: ('SpotHero' | 'ParkWhiz' | 'ParkMobile' | 'AceParking') | null;
-  link?: string | null;
-  price?: number | null;
   PDF?: (string | null) | File;
   notes?: string | null;
   folder?: (string | null) | FolderInterface;
@@ -694,7 +702,7 @@ export interface PayloadJob {
     | {
         executedAt: string;
         completedAt: string;
-        taskSlug: 'inline' | 'createCollectionExport';
+        taskSlug: 'inline' | 'purchase-task' | 'fulfillment-task' | 'createCollectionExport';
         taskID: string;
         input?:
           | {
@@ -727,7 +735,7 @@ export interface PayloadJob {
         id?: string | null;
       }[]
     | null;
-  taskSlug?: ('inline' | 'createCollectionExport') | null;
+  taskSlug?: ('inline' | 'purchase-task' | 'fulfillment-task' | 'createCollectionExport') | null;
   queue?: string | null;
   waitUntil?: string | null;
   processing?: boolean | null;
@@ -999,18 +1007,18 @@ export interface AdminInvitationsSelect<T extends boolean = true> {
  * via the `definition` "orders_select".
  */
 export interface OrdersSelect<T extends boolean = true> {
-  sessionURL?: T;
-  orderNumber?: T;
   tags?: T;
-  status?: T;
-  orderLink?: T;
+  purchaseAndFulfill?: T;
+  browserView?: T;
+  fulfillmentStatus?: T;
+  orderNumber?: T;
   value?: T;
+  orderLink?: T;
+  price?: T;
+  purchaseLink?: T;
   event?: T;
   venue?: T;
   location?: T;
-  vendor?: T;
-  link?: T;
-  price?: T;
   PDF?: T;
   notes?: T;
   folder?: T;
@@ -1299,6 +1307,40 @@ export interface SettingsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskPurchase-task".
+ */
+export interface TaskPurchaseTask {
+  input: {
+    orderNumber: string;
+    email?: string | null;
+    password?: string | null;
+    cardNumber?: number | null;
+    cardCvcNumber?: number | null;
+    cardExpirationDate?: string | null;
+  };
+  output: {
+    purchasePrice: number;
+    purchasePdf: string | File;
+    orderNotes?: string | null;
+    orderStatus?: ('Purchased' | 'Error') | null;
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskFulfillment-task".
+ */
+export interface TaskFulfillmentTask {
+  input: {
+    purchasePrice: number;
+    purchasePdf?: (string | null) | File;
+    orderNotes?: string | null;
+  };
+  output: {
+    orderStatus?: ('Fulfilled' | 'Error') | null;
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

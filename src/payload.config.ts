@@ -11,6 +11,7 @@ import { Users } from './collections/users'
 import { getEmailAdapter } from './lib/email/email-adapter'
 import { getServerSideURL } from './lib/payload'
 import { plugins } from './plugins'
+import { taskConfigs } from './tasks'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -71,6 +72,18 @@ export default buildConfig({
     },
     idType: 'uuid',
   }),
+  jobs: {
+    tasks: taskConfigs,
+    workflows: [],
+    jobsCollectionOverrides: ({ defaultJobsCollection }) => {
+      if (!defaultJobsCollection.admin) {
+        defaultJobsCollection.admin = {}
+      }
+
+      defaultJobsCollection.admin.hidden = false
+      return defaultJobsCollection
+    },
+  },
   cors: [getServerSideURL()].filter(Boolean),
   sharp,
   plugins,

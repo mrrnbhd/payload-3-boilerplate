@@ -1,5 +1,7 @@
+import { getServerSideURL } from '@/lib/payload'
+
 import type { CollectionConfig } from 'payload'
-import { getBrowserSession } from './hooks/get-browser-session'
+import { displayBrowserView } from './hooks/display-browser-view'
 
 export const Orders: CollectionConfig = {
   slug: 'orders',
@@ -8,8 +10,8 @@ export const Orders: CollectionConfig = {
   folders: true,
   admin: {
     defaultColumns: [
-      'orderStatus',
       'orderNumber',
+      'orderStatus',
       'orderValue',
       'orderLink',
       'marketplace',
@@ -26,9 +28,14 @@ export const Orders: CollectionConfig = {
     group: 'Operation',
     livePreview: {
       url: ({ data }) => {
-        if (data.sessionURL) {
+        if (
+          (data.orderStatus === 'Running' && data._status !== 'draft') ||
+          data.browserView === true
+        ) {
+          return 'https://ticketer-browser.up.railway.app/ui'
+        } else {
+          return `${getServerSideURL()}/orders`
         }
-        return 'https://ticketer.up.railway.app/'
       },
     },
   },
@@ -40,35 +47,45 @@ export const Orders: CollectionConfig = {
     },
   },
   hooks: {
-    beforeChange: [getBrowserSession],
+    beforeChange: [displayBrowserView],
   },
   fields: [
     {
-      type: 'text',
-      name: 'sessionURL',
+      type: 'relationship',
+      name: 'tags',
+      label: 'Order Tags',
+      relationTo: 'tags',
+      hasMany: true,
       admin: {
-        hidden: true,
+        readOnly: false,
+        position: 'sidebar',
       },
     },
     {
-      type: 'row',
-      admin: {},
+      type: 'collapsible',
+      label: 'Automation',
+      admin: {
+        position: 'sidebar',
+      },
       fields: [
         {
-          type: 'number',
-          name: 'orderNumber',
-          required: true,
+          type: 'checkbox',
+          name: 'purchaseAndFulfill',
+          label: 'Process Purchase and Fulfill Order?',
           admin: {
-            width: '40%',
+            description: 'Adds this order to the automated purchase and fulfillment queue.',
+            readOnly: false,
+            position: 'sidebar',
           },
         },
         {
-          type: 'relationship',
-          name: 'tags',
-          relationTo: 'tags',
-          hasMany: true,
+          type: 'checkbox',
+          name: 'browserView',
+          label: 'Enable Web Browser Monitoring?',
           admin: {
-            width: '60%',
+            description: 'Displays the browser automation tool inside the preview panel.',
+            readOnly: false,
+            position: 'sidebar',
           },
         },
       ],
@@ -78,11 +95,36 @@ export const Orders: CollectionConfig = {
       fields: [
         {
           type: 'select',
-          name: 'status',
-          label: 'Order Status',
-          options: ['Pending', 'Purchased', 'Fulfilled', 'Error'],
+          name: 'fulfillmentStatus',
+          label: 'Fulfillment Status',
+          defaultValue: 'Pending',
+          options: ['Pending', 'Queued', 'Running', 'Purchased', 'Fulfilled', 'Error'],
           admin: {
             width: '40%',
+            readOnly: true,
+          },
+        },
+        {
+          type: 'number',
+          name: 'orderNumber',
+          required: true,
+          admin: {
+            width: '60%',
+            readOnly: true,
+          },
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          type: 'number',
+          name: 'value',
+          label: 'Order Value',
+          admin: {
+            width: '40%',
+            readOnly: true,
           },
         },
         {
@@ -90,20 +132,35 @@ export const Orders: CollectionConfig = {
           name: 'orderLink',
           label: 'Order Link',
           admin: {
-            width: '30%',
-          },
-        },
-        {
-          type: 'number',
-          name: 'value',
-          label: 'Order Value',
-          admin: {
-            width: '30%',
+            width: '60%',
+            readOnly: true,
           },
         },
       ],
     },
-
+    {
+      type: 'row',
+      fields: [
+        {
+          type: 'number',
+          name: 'price',
+          label: 'Purchase Price',
+          admin: {
+            width: '40%',
+            readOnly: false,
+          },
+        },
+        {
+          type: 'text',
+          name: 'purchaseLink',
+          label: 'Purchase Link',
+          admin: {
+            width: '60%',
+            readOnly: false,
+          },
+        },
+      ],
+    },
     {
       type: 'row',
       fields: [
@@ -113,6 +170,7 @@ export const Orders: CollectionConfig = {
           label: 'Parking Event',
           admin: {
             width: '40%',
+            readOnly: false,
           },
         },
         {
@@ -121,6 +179,7 @@ export const Orders: CollectionConfig = {
           label: 'Parking Venue',
           admin: {
             width: '30%',
+            readOnly: false,
           },
         },
         {
@@ -129,54 +188,27 @@ export const Orders: CollectionConfig = {
           label: 'Parking Location',
           admin: {
             width: '30%',
+            readOnly: false,
           },
         },
       ],
     },
-    {
-      type: 'row',
-      fields: [
-        {
-          type: 'select',
-          name: 'vendor',
-          label: 'Purchase Vendor',
-          options: ['SpotHero', 'ParkWhiz', 'ParkMobile', 'AceParking'],
-          admin: {
-            width: '40%',
-          },
-        },
-        {
-          type: 'text',
-          name: 'link',
-          label: 'Purchase Link',
-          admin: {
-            width: '30%',
-          },
-        },
-
-        {
-          type: 'number',
-          name: 'price',
-          label: 'Purchase Price',
-          admin: {
-            width: '30%',
-          },
-        },
-      ],
-    },
-
     {
       type: 'upload',
       name: 'PDF',
       label: 'Purchase PDF',
       relationTo: 'files',
+      admin: {
+        readOnly: false,
+      },
     },
     {
       type: 'textarea',
       name: 'notes',
-      label: 'Additional Notes',
+      label: 'Order Notes',
       admin: {
-        rows: 5,
+        rows: 3,
+        readOnly: false,
       },
     },
   ],

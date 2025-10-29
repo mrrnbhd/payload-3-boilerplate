@@ -31,6 +31,8 @@ export const enum_admin_invitations_role = pgEnum(
 );
 export const enum_orders_status = pgEnum("enum_orders_status", [
   "Pending",
+  "Queued",
+  "Running",
   "Purchased",
   "Fulfilled",
   "Error",
@@ -43,7 +45,7 @@ export const enum_orders_vendor = pgEnum("enum_orders_vendor", [
 ]);
 export const enum__orders_v_version_status = pgEnum(
   "enum__orders_v_version_status",
-  ["Pending", "Purchased", "Fulfilled", "Error"],
+  ["Pending", "Queued", "Running", "Purchased", "Fulfilled", "Error"],
 );
 export const enum__orders_v_version_vendor = pgEnum(
   "enum__orders_v_version_vendor",
@@ -406,6 +408,7 @@ export const orders = pgTable(
   "orders",
   {
     id: uuid("id").defaultRandom().primaryKey(),
+    sessionId: varchar("session_id"),
     sessionURL: varchar("session_u_r_l"),
     orderNumber: numeric("order_number", { mode: "number" }),
     status: enum_orders_status("status"),
@@ -489,6 +492,7 @@ export const _orders_v = pgTable(
     parent: uuid("parent_id").references(() => orders.id, {
       onDelete: "set null",
     }),
+    version_sessionId: varchar("version_session_id"),
     version_sessionURL: varchar("version_session_u_r_l"),
     version_orderNumber: numeric("version_order_number", { mode: "number" }),
     version_status: enum__orders_v_version_status("version_status"),
