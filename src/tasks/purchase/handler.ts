@@ -1,4 +1,4 @@
-import type { TaskHandler, TaskHandlerResult } from 'payload'
+import type { TaskHandler } from 'payload'
 import Steel from 'steel-sdk'
 
 const STEEL_API_KEY = process.env.STEEL_API_KEY
@@ -9,7 +9,7 @@ const client: Steel = new Steel({
   baseURL: `https://${STEEL_URL}`,
 })
 
-export const purchaseHandler: TaskHandler<any> = async ({ input }) => {
+export const purchaseHandler: TaskHandler<'purchase-task'> = async ({ input }) => {
   if (!STEEL_API_KEY || !STEEL_URL) {
     console.error(
       'STEEL_API_KEY or STEEL_URL env variables are missing. Skipping session creation.'
@@ -37,14 +37,13 @@ export const purchaseHandler: TaskHandler<any> = async ({ input }) => {
   } catch (error) {
     console.error(`An error occurred creating Steel session at Order ${input}:`, error)
   }
-
-  const purchaseResult: TaskHandlerResult<'purchase-task'> = {
+  return {
     output: {
       purchasePrice: 10,
       purchasePdf: '',
       orderStatus: 'Purchased',
+      orderNotes: '',
     },
     state: 'succeeded',
   }
-  return purchaseResult
 }

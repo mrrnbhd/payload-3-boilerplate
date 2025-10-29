@@ -1,13 +1,18 @@
 import type { TaskConfig } from 'payload'
 import { purchaseHandler } from './handler'
 
-export const purchaseTask: TaskConfig<any> = {
+export const purchaseTask: TaskConfig<'purchase-task'> = {
   slug: 'purchase-task',
   handler: purchaseHandler,
   inputSchema: [
     {
       type: 'text',
       name: 'orderNumber',
+      required: true,
+    },
+    {
+      type: 'text',
+      name: 'purchaseLink',
       required: true,
     },
     {
@@ -35,12 +40,10 @@ export const purchaseTask: TaskConfig<any> = {
     {
       type: 'number',
       name: 'purchasePrice',
-      required: true,
     },
     {
       type: 'upload',
       name: 'purchasePdf',
-      required: true,
       relationTo: 'files',
       displayPreview: true,
     },
@@ -54,4 +57,5 @@ export const purchaseTask: TaskConfig<any> = {
       options: ['Purchased', 'Error'],
     },
   ],
+  onFail: () => {},
 }

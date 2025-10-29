@@ -1,21 +1,22 @@
 import type { TaskConfig } from 'payload'
 import { fulfillmentHandler } from './handler'
 
-export const fullfillmentTask: TaskConfig<any> = {
+export const fullfillmentTask: TaskConfig<'fulfillment-task'> = {
   slug: 'fulfillment-task',
   handler: fulfillmentHandler,
   inputSchema: [
     {
+      type: 'text',
+      name: 'orderNumber',
+    },
+    {
       type: 'number',
       name: 'purchasePrice',
-      required: true,
     },
     {
       type: 'upload',
       name: 'purchasePdf',
-      required: false,
       relationTo: 'files',
-      displayPreview: true,
     },
     {
       type: 'textarea',

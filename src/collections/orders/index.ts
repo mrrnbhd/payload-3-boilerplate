@@ -1,7 +1,6 @@
 import { getServerSideURL } from '@/lib/payload'
 
 import type { CollectionConfig } from 'payload'
-import { displayBrowserView } from './hooks/display-browser-view'
 
 export const Orders: CollectionConfig = {
   slug: 'orders',
@@ -28,10 +27,7 @@ export const Orders: CollectionConfig = {
     group: 'Operation',
     livePreview: {
       url: ({ data }) => {
-        if (
-          (data.orderStatus === 'Running' && data._status !== 'draft') ||
-          data.browserView === true
-        ) {
+        if (data.browserView === true) {
           return 'https://ticketer-browser.up.railway.app/ui'
         } else {
           return `${getServerSideURL()}/orders`
@@ -45,9 +41,6 @@ export const Orders: CollectionConfig = {
         interval: 275,
       },
     },
-  },
-  hooks: {
-    beforeChange: [displayBrowserView],
   },
   fields: [
     {

@@ -1315,6 +1315,7 @@ export interface SettingsSelect<T extends boolean = true> {
 export interface TaskPurchaseTask {
   input: {
     orderNumber: string;
+    purchaseLink: string;
     email?: string | null;
     password?: string | null;
     cardNumber?: number | null;
@@ -1322,8 +1323,8 @@ export interface TaskPurchaseTask {
     cardExpirationDate?: string | null;
   };
   output: {
-    purchasePrice: number;
-    purchasePdf: string | File;
+    purchasePrice?: number | null;
+    purchasePdf?: (string | null) | File;
     orderNotes?: string | null;
     orderStatus?: ('Purchased' | 'Error') | null;
   };
@@ -1334,7 +1335,8 @@ export interface TaskPurchaseTask {
  */
 export interface TaskFulfillmentTask {
   input: {
-    purchasePrice: number;
+    orderNumber?: string | null;
+    purchasePrice?: number | null;
     purchasePdf?: (string | null) | File;
     orderNotes?: string | null;
   };
