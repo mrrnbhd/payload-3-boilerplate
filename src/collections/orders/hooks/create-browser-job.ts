@@ -14,7 +14,7 @@ export const createBrowserJob: CollectionAfterChangeHook<Order> = async ({ data,
             .queue({
               task: 'purchase-task',
               input: {
-                orderNumber: '1234',
+                orderNumber: data.orderNumber ?? '',
                 purchaseLink: data.purchaseLink ?? '',
                 email: 'email@gmail.com',
                 password: '123456789',

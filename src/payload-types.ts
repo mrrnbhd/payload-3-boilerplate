@@ -439,7 +439,7 @@ export interface Order {
    */
   browserView?: boolean | null;
   fulfillmentStatus?: ('Pending' | 'Queued' | 'Running' | 'Purchased' | 'Fulfilled' | 'Error') | null;
-  orderNumber: number;
+  orderNumber: string;
   value?: number | null;
   orderLink?: string | null;
   price?: number | null;
@@ -1314,8 +1314,8 @@ export interface SettingsSelect<T extends boolean = true> {
  */
 export interface TaskPurchaseTask {
   input: {
-    orderNumber: string;
-    purchaseLink: string;
+    orderNumber?: string | null;
+    purchaseLink?: string | null;
     email?: string | null;
     password?: string | null;
     cardNumber?: number | null;
@@ -1323,10 +1323,10 @@ export interface TaskPurchaseTask {
     cardExpirationDate?: string | null;
   };
   output: {
+    orderNumber?: string | null;
     purchasePrice?: number | null;
     purchasePdf?: (string | null) | File;
     orderNotes?: string | null;
-    orderStatus?: ('Purchased' | 'Error') | null;
   };
 }
 /**

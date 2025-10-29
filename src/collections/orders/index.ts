@@ -98,7 +98,7 @@ export const Orders: CollectionConfig = {
           },
         },
         {
-          type: 'number',
+          type: 'text',
           name: 'orderNumber',
           required: true,
           admin: {

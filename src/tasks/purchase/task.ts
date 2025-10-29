@@ -8,12 +8,10 @@ export const purchaseTask: TaskConfig<'purchase-task'> = {
     {
       type: 'text',
       name: 'orderNumber',
-      required: true,
     },
     {
       type: 'text',
       name: 'purchaseLink',
-      required: true,
     },
     {
       type: 'email',
@@ -38,6 +36,10 @@ export const purchaseTask: TaskConfig<'purchase-task'> = {
   ],
   outputSchema: [
     {
+      type: 'text',
+      name: 'orderNumber',
+    },
+    {
       type: 'number',
       name: 'purchasePrice',
     },
@@ -51,11 +53,5 @@ export const purchaseTask: TaskConfig<'purchase-task'> = {
       type: 'textarea',
       name: 'orderNotes',
     },
-    {
-      type: 'select',
-      name: 'orderStatus',
-      options: ['Purchased', 'Error'],
-    },
   ],
-  onFail: () => {},
 }
