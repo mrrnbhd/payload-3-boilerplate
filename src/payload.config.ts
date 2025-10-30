@@ -99,6 +99,8 @@ export default buildConfig({
         create: isAdmin,
         delete: isAdmin,
       }
+      defaultJobsCollection.enableQueryPresets = true
+      defaultJobsCollection.folders = true
       return defaultJobsCollection
     },
   },
