@@ -77,7 +77,14 @@ export const csvToJson: FieldHook = async ({ siblingData, req, value, previousVa
         return err(new FileFindError('Uploaded document or URL not found.'))
       })
       .andThen((url) => {
-        return fromPromise(fetch(url), (e) => new FileFetchError((e as Error).message))
+        return fromPromise(
+          fetch(url, {
+            headers: {
+              cookie: req.headers.get('cookie') ?? '',
+            },
+          }),
+          (e) => new FileFetchError((e as Error).message)
+        )
       })
       .andThen((response) => {
         if (response.ok) {
