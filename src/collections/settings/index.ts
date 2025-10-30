@@ -74,7 +74,7 @@ export const Settings: GlobalConfig = {
             hidden: false,
             readOnly: false,
             maxHeight: 500,
-            description: 'Single-use account datum for purchasing automation.',
+            description: 'Single-use account datums for purchasing automation.',
           },
           jsonSchema,
         },
