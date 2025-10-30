@@ -4,6 +4,34 @@ import { purchaseHandler } from './handler'
 export const purchaseTask: TaskConfig<'purchase-task'> = {
   slug: 'purchase-task',
   handler: purchaseHandler,
+  onSuccess: ({ req }) => {
+    req.payload.update({
+      collection: 'orders',
+      limit: 1,
+      where: {
+        fulfillmentStatus: {
+          equals: 'running',
+        },
+      },
+      data: {
+        fulfillmentStatus: 'Purchased',
+      },
+    })
+  },
+  onFail: ({ req }) => {
+    req.payload.update({
+      collection: 'orders',
+      limit: 1,
+      where: {
+        fulfillmentStatus: {
+          equals: 'running',
+        },
+      },
+      data: {
+        fulfillmentStatus: 'Error',
+      },
+    })
+  },
   inputSchema: [
     {
       type: 'text',
