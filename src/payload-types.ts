@@ -1296,14 +1296,14 @@ export interface Setting {
   proxyPassword: string;
   proxyHost: string;
   proxyPort: number;
-  /**
-   * Upload a CSV of accounts to be used for browser automation, will overwrite any pre-existing account data.
-   */
-  accountUploader?: (string | null) | File;
   accountData?: {
     status: 'available' | 'in-use' | 'error' | 'used';
     [k: string]: unknown;
   }[];
+  /**
+   * Upload a CSV of accounts to be used for browser automation, will overwrite any pre-existing account data.
+   */
+  accountUploader?: (string | null) | File;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1316,8 +1316,8 @@ export interface SettingsSelect<T extends boolean = true> {
   proxyPassword?: T;
   proxyHost?: T;
   proxyPort?: T;
-  accountUploader?: T;
   accountData?: T;
+  accountUploader?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
