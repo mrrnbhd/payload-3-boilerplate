@@ -11,17 +11,15 @@ export const Orders: CollectionConfig = {
   admin: {
     defaultColumns: [
       'orderNumber',
-      'orderStatus',
+      'fulfillmentStatus',
+      'purchaseLink',
+      'parkingLocation',
+      'projectedCost',
+      'actualCost',
+      'purchasePdf',
+      'orderNotes',
       'orderValue',
       'orderLink',
-      'marketplace',
-      'venue',
-      'eventOrPerformerName',
-      'location',
-      'vendor',
-      'price',
-      'pdf',
-      'link',
       'tags',
     ],
     useAsTitle: 'orderNumber',
@@ -105,7 +103,6 @@ export const Orders: CollectionConfig = {
     {
       type: 'collapsible',
       label: 'Automation',
-      admin: {},
       fields: [
         {
           type: 'row',
