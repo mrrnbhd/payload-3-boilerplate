@@ -3,8 +3,8 @@ import csv from 'csvtojson'
 import { err, fromPromise, ok, ResultAsync } from 'neverthrow'
 import type { FieldHook, JsonArray } from 'payload'
 import * as R from 'remeda'
-import { generator } from 'ts-password-generator'
-import { names, uniqueNamesGenerator } from 'unique-names-generator'
+import { generator as passwordGenerator } from 'ts-password-generator'
+import { uniqueNamesGenerator as nameGenerator, names } from 'unique-names-generator'
 import type { Account } from '@/collections/orders/hooks/create-browser-job'
 
 class FileFindError extends Error {
@@ -41,9 +41,9 @@ const parseCsvToAccounts = (csvDataString: string): ResultAsync<JsonArray, CsvPa
 
   return fromPromise(parserPromise, (error) => new CsvParseError((error as Error).message)).map(
     R.map((account: Account) => {
-      const first = uniqueNamesGenerator({ dictionaries: [names] })
-      const last = uniqueNamesGenerator({ dictionaries: [names] })
-      const pass = generator({
+      const first = nameGenerator({ dictionaries: [names] })
+      const last = nameGenerator({ dictionaries: [names] })
+      const pass = passwordGenerator({
         haveNumbers: true,
         haveString: true,
         haveSymbols: true,
@@ -54,7 +54,7 @@ const parseCsvToAccounts = (csvDataString: string): ResultAsync<JsonArray, CsvPa
         first: account.first ?? first,
         last: account.last ?? last,
         pass: account.pass ?? pass,
-        status: 'available',
+        status: account.status ?? 'available',
       }
     })
   )
