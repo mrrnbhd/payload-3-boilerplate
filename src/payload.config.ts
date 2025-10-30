@@ -74,7 +74,13 @@ export default buildConfig({
   }),
   jobs: {
     tasks: taskConfigs,
-    workflows: [],
+    autoRun: [
+      {
+        cron: '* 0/5 * * * *',
+        limit: 5,
+        allQueues: true,
+      },
+    ],
     jobsCollectionOverrides: ({ defaultJobsCollection }) => {
       if (!defaultJobsCollection.admin) {
         defaultJobsCollection.admin = {}
