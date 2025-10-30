@@ -1,5 +1,5 @@
 {
-  "id": "8fb24eb1-4a38-4c6f-a8a3-cde1d29fd56b",
+  "id": "d093f264-cb0c-4594-a7ce-b8c468ae574c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -258,8 +258,12 @@
           "name": "users_folder_id_payload_folders_id_fk",
           "tableFrom": "users",
           "tableTo": "payload_folders",
-          "columnsFrom": ["folder_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "folder_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -456,8 +460,12 @@
           "name": "sessions_user_id_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -465,8 +473,12 @@
           "name": "sessions_impersonated_by_id_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": ["impersonated_by_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "impersonated_by_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -474,8 +486,12 @@
           "name": "sessions_folder_id_payload_folders_id_fk",
           "tableFrom": "sessions",
           "tableTo": "payload_folders",
-          "columnsFrom": ["folder_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "folder_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -711,8 +727,12 @@
           "name": "accounts_user_id_users_id_fk",
           "tableFrom": "accounts",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -720,8 +740,12 @@
           "name": "accounts_folder_id_payload_folders_id_fk",
           "tableFrom": "accounts",
           "tableTo": "payload_folders",
-          "columnsFrom": ["folder_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "folder_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -885,8 +909,12 @@
           "name": "verifications_folder_id_payload_folders_id_fk",
           "tableFrom": "verifications",
           "tableTo": "payload_folders",
-          "columnsFrom": ["folder_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "folder_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1030,8 +1058,12 @@
           "name": "passkeys_user_id_users_id_fk",
           "tableFrom": "passkeys",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1176,8 +1208,12 @@
           "name": "admin_invitations_folder_id_payload_folders_id_fk",
           "tableFrom": "admin_invitations",
           "tableTo": "payload_folders",
-          "columnsFrom": ["folder_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "folder_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1199,6 +1235,26 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
+        "fulfillment_status": {
+          "name": "fulfillment_status",
+          "type": "enum_orders_fulfillment_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'Pending'"
+        },
+        "order_value": {
+          "name": "order_value",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "order_link": {
+          "name": "order_link",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "order_number": {
           "name": "order_number",
           "type": "varchar",
@@ -1211,28 +1267,20 @@
           "primaryKey": false,
           "notNull": false
         },
-        "browser_view": {
-          "name": "browser_view",
+        "enable_browser_view": {
+          "name": "enable_browser_view",
           "type": "boolean",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "fulfillment_status": {
-          "name": "fulfillment_status",
-          "type": "enum_orders_fulfillment_status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'Pending'"
-        },
-        "order_link": {
-          "name": "order_link",
-          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
         "purchase_link": {
           "name": "purchase_link",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parking_location": {
+          "name": "parking_location",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -1249,38 +1297,14 @@
           "primaryKey": false,
           "notNull": false
         },
-        "order_value": {
-          "name": "order_value",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "event": {
-          "name": "event",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "venue": {
-          "name": "venue",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "location": {
-          "name": "location",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "pdf_id": {
-          "name": "pdf_id",
+        "purchase_pdf_id": {
+          "name": "purchase_pdf_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
-        "notes": {
-          "name": "notes",
+        "order_notes": {
+          "name": "order_notes",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -1321,11 +1345,11 @@
         }
       },
       "indexes": {
-        "orders_pdf_idx": {
-          "name": "orders_pdf_idx",
+        "orders_purchase_pdf_idx": {
+          "name": "orders_purchase_pdf_idx",
           "columns": [
             {
-              "expression": "pdf_id",
+              "expression": "purchase_pdf_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1413,12 +1437,16 @@
         }
       },
       "foreignKeys": {
-        "orders_pdf_id_files_id_fk": {
-          "name": "orders_pdf_id_files_id_fk",
+        "orders_purchase_pdf_id_files_id_fk": {
+          "name": "orders_purchase_pdf_id_files_id_fk",
           "tableFrom": "orders",
           "tableTo": "files",
-          "columnsFrom": ["pdf_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "purchase_pdf_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1426,8 +1454,12 @@
           "name": "orders_folder_id_payload_folders_id_fk",
           "tableFrom": "orders",
           "tableTo": "payload_folders",
-          "columnsFrom": ["folder_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "folder_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1540,8 +1572,12 @@
           "name": "orders_rels_parent_fk",
           "tableFrom": "orders_rels",
           "tableTo": "orders",
-          "columnsFrom": ["parent_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1549,8 +1585,12 @@
           "name": "orders_rels_tags_fk",
           "tableFrom": "orders_rels",
           "tableTo": "tags",
-          "columnsFrom": ["tags_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "tags_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1578,6 +1618,26 @@
           "primaryKey": false,
           "notNull": false
         },
+        "version_fulfillment_status": {
+          "name": "version_fulfillment_status",
+          "type": "enum__orders_v_version_fulfillment_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'Pending'"
+        },
+        "version_order_value": {
+          "name": "version_order_value",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_order_link": {
+          "name": "version_order_link",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "version_order_number": {
           "name": "version_order_number",
           "type": "varchar",
@@ -1590,28 +1650,20 @@
           "primaryKey": false,
           "notNull": false
         },
-        "version_browser_view": {
-          "name": "version_browser_view",
+        "version_enable_browser_view": {
+          "name": "version_enable_browser_view",
           "type": "boolean",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "version_fulfillment_status": {
-          "name": "version_fulfillment_status",
-          "type": "enum__orders_v_version_fulfillment_status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'Pending'"
-        },
-        "version_order_link": {
-          "name": "version_order_link",
-          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
         "version_purchase_link": {
           "name": "version_purchase_link",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_parking_location": {
+          "name": "version_parking_location",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -1628,38 +1680,14 @@
           "primaryKey": false,
           "notNull": false
         },
-        "version_order_value": {
-          "name": "version_order_value",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "version_event": {
-          "name": "version_event",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "version_venue": {
-          "name": "version_venue",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "version_location": {
-          "name": "version_location",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "version_pdf_id": {
-          "name": "version_pdf_id",
+        "version_purchase_pdf_id": {
+          "name": "version_purchase_pdf_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
-        "version_notes": {
-          "name": "version_notes",
+        "version_order_notes": {
+          "name": "version_order_notes",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -1739,11 +1767,11 @@
           "method": "btree",
           "with": {}
         },
-        "_orders_v_version_version_pdf_idx": {
-          "name": "_orders_v_version_version_pdf_idx",
+        "_orders_v_version_version_purchase_pdf_idx": {
+          "name": "_orders_v_version_version_purchase_pdf_idx",
           "columns": [
             {
-              "expression": "version_pdf_id",
+              "expression": "version_purchase_pdf_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1895,17 +1923,25 @@
           "name": "_orders_v_parent_id_orders_id_fk",
           "tableFrom": "_orders_v",
           "tableTo": "orders",
-          "columnsFrom": ["parent_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
-        "_orders_v_version_pdf_id_files_id_fk": {
-          "name": "_orders_v_version_pdf_id_files_id_fk",
+        "_orders_v_version_purchase_pdf_id_files_id_fk": {
+          "name": "_orders_v_version_purchase_pdf_id_files_id_fk",
           "tableFrom": "_orders_v",
           "tableTo": "files",
-          "columnsFrom": ["version_pdf_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "version_purchase_pdf_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1913,8 +1949,12 @@
           "name": "_orders_v_version_folder_id_payload_folders_id_fk",
           "tableFrom": "_orders_v",
           "tableTo": "payload_folders",
-          "columnsFrom": ["version_folder_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "version_folder_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2027,8 +2067,12 @@
           "name": "_orders_v_rels_parent_fk",
           "tableFrom": "_orders_v_rels",
           "tableTo": "_orders_v",
-          "columnsFrom": ["parent_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2036,8 +2080,12 @@
           "name": "_orders_v_rels_tags_fk",
           "tableFrom": "_orders_v_rels",
           "tableTo": "tags",
-          "columnsFrom": ["tags_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "tags_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2592,8 +2640,12 @@
           "name": "files_folder_id_payload_folders_id_fk",
           "tableFrom": "files",
           "tableTo": "payload_folders",
-          "columnsFrom": ["folder_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "folder_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2706,8 +2758,12 @@
           "name": "files_rels_parent_fk",
           "tableFrom": "files_rels",
           "tableTo": "files",
-          "columnsFrom": ["parent_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2715,8 +2771,12 @@
           "name": "files_rels_tags_fk",
           "tableFrom": "files_rels",
           "tableTo": "tags",
-          "columnsFrom": ["tags_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "tags_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2844,8 +2904,12 @@
           "name": "tags_folder_id_payload_folders_id_fk",
           "tableFrom": "tags",
           "tableTo": "payload_folders",
-          "columnsFrom": ["folder_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "folder_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3114,8 +3178,12 @@
           "name": "exports_texts_parent_fk",
           "tableFrom": "exports_texts",
           "tableTo": "exports",
-          "columnsFrom": ["parent_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3210,8 +3278,12 @@
           "name": "audit_log_user_id_users_id_fk",
           "tableFrom": "audit_log",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3332,8 +3404,12 @@
           "name": "payload_jobs_log_parent_id_fk",
           "tableFrom": "payload_jobs_log",
           "tableTo": "payload_jobs",
-          "columnsFrom": ["_parent_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3678,8 +3754,12 @@
           "name": "payload_folders_folder_id_payload_folders_id_fk",
           "tableFrom": "payload_folders",
           "tableTo": "payload_folders",
-          "columnsFrom": ["folder_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "folder_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -4130,8 +4210,12 @@
           "name": "payload_locked_documents_rels_parent_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "payload_locked_documents",
-          "columnsFrom": ["parent_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4139,8 +4223,12 @@
           "name": "payload_locked_documents_rels_users_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "users",
-          "columnsFrom": ["users_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "users_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4148,8 +4236,12 @@
           "name": "payload_locked_documents_rels_sessions_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "sessions",
-          "columnsFrom": ["sessions_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "sessions_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4157,8 +4249,12 @@
           "name": "payload_locked_documents_rels_accounts_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "accounts",
-          "columnsFrom": ["accounts_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "accounts_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4166,8 +4262,12 @@
           "name": "payload_locked_documents_rels_verifications_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "verifications",
-          "columnsFrom": ["verifications_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "verifications_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4175,8 +4275,12 @@
           "name": "payload_locked_documents_rels_passkeys_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "passkeys",
-          "columnsFrom": ["passkeys_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "passkeys_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4184,8 +4288,12 @@
           "name": "payload_locked_documents_rels_admin_invitations_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "admin_invitations",
-          "columnsFrom": ["admin_invitations_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "admin_invitations_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4193,8 +4301,12 @@
           "name": "payload_locked_documents_rels_orders_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "orders",
-          "columnsFrom": ["orders_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "orders_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4202,8 +4314,12 @@
           "name": "payload_locked_documents_rels_files_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "files",
-          "columnsFrom": ["files_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "files_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4211,8 +4327,12 @@
           "name": "payload_locked_documents_rels_tags_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "tags",
-          "columnsFrom": ["tags_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "tags_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4220,8 +4340,12 @@
           "name": "payload_locked_documents_rels_exports_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "exports",
-          "columnsFrom": ["exports_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "exports_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4229,8 +4353,12 @@
           "name": "payload_locked_documents_rels_audit_log_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "audit_log",
-          "columnsFrom": ["audit_log_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "audit_log_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4238,8 +4366,12 @@
           "name": "payload_locked_documents_rels_payload_jobs_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "payload_jobs",
-          "columnsFrom": ["payload_jobs_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "payload_jobs_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4247,8 +4379,12 @@
           "name": "payload_locked_documents_rels_payload_folders_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "payload_folders",
-          "columnsFrom": ["payload_folders_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "payload_folders_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4453,8 +4589,12 @@
           "name": "payload_preferences_rels_parent_fk",
           "tableFrom": "payload_preferences_rels",
           "tableTo": "payload_preferences",
-          "columnsFrom": ["parent_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4462,8 +4602,12 @@
           "name": "payload_preferences_rels_users_fk",
           "tableFrom": "payload_preferences_rels",
           "tableTo": "users",
-          "columnsFrom": ["users_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "users_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4780,8 +4924,12 @@
           "name": "payload_query_presets_rels_parent_fk",
           "tableFrom": "payload_query_presets_rels",
           "tableTo": "payload_query_presets",
-          "columnsFrom": ["parent_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4789,8 +4937,12 @@
           "name": "payload_query_presets_rels_users_fk",
           "tableFrom": "payload_query_presets_rels",
           "tableTo": "users",
-          "columnsFrom": ["users_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "users_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4812,6 +4964,46 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
+        "proxy_login": {
+          "name": "proxy_login",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "proxy_password": {
+          "name": "proxy_password",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "proxy_host": {
+          "name": "proxy_host",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "proxy_port": {
+          "name": "proxy_port",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 10000
+        },
+        "account_uploader_id": {
+          "name": "account_uploader_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "account_data": {
+          "name": "account_data",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -4825,100 +5017,12 @@
           "notNull": false
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.settings_rels": {
-      "name": "settings_rels",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "order": {
-          "name": "order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "parent_id": {
-          "name": "parent_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "path": {
-          "name": "path",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "files_id": {
-          "name": "files_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
       "indexes": {
-        "settings_rels_order_idx": {
-          "name": "settings_rels_order_idx",
+        "settings_account_uploader_idx": {
+          "name": "settings_account_uploader_idx",
           "columns": [
             {
-              "expression": "order",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "settings_rels_parent_idx": {
-          "name": "settings_rels_parent_idx",
-          "columns": [
-            {
-              "expression": "parent_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "settings_rels_path_idx": {
-          "name": "settings_rels_path_idx",
-          "columns": [
-            {
-              "expression": "path",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "settings_rels_files_id_idx": {
-          "name": "settings_rels_files_id_idx",
-          "columns": [
-            {
-              "expression": "files_id",
+              "expression": "account_uploader_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -4931,22 +5035,17 @@
         }
       },
       "foreignKeys": {
-        "settings_rels_parent_fk": {
-          "name": "settings_rels_parent_fk",
-          "tableFrom": "settings_rels",
-          "tableTo": "settings",
-          "columnsFrom": ["parent_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "settings_rels_files_fk": {
-          "name": "settings_rels_files_fk",
-          "tableFrom": "settings_rels",
+        "settings_account_uploader_id_files_id_fk": {
+          "name": "settings_account_uploader_id_files_id_fk",
+          "tableFrom": "settings",
           "tableTo": "files",
-          "columnsFrom": ["files_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
+          "columnsFrom": [
+            "account_uploader_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -4961,82 +5060,150 @@
     "public.enum_users_role": {
       "name": "enum_users_role",
       "schema": "public",
-      "values": ["admin", "user"]
+      "values": [
+        "admin",
+        "user"
+      ]
     },
     "public.enum_admin_invitations_role": {
       "name": "enum_admin_invitations_role",
       "schema": "public",
-      "values": ["admin", "user"]
+      "values": [
+        "admin",
+        "user"
+      ]
     },
     "public.enum_orders_fulfillment_status": {
       "name": "enum_orders_fulfillment_status",
       "schema": "public",
-      "values": ["Pending", "Queued", "Running", "Purchased", "Fulfilled", "Error"]
+      "values": [
+        "Pending",
+        "Queued",
+        "Running",
+        "Purchased",
+        "Fulfilled",
+        "Error"
+      ]
     },
     "public.enum_orders_status": {
       "name": "enum_orders_status",
       "schema": "public",
-      "values": ["draft", "published"]
+      "values": [
+        "draft",
+        "published"
+      ]
     },
     "public.enum__orders_v_version_fulfillment_status": {
       "name": "enum__orders_v_version_fulfillment_status",
       "schema": "public",
-      "values": ["Pending", "Queued", "Running", "Purchased", "Fulfilled", "Error"]
+      "values": [
+        "Pending",
+        "Queued",
+        "Running",
+        "Purchased",
+        "Fulfilled",
+        "Error"
+      ]
     },
     "public.enum__orders_v_version_status": {
       "name": "enum__orders_v_version_status",
       "schema": "public",
-      "values": ["draft", "published"]
+      "values": [
+        "draft",
+        "published"
+      ]
     },
     "public.enum_exports_format": {
       "name": "enum_exports_format",
       "schema": "public",
-      "values": ["csv", "json"]
+      "values": [
+        "csv",
+        "json"
+      ]
     },
     "public.enum_exports_sort_order": {
       "name": "enum_exports_sort_order",
       "schema": "public",
-      "values": ["asc", "desc"]
+      "values": [
+        "asc",
+        "desc"
+      ]
     },
     "public.enum_exports_drafts": {
       "name": "enum_exports_drafts",
       "schema": "public",
-      "values": ["yes", "no"]
+      "values": [
+        "yes",
+        "no"
+      ]
     },
     "public.enum_audit_log_type": {
       "name": "enum_audit_log_type",
       "schema": "public",
-      "values": ["info", "debug", "warning", "error", "audit", "security", "unknown"]
+      "values": [
+        "info",
+        "debug",
+        "warning",
+        "error",
+        "audit",
+        "security",
+        "unknown"
+      ]
     },
     "public.enum_payload_jobs_log_task_slug": {
       "name": "enum_payload_jobs_log_task_slug",
       "schema": "public",
-      "values": ["inline", "purchase-task", "fulfillment-task", "createCollectionExport"]
+      "values": [
+        "inline",
+        "purchase-task",
+        "fulfillment-task",
+        "createCollectionExport"
+      ]
     },
     "public.enum_payload_jobs_log_state": {
       "name": "enum_payload_jobs_log_state",
       "schema": "public",
-      "values": ["failed", "succeeded"]
+      "values": [
+        "failed",
+        "succeeded"
+      ]
     },
     "public.enum_payload_jobs_task_slug": {
       "name": "enum_payload_jobs_task_slug",
       "schema": "public",
-      "values": ["inline", "purchase-task", "fulfillment-task", "createCollectionExport"]
+      "values": [
+        "inline",
+        "purchase-task",
+        "fulfillment-task",
+        "createCollectionExport"
+      ]
     },
     "public.enum_payload_query_presets_access_read_constraint": {
       "name": "enum_payload_query_presets_access_read_constraint",
       "schema": "public",
-      "values": ["everyone", "onlyMe", "specificUsers"]
+      "values": [
+        "everyone",
+        "onlyMe",
+        "specificUsers"
+      ]
     },
     "public.enum_payload_query_presets_access_update_constraint": {
       "name": "enum_payload_query_presets_access_update_constraint",
       "schema": "public",
-      "values": ["everyone", "onlyMe", "specificUsers"]
+      "values": [
+        "everyone",
+        "onlyMe",
+        "specificUsers"
+      ]
     },
     "public.enum_payload_query_presets_access_delete_constraint": {
       "name": "enum_payload_query_presets_access_delete_constraint",
       "schema": "public",
-      "values": ["everyone", "onlyMe", "specificUsers"]
+      "values": [
+        "everyone",
+        "onlyMe",
+        "specificUsers"
+      ]
     },
     "public.enum_payload_query_presets_related_collection": {
       "name": "enum_payload_query_presets_related_collection",

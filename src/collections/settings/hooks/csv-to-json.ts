@@ -1,7 +1,10 @@
+import { randomInt } from 'node:crypto'
 import csv from 'csvtojson'
 import { err, fromPromise, ok, ResultAsync } from 'neverthrow'
 import type { FieldHook, JsonArray } from 'payload'
 import * as R from 'remeda'
+import { generator } from 'ts-password-generator'
+import { names, uniqueNamesGenerator } from 'unique-names-generator'
 
 class FileFindError extends Error {
   constructor(message: string) {
@@ -27,6 +30,7 @@ const parseCsvToAccounts = (csvDataString: string): ResultAsync<JsonArray, CsvPa
     delimiter: '/',
     checkType: true,
     colParser: {
+      email: 'string',
       card: 'number',
       cvc: 'number',
       zip: 'number',
@@ -35,10 +39,23 @@ const parseCsvToAccounts = (csvDataString: string): ResultAsync<JsonArray, CsvPa
   }).fromString(csvDataString)
 
   return fromPromise(parserPromise, (error) => new CsvParseError((error as Error).message)).map(
-    R.map((account: any) => ({
-      ...account,
-      status: 'available',
-    }))
+    R.map((account: any) => {
+      const first = uniqueNamesGenerator({ dictionaries: [names] })
+      const last = uniqueNamesGenerator({ dictionaries: [names] })
+      const pass = generator({
+        haveNumbers: true,
+        haveString: true,
+        haveSymbols: true,
+        charsQty: randomInt(12, 20),
+      })
+      return {
+        ...account,
+        first: account.first ?? first,
+        last: account.last ?? last,
+        pass: account.pass ?? pass,
+        status: 'available',
+      }
+    })
   )
 }
 
@@ -67,7 +84,6 @@ export const csvToJson: FieldHook = async ({ siblingData, req, value, previousVa
         return err(new FileFetchError(`Failed to fetch file: ${response.statusText}`))
       })
       .andThen(parseCsvToAccounts)
-
     processingResult.match(
       (accountData) => {
         siblingData.accountData = accountData
