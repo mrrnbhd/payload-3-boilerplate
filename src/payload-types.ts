@@ -1328,11 +1328,6 @@ export interface SettingsSelect<T extends boolean = true> {
  */
 export interface TaskPurchaseTask {
   input: {
-    orderNumber: string;
-    purchaseLink: string;
-    parkingLocation: string;
-    projectedCost: number;
-    proxySession: string;
     account: {
       first: string;
       last: string;

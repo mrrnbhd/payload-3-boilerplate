@@ -3,16 +3,16 @@ import type { PayloadRequest, TaskHandler, TaskHandlerResult } from 'payload'
 import puppeteer, { type Page } from 'puppeteer-core'
 import Steel from 'steel-sdk'
 import type { Account } from '@/collections/orders/hooks/create-browser-job'
-import type { VendorHostName } from '../vendors'
-import { handleAceParking } from './ace-parking'
-import { handleParkMobile } from './park-mobile'
-import { handleParkWhiz } from './park-whiz'
-import { handleSpotHero } from './spot-hero'
+import type { VendorHostName } from '../schemas'
+import { handleAceParking } from './vendors/ace-parking'
+import { handleParkMobile } from './vendors/park-mobile'
+import { handleParkWhiz } from './vendors/park-whiz'
+import { handleSpotHero } from './vendors/spot-hero'
 
 class BrowserError extends Error {
   constructor(message: string) {
     super(message)
-    this.name = 'PuppeteerError'
+    this.name = 'BrowserError'
   }
 }
 class AutomationError extends Error {
