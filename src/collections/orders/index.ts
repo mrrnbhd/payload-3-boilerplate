@@ -1,6 +1,7 @@
 import { getServerSideURL } from '@/lib/payload'
 
 import type { CollectionConfig } from 'payload'
+import { createBrowserJob } from './hooks/create-browser-job'
 
 export const Orders: CollectionConfig = {
   slug: 'orders',
@@ -35,6 +36,7 @@ export const Orders: CollectionConfig = {
       },
     },
   },
+  hooks: { beforeChange: [createBrowserJob] },
   versions: {
     drafts: {
       autosave: {
