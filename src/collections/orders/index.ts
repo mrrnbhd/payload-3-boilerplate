@@ -44,6 +44,52 @@ export const Orders: CollectionConfig = {
   },
   fields: [
     {
+      type: 'select',
+      name: 'fulfillmentStatus',
+      label: 'Fulfillment Status',
+      defaultValue: 'Pending',
+      options: ['Pending', 'Queued', 'Running', 'Purchased', 'Fulfilled', 'Error'],
+      admin: {
+        readOnly: true,
+        position: 'sidebar',
+      },
+    },
+    {
+      type: 'row',
+      admin: {
+        position: 'sidebar',
+      },
+      fields: [
+        {
+          type: 'number',
+          name: 'orderValue',
+          label: 'Order Value',
+          admin: {
+            readOnly: true,
+            width: '50%',
+          },
+        },
+        {
+          type: 'text',
+          name: 'orderLink',
+          label: 'Order Link',
+          admin: {
+            readOnly: true,
+            width: '50%',
+          },
+        },
+      ],
+    },
+    {
+      type: 'text',
+      name: 'orderNumber',
+      required: true,
+      admin: {
+        readOnly: true,
+        position: 'sidebar',
+      },
+    },
+    {
       type: 'relationship',
       name: 'tags',
       label: 'Order Tags',
@@ -57,121 +103,44 @@ export const Orders: CollectionConfig = {
     {
       type: 'collapsible',
       label: 'Automation',
-      admin: {
-        position: 'sidebar',
-      },
+      admin: {},
       fields: [
         {
-          type: 'checkbox',
-          name: 'purchaseAndFulfill',
-          label: 'Process Purchase and Fulfill Order?',
-          admin: {
-            description: 'Adds this order to the automated purchase and fulfillment queue.',
-            readOnly: false,
-            position: 'sidebar',
-          },
-        },
-        {
-          type: 'checkbox',
-          name: 'browserView',
-          label: 'Enable Web Browser Monitoring?',
-          admin: {
-            description: 'Displays the browser automation tool inside the preview panel.',
-            readOnly: false,
-            position: 'sidebar',
-          },
+          type: 'row',
+          fields: [
+            {
+              type: 'checkbox',
+              name: 'purchaseAndFulfill',
+              label: 'Purchase and Fulfill Order?',
+              admin: {
+                description: 'Adds this order to the automated purchase and fulfillment queue.',
+                readOnly: false,
+                width: '50%',
+              },
+            },
+            {
+              type: 'checkbox',
+              name: 'browserView',
+              label: 'Enable Browser Monitoring?',
+              admin: {
+                description: 'Displays the browser automation tool inside the preview panel.',
+                readOnly: false,
+                width: '50%',
+              },
+            },
+          ],
         },
       ],
     },
     {
       type: 'row',
       fields: [
-        {
-          type: 'select',
-          name: 'fulfillmentStatus',
-          label: 'Fulfillment Status',
-          defaultValue: 'Pending',
-          options: ['Pending', 'Queued', 'Running', 'Purchased', 'Fulfilled', 'Error'],
-          admin: {
-            width: '40%',
-            readOnly: true,
-          },
-        },
-        {
-          type: 'text',
-          name: 'orderNumber',
-          required: true,
-          admin: {
-            width: '60%',
-            readOnly: true,
-          },
-        },
-      ],
-    },
-    {
-      type: 'row',
-      fields: [
-        {
-          type: 'number',
-          name: 'value',
-          label: 'Order Value',
-          admin: {
-            width: '40%',
-            readOnly: true,
-          },
-        },
-        {
-          type: 'text',
-          name: 'orderLink',
-          label: 'Order Link',
-          admin: {
-            width: '60%',
-            readOnly: true,
-          },
-        },
-      ],
-    },
-    {
-      type: 'row',
-      fields: [
-        {
-          type: 'number',
-          name: 'price',
-          label: 'Purchase Price',
-          admin: {
-            width: '40%',
-            readOnly: false,
-          },
-        },
         {
           type: 'text',
           name: 'purchaseLink',
           label: 'Purchase Link',
           admin: {
-            width: '60%',
-            readOnly: false,
-          },
-        },
-      ],
-    },
-    {
-      type: 'row',
-      fields: [
-        {
-          type: 'text',
-          name: 'event',
-          label: 'Parking Event',
-          admin: {
-            width: '40%',
-            readOnly: false,
-          },
-        },
-        {
-          type: 'text',
-          name: 'venue',
-          label: 'Parking Venue',
-          admin: {
-            width: '30%',
+            width: '50%',
             readOnly: false,
           },
         },
@@ -180,7 +149,28 @@ export const Orders: CollectionConfig = {
           name: 'location',
           label: 'Parking Location',
           admin: {
-            width: '30%',
+            width: '50%',
+            readOnly: false,
+          },
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          type: 'number',
+          name: 'projectedCost',
+          admin: {
+            width: '50%',
+            readOnly: false,
+          },
+        },
+        {
+          type: 'number',
+          name: 'actualCost',
+          admin: {
+            width: '50%',
             readOnly: false,
           },
         },
@@ -193,6 +183,7 @@ export const Orders: CollectionConfig = {
       relationTo: 'files',
       admin: {
         readOnly: false,
+        width: '60%',
       },
     },
     {
@@ -202,6 +193,7 @@ export const Orders: CollectionConfig = {
       admin: {
         rows: 3,
         readOnly: false,
+        position: 'sidebar',
       },
     },
   ],

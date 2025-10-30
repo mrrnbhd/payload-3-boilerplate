@@ -16,11 +16,14 @@ export const createBrowserJob: CollectionBeforeChangeHook<Order> = async ({ data
               input: {
                 orderNumber: data.orderNumber ?? '',
                 purchaseLink: data.purchaseLink ?? '',
+                location: data.location ?? '',
+                projectedCost: data.projectedCost ?? '',
                 email: 'email@gmail.com',
                 password: '123456789',
                 cardCvcNumber: 1234,
                 cardExpirationDate: '11/22/22',
                 cardNumber: 123456789,
+                promoCode: '',
               },
             })
             .finally(() => {

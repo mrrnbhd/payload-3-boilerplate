@@ -8,6 +8,8 @@ export const purchaseHandler: TaskHandler<'purchase-task'> = async ({ input, req
   const {
     orderNumber,
     purchaseLink,
+    location,
+    projectedCost,
     email,
     password,
     cardNumber,

@@ -429,6 +429,10 @@ export interface AdminInvitation {
  */
 export interface Order {
   id: string;
+  fulfillmentStatus?: ('Pending' | 'Queued' | 'Running' | 'Purchased' | 'Fulfilled' | 'Error') | null;
+  orderValue?: number | null;
+  orderLink?: string | null;
+  orderNumber: string;
   tags?: (string | Tag)[] | null;
   /**
    * Adds this order to the automated purchase and fulfillment queue.
@@ -438,15 +442,10 @@ export interface Order {
    * Displays the browser automation tool inside the preview panel.
    */
   browserView?: boolean | null;
-  fulfillmentStatus?: ('Pending' | 'Queued' | 'Running' | 'Purchased' | 'Fulfilled' | 'Error') | null;
-  orderNumber: string;
-  value?: number | null;
-  orderLink?: string | null;
-  price?: number | null;
   purchaseLink?: string | null;
-  event?: string | null;
-  venue?: string | null;
   location?: string | null;
+  projectedCost?: number | null;
+  actualCost?: number | null;
   pdf?: (string | null) | File;
   notes?: string | null;
   folder?: (string | null) | FolderInterface;
@@ -1007,18 +1006,17 @@ export interface AdminInvitationsSelect<T extends boolean = true> {
  * via the `definition` "orders_select".
  */
 export interface OrdersSelect<T extends boolean = true> {
+  fulfillmentStatus?: T;
+  orderValue?: T;
+  orderLink?: T;
+  orderNumber?: T;
   tags?: T;
   purchaseAndFulfill?: T;
   browserView?: T;
-  fulfillmentStatus?: T;
-  orderNumber?: T;
-  value?: T;
-  orderLink?: T;
-  price?: T;
   purchaseLink?: T;
-  event?: T;
-  venue?: T;
   location?: T;
+  projectedCost?: T;
+  actualCost?: T;
   pdf?: T;
   notes?: T;
   folder?: T;
@@ -1316,6 +1314,8 @@ export interface TaskPurchaseTask {
   input: {
     orderNumber: string;
     purchaseLink: string;
+    location: string;
+    projectedCost: string;
     email: string;
     password: string;
     cardNumber: number;
