@@ -10,7 +10,7 @@ export const purchaseTask: TaskConfig<'purchase-task'> = {
       limit: 1,
       where: {
         fulfillmentStatus: {
-          equals: 'running',
+          equals: 'Running',
         },
       },
       data: {
@@ -24,7 +24,7 @@ export const purchaseTask: TaskConfig<'purchase-task'> = {
       limit: 1,
       where: {
         fulfillmentStatus: {
-          equals: 'running',
+          equals: 'Running',
         },
       },
       data: {
