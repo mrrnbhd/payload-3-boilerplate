@@ -1315,7 +1315,7 @@ export interface TaskPurchaseTask {
     orderNumber: string;
     purchaseLink: string;
     location: string;
-    projectedCost: string;
+    projectedCost: number;
     email: string;
     password: string;
     cardNumber: number;

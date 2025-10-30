@@ -21,7 +21,7 @@ export const purchaseTask: TaskConfig<'purchase-task'> = {
       required: true,
     },
     {
-      type: 'text',
+      type: 'number',
       name: 'projectedCost',
       required: true,
     },
