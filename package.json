@@ -57,7 +57,7 @@
     "html-react-parser": "^5.2.7",
     "neverthrow": "^8.2.0",
     "next": "15.5.4",
-    "payload": "3.61.1",
+    "payload": "^3.61.1",
     "payload-auditor": "^1.8.0",
     "payload-auth": "^1.6.4",
     "puppeteer-core": "^24.25.0",
