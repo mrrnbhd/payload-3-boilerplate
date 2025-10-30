@@ -77,7 +77,7 @@ export interface Config {
     files: File;
     tags: Tag;
     exports: Export;
-    'Audit-log': AuditLog;
+    logs: Log;
     'payload-jobs': PayloadJob;
     'payload-folders': FolderInterface;
     'payload-locked-documents': PayloadLockedDocument;
@@ -100,7 +100,7 @@ export interface Config {
         | 'orders'
         | 'files'
         | 'tags'
-        | 'Audit-log';
+        | 'logs';
     };
   };
   collectionsSelect: {
@@ -114,7 +114,7 @@ export interface Config {
     files: FilesSelect<false> | FilesSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
     exports: ExportsSelect<false> | ExportsSelect<true>;
-    'Audit-log': AuditLogSelect<false> | AuditLogSelect<true>;
+    logs: LogsSelect<false> | LogsSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -289,8 +289,8 @@ export interface FolderInterface {
           value: string | Tag;
         }
       | {
-          relationTo?: 'Audit-log';
-          value: string | AuditLog;
+          relationTo?: 'logs';
+          value: string | Log;
         }
     )[];
     hasNextPage?: boolean;
@@ -560,9 +560,9 @@ export interface File {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "Audit-log".
+ * via the `definition` "logs".
  */
-export interface AuditLog {
+export interface Log {
   id: string;
   operation: string;
   collection: string;
@@ -795,8 +795,8 @@ export interface PayloadLockedDocument {
         value: string | Export;
       } | null)
     | ({
-        relationTo: 'Audit-log';
-        value: string | AuditLog;
+        relationTo: 'logs';
+        value: string | Log;
       } | null)
     | ({
         relationTo: 'payload-jobs';
@@ -897,7 +897,7 @@ export interface PayloadQueryPreset {
     | 'orders'
     | 'files'
     | 'tags'
-    | 'Audit-log'
+    | 'logs'
     | 'payload-jobs';
   /**
    * This is a temporary field used to determine if updating the preset would remove the user's access to it. When `true`, this record will be deleted after running the preset's `validate` function.
@@ -1172,9 +1172,9 @@ export interface ExportsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "Audit-log_select".
+ * via the `definition` "logs_select".
  */
-export interface AuditLogSelect<T extends boolean = true> {
+export interface LogsSelect<T extends boolean = true> {
   operation?: T;
   collection?: T;
   documentId?: T;
