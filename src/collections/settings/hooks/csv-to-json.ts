@@ -5,6 +5,7 @@ import type { FieldHook, JsonArray } from 'payload'
 import * as R from 'remeda'
 import { generator } from 'ts-password-generator'
 import { names, uniqueNamesGenerator } from 'unique-names-generator'
+import type { Account } from '@/collections/orders/hooks/create-browser-job'
 
 class FileFindError extends Error {
   constructor(message: string) {
@@ -39,7 +40,7 @@ const parseCsvToAccounts = (csvDataString: string): ResultAsync<JsonArray, CsvPa
   }).fromString(csvDataString)
 
   return fromPromise(parserPromise, (error) => new CsvParseError((error as Error).message)).map(
-    R.map((account: any) => {
+    R.map((account: Account) => {
       const first = uniqueNamesGenerator({ dictionaries: [names] })
       const last = uniqueNamesGenerator({ dictionaries: [names] })
       const pass = generator({

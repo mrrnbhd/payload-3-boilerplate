@@ -1,4 +1,4 @@
-import type { Payload } from 'payload'
+import type { Data, Payload } from 'payload'
 import type { Setting as Settings } from '@/payload-types'
 
 export const updateAccountStatus = async (
@@ -10,7 +10,7 @@ export const updateAccountStatus = async (
     const settings = (await payload.findGlobal({
       slug: 'settings',
     })) as Settings
-    const accountData = settings.accountData as any[] | null
+    const accountData = settings.accountData as Data[] | null
     if (!accountData) return
 
     let accountUpdated = false
