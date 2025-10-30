@@ -7,6 +7,7 @@ export const purchaseSuccess: TaskCallbackFn = async (
   args: Pick<TaskCallbackArgs, 'req'>
 ): Promise<void> => {
   await args.req.payload.update({
+    overrideAccess: true,
     collection: 'orders',
     limit: 1,
     where: {

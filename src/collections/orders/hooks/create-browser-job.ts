@@ -64,6 +64,7 @@ export const createBrowserJob: CollectionBeforeChangeHook<Order> = async ({ data
   const jobResult = await ResultAsync.fromPromise(
     req.payload.findGlobal({
       slug: 'settings',
+      overrideAccess: true,
       select: {
         accountData: true,
         proxyLogin: true,

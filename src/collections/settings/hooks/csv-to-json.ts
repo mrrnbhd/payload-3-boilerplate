@@ -64,6 +64,7 @@ export const csvToJson: FieldHook = async ({ siblingData, req, value, previousVa
   if (value && value !== previousValue) {
     const processingResult = await ResultAsync.fromPromise(
       req.payload.findByID({
+        overrideAccess: true,
         collection: 'files',
         id: value,
       }),
