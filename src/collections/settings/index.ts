@@ -68,7 +68,7 @@ export const Settings: GlobalConfig = {
           hasMany: false,
           admin: {
             description:
-              'Upload a CSV of accounts to be used for browser automation, will overwrite any pre-existing list.',
+              'Upload a CSV of accounts to be used for browser automation, will overwrite any pre-existing account data.',
           },
           hooks: {
             beforeChange: [csvToJson],
