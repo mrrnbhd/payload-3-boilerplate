@@ -1292,14 +1292,23 @@ export interface PayloadQueryPresetsSelect<T extends boolean = true> {
  */
 export interface Setting {
   id: string;
-  proxyLogin?: string | null;
-  proxyPassword?: string | null;
-  proxyHost?: string | null;
-  proxyPort?: string | null;
+  proxyLogin: string;
+  proxyPassword: string;
+  proxyHost: string;
+  proxyPort: number;
   /**
    * Upload a CSV of accounts to be used for browser automation, will overwrite any pre-existing list.
    */
-  accounts?: (string | null) | File;
+  accountUploader: string | File;
+  accountData:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1312,7 +1321,8 @@ export interface SettingsSelect<T extends boolean = true> {
   proxyPassword?: T;
   proxyHost?: T;
   proxyPort?: T;
-  accounts?: T;
+  accountUploader?: T;
+  accountData?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
