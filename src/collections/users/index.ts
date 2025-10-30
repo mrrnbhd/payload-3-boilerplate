@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { isAdmin } from '@/access/admin'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -6,6 +7,12 @@ export const Users: CollectionConfig = {
   enableQueryPresets: true,
   trash: true,
   folders: true,
+  access: {
+    read: isAdmin,
+    update: isAdmin,
+    create: isAdmin,
+    delete: isAdmin,
+  },
   labels: {
     singular: 'User',
     plural: 'Users',

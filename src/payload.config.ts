@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
+import { isAdmin } from './access/admin'
 import { Files } from './collections/files'
 import { Orders } from './collections/orders'
 import { Settings } from './collections/settings'
@@ -91,6 +92,12 @@ export default buildConfig({
       defaultJobsCollection.labels = {
         singular: 'Job',
         plural: 'Jobs',
+      }
+      defaultJobsCollection.access = {
+        read: isAdmin,
+        update: isAdmin,
+        create: isAdmin,
+        delete: isAdmin,
       }
       return defaultJobsCollection
     },

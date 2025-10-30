@@ -4,6 +4,7 @@ import { passkey } from 'better-auth/plugins/passkey'
 import { emailHarmony, phoneHarmony } from 'better-auth-harmony'
 import { getPayload } from 'payload'
 import type { BetterAuthOptions, BetterAuthPluginOptions } from 'payload-auth/better-auth'
+import { isAdmin } from '@/access/admin'
 import payloadConfig from '@/payload.config'
 import {
   sendAdminInviteEmail,
@@ -136,6 +137,7 @@ export const betterAuthPluginOptions: BetterAuthPluginOptions = {
   disableDefaultPayloadAuth: true,
   hidePluginCollections: true,
   collectionAdminGroup: 'Access',
+  requireAdminInviteForSignUp: true,
   users: {
     slug: 'users',
     hidden: false,
@@ -156,6 +158,12 @@ export const betterAuthPluginOptions: BetterAuthPluginOptions = {
         enableQueryPresets: true,
         folders: true,
         trash: true,
+        access: {
+          read: isAdmin,
+          update: isAdmin,
+          create: isAdmin,
+          delete: isAdmin,
+        },
       }
     },
   },
@@ -168,6 +176,12 @@ export const betterAuthPluginOptions: BetterAuthPluginOptions = {
         enableQueryPresets: true,
         folders: true,
         trash: true,
+        access: {
+          read: isAdmin,
+          update: isAdmin,
+          create: isAdmin,
+          delete: isAdmin,
+        },
       }
     },
   },
@@ -181,6 +195,12 @@ export const betterAuthPluginOptions: BetterAuthPluginOptions = {
         enableQueryPresets: true,
         folders: true,
         trash: true,
+        access: {
+          read: isAdmin,
+          update: isAdmin,
+          create: isAdmin,
+          delete: isAdmin,
+        },
       }
     },
   },
@@ -202,6 +222,12 @@ export const betterAuthPluginOptions: BetterAuthPluginOptions = {
         enableQueryPresets: true,
         folders: true,
         trash: true,
+        access: {
+          read: isAdmin,
+          update: isAdmin,
+          create: isAdmin,
+          delete: isAdmin,
+        },
       }
     },
   },

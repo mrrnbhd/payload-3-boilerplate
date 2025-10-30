@@ -4,6 +4,7 @@ import { importExportPlugin } from '@payloadcms/plugin-import-export'
 import type { Plugin } from 'payload'
 import { auditorPlugin } from 'payload-auditor'
 import { betterAuthPlugin } from 'payload-auth/better-auth'
+import { isAdmin } from '@/access/admin'
 import { s3StoragePluginPrivate } from './s3-storage-plugin'
 
 export const plugins: Plugin[] = [
@@ -19,6 +20,12 @@ export const plugins: Plugin[] = [
         const prevConf = defaults
         return {
           ...prevConf,
+          access: {
+            read: isAdmin,
+            update: isAdmin,
+            create: isAdmin,
+            delete: isAdmin,
+          },
           admin: {
             group: 'Operation',
           },

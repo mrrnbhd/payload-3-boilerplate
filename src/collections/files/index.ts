@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { authenticated } from '@/access/authenticated'
 
 export const Files: CollectionConfig = {
   slug: 'files',
@@ -10,7 +11,8 @@ export const Files: CollectionConfig = {
     plural: 'Files',
   },
   access: {
-    read: () => true,
+    update: authenticated,
+    read: authenticated,
   },
   admin: {
     group: 'Operation',

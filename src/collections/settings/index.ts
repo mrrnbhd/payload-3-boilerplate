@@ -1,9 +1,14 @@
 import type { GlobalConfig } from 'payload'
+import { isAdmin } from '@/access/admin'
 import { csvToJson } from './hooks/csv-to-json'
 import { accountDataSchema as jsonSchema } from './schemas/account-data'
 
 export const Settings: GlobalConfig = {
   slug: 'settings',
+  access: {
+    update: isAdmin,
+    read: isAdmin,
+  },
   admin: {
     group: 'Operation',
   },

@@ -1,6 +1,7 @@
 import { getServerSideURL } from '@/lib/payload'
 
 import type { CollectionConfig } from 'payload'
+import { authenticated } from '@/access/authenticated'
 import { createBrowserJob } from './hooks/create-browser-job'
 
 export const Orders: CollectionConfig = {
@@ -8,6 +9,10 @@ export const Orders: CollectionConfig = {
   enableQueryPresets: true,
   trash: true,
   folders: true,
+  access: {
+    update: authenticated,
+    read: authenticated,
+  },
   admin: {
     defaultColumns: [
       'orderNumber',

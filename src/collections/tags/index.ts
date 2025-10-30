@@ -1,10 +1,15 @@
 import type { CollectionConfig } from 'payload'
+import { authenticated } from '@/access/authenticated'
 
 export const Tags: CollectionConfig = {
   slug: 'tags',
   enableQueryPresets: true,
   trash: true,
   folders: true,
+  access: {
+    update: authenticated,
+    read: authenticated,
+  },
   admin: {
     group: 'Operation',
   },
