@@ -1,4 +1,4 @@
-export const accountDataSchema: any = {
+export const accountDataSchema = {
   uri: 'a://b/account-schema.json',
   fileMatch: ['a://b/account-schema.json'],
   schema: {
