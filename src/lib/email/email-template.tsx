@@ -1,11 +1,9 @@
-// import parse from "html-react-parser";
-
 import type { ReactNode } from 'react'
 
 import type { LayoutClassNames } from './components/layout'
 import Layout from './components/layout'
 
-export interface TicketerTemplateProps {
+interface TicketerTemplateProps {
   heading: string
   subtitle?: string
   content: ReactNode
@@ -41,4 +39,3 @@ export const TicketerTemplate = ({
   )
 }
 
-export default TicketerTemplate

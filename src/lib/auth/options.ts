@@ -16,7 +16,7 @@ import {
 
 const isDev = process.env.NODE_ENV === 'development'
 
-export const betterAuthPlugins = [
+const betterAuthPlugins = [
   username(),
   emailHarmony(),
   phoneHarmony({
@@ -45,7 +45,7 @@ export const betterAuthPlugins = [
 
 export type BetterAuthPlugins = typeof betterAuthPlugins
 
-export const betterAuthOptions: BetterAuthOptions = {
+const betterAuthOptions: BetterAuthOptions = {
   appName: 'Ticketer',
   baseURL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
   trustedOrigins: [process.env.NEXT_PUBLIC_BETTER_AUTH_URL],

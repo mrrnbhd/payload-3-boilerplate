@@ -29,9 +29,9 @@ export const Orders: CollectionConfig = {
     livePreview: {
       url: ({ data }) => {
         if (data.browserView === true) {
-          return 'https://ticketer-browser.up.railway.app/ui'
+          return `https://${process.env.STEEL_URL}/ui`
         } else {
-          return `${getServerSideURL()}/orders`
+          return `${getServerSideURL()}/admin/orders`
         }
       },
     },

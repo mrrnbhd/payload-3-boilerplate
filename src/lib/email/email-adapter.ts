@@ -16,7 +16,6 @@ export function getEmailAdapter() {
           user: 'test',
           pass: 'test',
         },
-        // Disable TLS for local development
         tls: {
           rejectUnauthorized: false,
         },
@@ -24,7 +23,6 @@ export function getEmailAdapter() {
     })
   }
 
-  // Use Resend for production
   return resendAdapter({
     defaultFromAddress: 'mail@recursive.blue',
     defaultFromName: 'Ticketer',
