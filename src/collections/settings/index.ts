@@ -10,10 +10,21 @@ export const Settings: GlobalConfig = {
   },
   fields: [
     {
+      type: 'text',
+      name: 'proxyServer',
+      admin: {
+        placeholder: 'http://username:password@proxy.example.com:8080',
+      },
+    },
+    {
       type: 'upload',
       relationTo: 'files',
-      name: 'browserProfiles',
-      hasMany: true,
+      name: 'accounts',
+      hasMany: false,
+      admin: {
+        description:
+          'Upload a CSV of accounts to be used for browser automation, will overwrite any pre-existing list.',
+      },
     },
   ],
 }

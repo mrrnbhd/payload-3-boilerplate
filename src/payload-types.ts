@@ -1292,7 +1292,11 @@ export interface PayloadQueryPresetsSelect<T extends boolean = true> {
  */
 export interface Setting {
   id: string;
-  browserProfiles?: (string | File)[] | null;
+  proxyServer?: string | null;
+  /**
+   * Upload a CSV of accounts to be used for browser automation, will overwrite any pre-existing list.
+   */
+  accounts?: (string | null) | File;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1301,7 +1305,8 @@ export interface Setting {
  * via the `definition` "settings_select".
  */
 export interface SettingsSelect<T extends boolean = true> {
-  browserProfiles?: T;
+  proxyServer?: T;
+  accounts?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
