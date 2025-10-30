@@ -44,16 +44,16 @@ export const Settings: GlobalConfig = {
                 width: '75%',
               },
             },
+            {
+              type: 'number',
+              name: 'proxyPort',
+              defaultValue: 10000,
+              required: true,
+              admin: {
+                width: '25%',
+              },
+            },
           ],
-        },
-        {
-          type: 'number',
-          name: 'proxyPort',
-          defaultValue: 10000,
-          required: true,
-          admin: {
-            width: '25%',
-          },
         },
       ],
     },
