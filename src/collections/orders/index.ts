@@ -85,7 +85,7 @@ export const Orders: CollectionConfig = {
       name: 'orderNumber',
       required: true,
       admin: {
-        readOnly: true,
+        readOnly: false,
         position: 'sidebar',
       },
     },
