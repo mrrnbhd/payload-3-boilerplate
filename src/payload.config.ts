@@ -5,9 +5,9 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { Files } from './collections/files'
 import { Orders } from './collections/orders'
+import { Settings } from './collections/settings'
 import { Tags } from './collections/tags'
 import { Users } from './collections/users'
-import { Settings } from './globals/settings'
 import { getEmailAdapter } from './lib/email/email-adapter'
 import { getServerSideURL } from './lib/payload'
 import { plugins } from './plugins'
@@ -47,10 +47,10 @@ export default buildConfig({
     components: {
       graphics: {
         Icon: {
-          path: '@/components/payload/admin-icon.tsx',
+          path: '@/components/admin-icon.tsx',
         },
         Logo: {
-          path: '@/components/payload/admin-logo.tsx',
+          path: '@/components/admin-logo.tsx',
         },
       },
     },

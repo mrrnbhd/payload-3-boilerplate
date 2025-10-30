@@ -1,25 +1,24 @@
 import type { TaskHandler, TaskHandlerResult } from 'payload'
 import puppeteer from 'puppeteer-core'
 import Steel from 'steel-sdk'
-import { names, uniqueNamesGenerator } from 'unique-names-generator'
 import type { VendorHostName } from './vendors'
-
 export const purchaseHandler: TaskHandler<'purchase-task'> = async ({ input, req }) => {
   const {
     orderNumber,
     purchaseLink,
-    location,
+    parkingLocation,
     projectedCost,
-    email,
-    password,
+    promoCode,
+    proxySession,
+    accountFirstName,
+    accountLastName,
+    accountEmail,
+    accountPassword,
     cardNumber,
     cardExpirationDate,
     cardCvcNumber,
   } = input
 
-  const hostname = new URL(purchaseLink).hostname as VendorHostName
-
-  const accountName = uniqueNamesGenerator({ dictionaries: [names], length: 2 })
   const client = new Steel({
     steelAPIKey: process.env.STEEL_API_KEY,
   })
@@ -33,18 +32,21 @@ export const purchaseHandler: TaskHandler<'purchase-task'> = async ({ input, req
       browserWSEndpoint: `wss://ticketer-browser.up.railway.app?apiKey=${process.env.STEEL_API_KEY}&sessionId=${session.id}`,
     })
 
-    const page = await browser.newPage()
+    const hostname = new URL(purchaseLink).hostname as VendorHostName
+
     console.log(`Running purchase automation for ${hostname}`)
+
+    const page = await browser.newPage()
 
     switch (hostname) {
       case 'parkwhiz.com':
         await page.goto('https://www.parkwhiz.com/account/signup/', {
           waitUntil: 'networkidle0',
         })
-        await page.locator('#firstName').fill(accountName[0])
-        await page.locator('#lastName').fill(accountName[1])
-        await page.locator('#email').fill(email)
-        await page.locator('#password').fill(password)
+        await page.locator('#firstName').fill(accountFirstName)
+        await page.locator('#lastName').fill(accountLastName)
+        await page.locator('#email').fill(accountEmail)
+        await page.locator('#password').fill(accountPassword)
         await page.screenshot()
         await page.locator('div ::-p-text(SIGN UP)').click()
         await page.goto(purchaseLink, {

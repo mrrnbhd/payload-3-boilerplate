@@ -45,7 +45,7 @@ export const purchaseTask: TaskConfig<'purchase-task'> = {
     },
     {
       type: 'text',
-      name: 'location',
+      name: 'parkingLocation',
       required: true,
     },
     {
@@ -54,13 +54,28 @@ export const purchaseTask: TaskConfig<'purchase-task'> = {
       required: true,
     },
     {
-      type: 'email',
-      name: 'email',
+      type: 'text',
+      name: 'promoCode',
+      required: false,
+    },
+    {
+      type: 'text',
+      name: 'accountFirstName',
       required: true,
     },
     {
       type: 'text',
-      name: 'password',
+      name: 'accountLastName',
+      required: true,
+    },
+    {
+      type: 'email',
+      name: 'accountEmail',
+      required: true,
+    },
+    {
+      type: 'text',
+      name: 'accountPassword',
       required: true,
     },
     {
@@ -77,11 +92,32 @@ export const purchaseTask: TaskConfig<'purchase-task'> = {
       type: 'date',
       name: 'cardExpirationDate',
       required: true,
+      admin: {},
+    },
+    {
+      type: 'number',
+      name: 'billingZip',
+      required: true,
     },
     {
       type: 'text',
-      name: 'promoCode',
-      required: false,
+      name: 'proxySession',
+      required: true,
+    },
+  ],
+  outputSchema: [
+    {
+      type: 'number',
+      name: 'purchasePrice',
+    },
+    {
+      type: 'upload',
+      name: 'purchasePdf',
+      relationTo: 'files',
+    },
+    {
+      type: 'textarea',
+      name: 'orderNotes',
     },
   ],
 }

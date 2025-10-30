@@ -441,13 +441,13 @@ export interface Order {
   /**
    * Displays the browser automation tool inside the preview panel.
    */
-  browserView?: boolean | null;
-  purchaseLink?: string | null;
-  location?: string | null;
+  enableBrowserView?: boolean | null;
+  purchaseLink: string;
+  parkingLocation?: string | null;
   projectedCost?: number | null;
   actualCost?: number | null;
-  pdf?: (string | null) | File;
-  notes?: string | null;
+  purchasePdf?: (string | null) | File;
+  orderNotes?: string | null;
   folder?: (string | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -1012,13 +1012,13 @@ export interface OrdersSelect<T extends boolean = true> {
   orderNumber?: T;
   tags?: T;
   purchaseAndFulfill?: T;
-  browserView?: T;
+  enableBrowserView?: T;
   purchaseLink?: T;
-  location?: T;
+  parkingLocation?: T;
   projectedCost?: T;
   actualCost?: T;
-  pdf?: T;
-  notes?: T;
+  purchasePdf?: T;
+  orderNotes?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1292,7 +1292,10 @@ export interface PayloadQueryPresetsSelect<T extends boolean = true> {
  */
 export interface Setting {
   id: string;
-  proxyServer?: string | null;
+  proxyLogin?: string | null;
+  proxyPassword?: string | null;
+  proxyHost?: string | null;
+  proxyPort?: string | null;
   /**
    * Upload a CSV of accounts to be used for browser automation, will overwrite any pre-existing list.
    */
@@ -1305,7 +1308,10 @@ export interface Setting {
  * via the `definition` "settings_select".
  */
 export interface SettingsSelect<T extends boolean = true> {
-  proxyServer?: T;
+  proxyLogin?: T;
+  proxyPassword?: T;
+  proxyHost?: T;
+  proxyPort?: T;
   accounts?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1319,16 +1325,24 @@ export interface TaskPurchaseTask {
   input: {
     orderNumber: string;
     purchaseLink: string;
-    location: string;
+    parkingLocation: string;
     projectedCost: number;
-    email: string;
-    password: string;
+    promoCode?: string | null;
+    accountFirstName: string;
+    accountLastName: string;
+    accountEmail: string;
+    accountPassword: string;
     cardNumber: number;
     cardCvcNumber: number;
     cardExpirationDate: string;
-    promoCode?: string | null;
+    billingZip: number;
+    proxySession: string;
   };
-  output?: unknown;
+  output: {
+    purchasePrice?: number | null;
+    purchasePdf?: (string | null) | File;
+    orderNotes?: string | null;
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

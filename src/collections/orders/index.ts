@@ -28,7 +28,7 @@ export const Orders: CollectionConfig = {
     group: 'Operation',
     livePreview: {
       url: ({ data }) => {
-        if (data.browserView === true) {
+        if (data.enableBrowserView === true) {
           return `https://${process.env.STEEL_URL}/ui`
         } else {
           return `${getServerSideURL()}/admin/orders`
@@ -122,7 +122,7 @@ export const Orders: CollectionConfig = {
             },
             {
               type: 'checkbox',
-              name: 'browserView',
+              name: 'enableBrowserView',
               label: 'Enable Browser Monitoring?',
               admin: {
                 description: 'Displays the browser automation tool inside the preview panel.',
@@ -141,6 +141,7 @@ export const Orders: CollectionConfig = {
           type: 'text',
           name: 'purchaseLink',
           label: 'Purchase Link',
+          required: true,
           admin: {
             width: '50%',
             readOnly: false,
@@ -148,7 +149,7 @@ export const Orders: CollectionConfig = {
         },
         {
           type: 'text',
-          name: 'location',
+          name: 'parkingLocation',
           label: 'Parking Location',
           admin: {
             width: '50%',
@@ -180,7 +181,7 @@ export const Orders: CollectionConfig = {
     },
     {
       type: 'upload',
-      name: 'pdf',
+      name: 'purchasePdf',
       label: 'Purchase PDF',
       relationTo: 'files',
       admin: {
@@ -190,7 +191,7 @@ export const Orders: CollectionConfig = {
     },
     {
       type: 'textarea',
-      name: 'notes',
+      name: 'orderNotes',
       label: 'Order Notes',
       admin: {
         rows: 3,

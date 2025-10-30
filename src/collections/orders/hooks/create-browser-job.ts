@@ -1,9 +1,17 @@
+import { randomInt } from 'crypto'
 import type { CollectionBeforeChangeHook } from 'payload'
+import { generator as passwordGenerator } from 'ts-password-generator'
+import { uniqueNamesGenerator as nameGenerator, names, starWars } from 'unique-names-generator'
 import type { Order } from '@/payload-types'
 
 export const createBrowserJob: CollectionBeforeChangeHook<Order> = async ({ data, req }) => {
   if (
     data.purchaseAndFulfill &&
+    data.purchaseLink &&
+    data.orderNumber &&
+    data.parkingLocation &&
+    data.projectedCost &&
+    data.parkingLocation &&
     data._status !== 'draft' &&
     ['Pending', 'Purchased'].includes(data.fulfillmentStatus ?? '')
   )
@@ -14,15 +22,24 @@ export const createBrowserJob: CollectionBeforeChangeHook<Order> = async ({ data
             .queue({
               task: 'purchase-task',
               input: {
-                orderNumber: data.orderNumber ?? '',
-                purchaseLink: data.purchaseLink ?? '',
-                location: data.location ?? '',
-                projectedCost: data.projectedCost ?? 0,
-                email: 'email@gmail.com',
-                password: '123456789',
-                cardCvcNumber: 1234,
+                orderNumber: data.orderNumber,
+                purchaseLink: data.purchaseLink,
+                parkingLocation: data.parkingLocation,
+                accountEmail: `${nameGenerator({ dictionaries: [names, starWars], length: randomInt(10, 15) })}`,
+                accountFirstName: nameGenerator({ dictionaries: [names] }),
+                accountLastName: nameGenerator({ dictionaries: [names] }),
+                accountPassword: passwordGenerator({
+                  haveString: true,
+                  haveNumbers: true,
+                  haveSymbols: true,
+                  charsQty: randomInt(12, 25),
+                }),
+                billingZip: 0,
+                cardCvcNumber: 0,
                 cardExpirationDate: '11/22/22',
-                cardNumber: 123456789,
+                cardNumber: 1234,
+                projectedCost: 22,
+                proxySession: '',
               },
             })
             .finally(() => {
@@ -34,10 +51,10 @@ export const createBrowserJob: CollectionBeforeChangeHook<Order> = async ({ data
             .queue({
               task: 'fulfillment-task',
               input: {
-                orderNumber: '',
-                purchasePrice: 1234,
-                purchasePdf: '',
                 orderNotes: '',
+                orderNumber: '',
+                purchasePdf: '',
+                purchasePrice: 1234,
               },
             })
             .finally(() => {
