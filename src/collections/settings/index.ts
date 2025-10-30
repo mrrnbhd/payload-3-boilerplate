@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 import { csvToJson } from './hooks/csv-to-json'
+import { accountDataSchema as jsonSchema } from './schemas/account-data'
 
 export const Settings: GlobalConfig = {
   slug: 'settings',
@@ -41,7 +42,7 @@ export const Settings: GlobalConfig = {
               defaultValue: '',
               required: true,
               admin: {
-                width: '75%',
+                width: '70%',
               },
             },
             {
@@ -50,7 +51,7 @@ export const Settings: GlobalConfig = {
               defaultValue: 10000,
               required: true,
               admin: {
-                width: '25%',
+                width: '30%',
               },
             },
           ],
@@ -62,6 +63,16 @@ export const Settings: GlobalConfig = {
       label: 'Account Pool',
       fields: [
         {
+          type: 'json',
+          name: 'accountData',
+          admin: {
+            hidden: false,
+            readOnly: false,
+            maxHeight: 500,
+          },
+          jsonSchema,
+        },
+        {
           type: 'upload',
           relationTo: 'files',
           name: 'accountUploader',
@@ -72,40 +83,6 @@ export const Settings: GlobalConfig = {
           },
           hooks: {
             beforeChange: [csvToJson],
-          },
-        },
-        {
-          type: 'json',
-          name: 'accountData',
-          admin: {
-            hidden: false,
-            readOnly: false,
-            maxHeight: 500,
-          },
-          jsonSchema: {
-            uri: 'a://b/account-schema.json',
-            fileMatch: ['a://b/account-schema.json'],
-            schema: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  status: {
-                    type: 'string',
-                    enum: ['available', 'in-use', 'error', 'used'],
-                  },
-                },
-                first: { type: 'string' },
-                last: { type: 'string' },
-                pass: { type: 'string' },
-                email: { type: 'string' },
-                card: { type: 'number' },
-                exp: { type: 'string' },
-                cvc: { type: 'number' },
-                zip: { type: 'number' },
-                required: ['email', 'card', 'exp', 'cvc', 'zip', 'status'],
-              },
-            },
           },
         },
       ],
