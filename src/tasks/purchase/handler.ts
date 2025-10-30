@@ -1,23 +1,68 @@
 import type { TaskHandler, TaskHandlerResult } from 'payload'
+import puppeteer from 'puppeteer-core'
 import Steel from 'steel-sdk'
+import { names, uniqueNamesGenerator } from 'unique-names-generator'
+import type { VendorHostName } from './vendors'
 
-const STEEL_API_KEY = process.env.STEEL_API_KEY
-const STEEL_URL = process.env.STEEL_URL
+export const purchaseHandler: TaskHandler<'purchase-task'> = async ({ input, req }) => {
+  const {
+    orderNumber,
+    purchaseLink,
+    email,
+    password,
+    cardNumber,
+    cardExpirationDate,
+    cardCvcNumber,
+  } = input
 
-const client: Steel = new Steel({
-  steelAPIKey: STEEL_API_KEY,
-  baseURL: `https://${STEEL_URL}`,
-})
+  const hostname = new URL(purchaseLink).hostname as VendorHostName
 
-export const purchaseHandler: TaskHandler<'purchase-task'> = async ({ input }) => {
+  const accountName = uniqueNamesGenerator({ dictionaries: [names], length: 2 })
+  const client = new Steel({
+    steelAPIKey: process.env.STEEL_API_KEY,
+  })
+
+  const session = await client.sessions.create()
+  console.log('Session created:', session.id)
+  console.log(`View live session at: ${session.sessionViewerUrl}`)
+
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: `wss://ticketer-browser.up.railway.app?apiKey=${process.env.STEEL_API_KEY}&sessionId=${session.id}`,
+  })
+
+  const page = await browser.newPage()
+
+  switch (hostname) {
+    case 'parkwhiz.com':
+      await page.goto('https://www.parkwhiz.com/account/signup/', {
+        waitUntil: 'networkidle0',
+      })
+      await page.locator('#firstName').fill(accountName[0])
+      await page.locator('#lastName').fill(accountName[1])
+      await page.locator('#email').fill(email)
+      await page.locator('#password').fill(password)
+      await page.screenshot()
+      await page.locator('div ::-p-text(SIGN UP)').click()
+      await page.goto(purchaseLink, {
+        waitUntil: 'networkidle0',
+      })
+      await page.locator('div ::-p-text(BOOK NOW)').click()
+      break
+    case 'spothero.com':
+      break
+    case 'app.parkmobile.io':
+      break
+    case 'space.aceparking.com':
+      break
+  }
+
+  await client.sessions.release(session.id)
+  console.log('Session released')
+
   const purchaseResult: TaskHandlerResult<'purchase-task'> = {
-    output: {
-      orderNotes: '',
-      orderNumber: '',
-      purchasePdf: '',
-      purchasePrice: 2,
-    },
+    output: {},
     state: 'succeeded',
   }
+
   return purchaseResult
 }

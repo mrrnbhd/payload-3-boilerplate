@@ -8,50 +8,42 @@ export const purchaseTask: TaskConfig<'purchase-task'> = {
     {
       type: 'text',
       name: 'orderNumber',
+      required: true,
     },
     {
       type: 'text',
       name: 'purchaseLink',
+      required: true,
     },
     {
       type: 'email',
       name: 'email',
+      required: true,
     },
     {
-      type: 'email',
+      type: 'text',
       name: 'password',
+      required: true,
     },
     {
       type: 'number',
       name: 'cardNumber',
+      required: true,
     },
     {
       type: 'number',
       name: 'cardCvcNumber',
+      required: true,
     },
     {
       type: 'date',
       name: 'cardExpirationDate',
+      required: true,
     },
-  ],
-  outputSchema: [
     {
       type: 'text',
-      name: 'orderNumber',
-    },
-    {
-      type: 'number',
-      name: 'purchasePrice',
-    },
-    {
-      type: 'upload',
-      name: 'purchasePdf',
-      relationTo: 'files',
-      displayPreview: true,
-    },
-    {
-      type: 'textarea',
-      name: 'orderNotes',
+      name: 'promoCode',
+      required: false,
     },
   ],
 }

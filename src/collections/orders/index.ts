@@ -188,7 +188,7 @@ export const Orders: CollectionConfig = {
     },
     {
       type: 'upload',
-      name: 'PDF',
+      name: 'pdf',
       label: 'Purchase PDF',
       relationTo: 'files',
       admin: {

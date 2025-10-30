@@ -1,7 +1,7 @@
-import type { CollectionAfterChangeHook } from 'payload'
+import type { CollectionBeforeChangeHook } from 'payload'
 import type { Order } from '@/payload-types'
 
-export const createBrowserJob: CollectionAfterChangeHook<Order> = async ({ data, req }) => {
+export const createBrowserJob: CollectionBeforeChangeHook<Order> = async ({ data, req }) => {
   if (
     data.purchaseAndFulfill &&
     data._status !== 'draft' &&
@@ -32,10 +32,10 @@ export const createBrowserJob: CollectionAfterChangeHook<Order> = async ({ data,
             .queue({
               task: 'fulfillment-task',
               input: {
-                orderNotes: '',
                 orderNumber: '',
-                purchasePdf: '',
                 purchasePrice: 1234,
+                purchasePdf: '',
+                orderNotes: '',
               },
             })
             .finally(() => {

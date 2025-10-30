@@ -447,7 +447,7 @@ export interface Order {
   event?: string | null;
   venue?: string | null;
   location?: string | null;
-  PDF?: (string | null) | File;
+  pdf?: (string | null) | File;
   notes?: string | null;
   folder?: (string | null) | FolderInterface;
   updatedAt: string;
@@ -1019,7 +1019,7 @@ export interface OrdersSelect<T extends boolean = true> {
   event?: T;
   venue?: T;
   location?: T;
-  PDF?: T;
+  pdf?: T;
   notes?: T;
   folder?: T;
   updatedAt?: T;
@@ -1314,20 +1314,16 @@ export interface SettingsSelect<T extends boolean = true> {
  */
 export interface TaskPurchaseTask {
   input: {
-    orderNumber?: string | null;
-    purchaseLink?: string | null;
-    email?: string | null;
-    password?: string | null;
-    cardNumber?: number | null;
-    cardCvcNumber?: number | null;
-    cardExpirationDate?: string | null;
+    orderNumber: string;
+    purchaseLink: string;
+    email: string;
+    password: string;
+    cardNumber: number;
+    cardCvcNumber: number;
+    cardExpirationDate: string;
+    promoCode?: string | null;
   };
-  output: {
-    orderNumber?: string | null;
-    purchasePrice?: number | null;
-    purchasePdf?: (string | null) | File;
-    orderNotes?: string | null;
-  };
+  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
