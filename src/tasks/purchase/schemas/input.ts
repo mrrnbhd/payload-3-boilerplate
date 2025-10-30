@@ -2,6 +2,30 @@ import type { Field } from 'payload'
 
 export const purchaseInputSchema: Field[] = [
   {
+    type: 'text',
+    name: 'orderNumber',
+    required: true,
+  },
+  {
+    type: 'text',
+    name: 'purchaseLink',
+    required: true,
+  },
+  {
+    type: 'number',
+    name: 'projectedCost',
+    required: true,
+  },
+  {
+    type: 'text',
+    name: 'parkingLocation',
+    required: true,
+  },
+  {
+    type: 'text',
+    name: 'proxySession',
+  },
+  {
     type: 'group',
     name: 'account',
     fields: [
