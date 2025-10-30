@@ -1,5 +1,5 @@
 import type { TaskConfig } from 'payload'
-import { purchaseHandler } from './handler'
+import { purchaseHandler } from './handlers'
 
 export const purchaseTask: TaskConfig<'purchase-task'> = {
   slug: 'purchase-task',
@@ -55,60 +55,66 @@ export const purchaseTask: TaskConfig<'purchase-task'> = {
     },
     {
       type: 'text',
-      name: 'promoCode',
-      required: false,
-    },
-    {
-      type: 'text',
-      name: 'accountFirstName',
-      required: true,
-    },
-    {
-      type: 'text',
-      name: 'accountLastName',
-      required: true,
-    },
-    {
-      type: 'email',
-      name: 'accountEmail',
-      required: true,
-    },
-    {
-      type: 'text',
-      name: 'accountPassword',
-      required: true,
-    },
-    {
-      type: 'number',
-      name: 'cardNumber',
-      required: true,
-    },
-    {
-      type: 'number',
-      name: 'cardCvcNumber',
-      required: true,
-    },
-    {
-      type: 'date',
-      name: 'cardExpirationDate',
-      required: true,
-      admin: {},
-    },
-    {
-      type: 'number',
-      name: 'billingZip',
-      required: true,
-    },
-    {
-      type: 'text',
       name: 'proxySession',
       required: true,
+    },
+    {
+      type: 'group',
+      name: 'account',
+      fields: [
+        {
+          type: 'text',
+          name: 'first',
+          required: true,
+        },
+        {
+          type: 'text',
+          name: 'last',
+          required: true,
+        },
+        {
+          type: 'email',
+          name: 'email',
+          required: true,
+        },
+        {
+          type: 'text',
+          name: 'pass',
+          required: true,
+        },
+        {
+          type: 'number',
+          name: 'card',
+          required: true,
+        },
+        {
+          type: 'number',
+          name: 'cvc',
+          required: true,
+        },
+        {
+          type: 'date',
+          name: 'exp',
+          required: true,
+          admin: {},
+        },
+        {
+          type: 'number',
+          name: 'zip',
+          required: true,
+        },
+        {
+          type: 'text',
+          name: 'promo',
+          required: false,
+        },
+      ],
     },
   ],
   outputSchema: [
     {
       type: 'number',
-      name: 'purchasePrice',
+      name: 'actualCost',
     },
     {
       type: 'upload',

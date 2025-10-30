@@ -87,6 +87,11 @@ export default buildConfig({
       }
 
       defaultJobsCollection.admin.hidden = false
+      defaultJobsCollection.admin.group = 'Operation'
+      defaultJobsCollection.labels = {
+        singular: 'Job',
+        plural: 'Jobs',
+      }
       return defaultJobsCollection
     },
   },

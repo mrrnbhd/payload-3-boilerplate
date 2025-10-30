@@ -1,68 +1,150 @@
-import { randomInt } from 'crypto'
+import { err, ok, ResultAsync } from 'neverthrow'
 import type { CollectionBeforeChangeHook } from 'payload'
-import { generator as passwordGenerator } from 'ts-password-generator'
-import { uniqueNamesGenerator as nameGenerator, names, starWars } from 'unique-names-generator'
-import type { Order } from '@/payload-types'
+import * as R from 'remeda'
+import type { Order, Setting as Settings } from '@/payload-types'
+
+export type Account = {
+  first: string
+  last: string
+  pass: string
+  email: string
+  card: number
+  exp: string
+  cvc: number
+  zip: number
+  status: string
+}
+
+type AccountData = Account[]
+
+class SettingsError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'SettingsError'
+  }
+}
+class AccountError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'AccountError'
+  }
+}
+class QueueError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'QueueError'
+  }
+}
 
 export const createBrowserJob: CollectionBeforeChangeHook<Order> = async ({ data, req }) => {
-  if (
+  const shouldQueue =
     data.purchaseAndFulfill &&
     data.purchaseLink &&
     data.orderNumber &&
     data.parkingLocation &&
     data.projectedCost &&
-    data.parkingLocation &&
     data._status !== 'draft' &&
     ['Pending', 'Purchased'].includes(data.fulfillmentStatus ?? '')
+
+  if (!shouldQueue) {
+    return
+  }
+
+  const {
+    orderNumber,
+    purchaseLink,
+    parkingLocation,
+    projectedCost,
+    orderNotes,
+    purchasePdf,
+    actualCost,
+    fulfillmentStatus,
+  } = data
+
+  const jobResult = await ResultAsync.fromPromise(
+    req.payload.findGlobal({
+      slug: 'settings',
+      select: {
+        accountData: true,
+        proxyLogin: true,
+        proxyPassword: true,
+        proxyHost: true,
+        proxyPort: true,
+      },
+    }) as Promise<Settings>,
+    (e) => new SettingsError((e as Error).message)
   )
-    try {
-      switch (data.fulfillmentStatus) {
+    .andThen((identity) => {
+      const { accountData, proxyHost, proxyLogin, proxyPassword, proxyPort } = identity
+      const accounts = accountData as AccountData | null | undefined
+
+      if (!accounts || R.isEmpty(accounts)) {
+        return err(new AccountError('No accounts found in Settings.'))
+      }
+
+      const availableAccounts = R.filter(accounts, (a) => a.status === 'available')
+
+      if (R.isEmpty(availableAccounts)) {
+        return err(new AccountError('No available accounts found.'))
+      }
+
+      const account = R.sample(availableAccounts, 1)[0]
+      if (!account) {
+        return err(new AccountError('Failed to select a random account.'))
+      }
+
+      if (!proxyLogin || !proxyPassword || !proxyHost || !proxyPort) {
+        return err(new SettingsError('Proxy configuration is incomplete in Settings.'))
+      }
+
+      const proxySession = `http://${proxyLogin}:${proxyPassword}@${proxyHost}:${proxyPort}`
+
+      return ok({ account, proxySession })
+    })
+    .andThen(({ account, proxySession }) => {
+      if (!orderNumber || !purchaseLink || !parkingLocation || !projectedCost) {
+        return err(new QueueError('Order data became empty. This should not happen.'))
+      }
+      let jobPromise: Promise<any>
+      switch (fulfillmentStatus) {
         case 'Pending':
-          await req.payload.jobs
-            .queue({
-              task: 'purchase-task',
-              input: {
-                orderNumber: data.orderNumber,
-                purchaseLink: data.purchaseLink,
-                parkingLocation: data.parkingLocation,
-                accountEmail: `${nameGenerator({ dictionaries: [names, starWars], length: randomInt(10, 15) })}`,
-                accountFirstName: nameGenerator({ dictionaries: [names] }),
-                accountLastName: nameGenerator({ dictionaries: [names] }),
-                accountPassword: passwordGenerator({
-                  haveString: true,
-                  haveNumbers: true,
-                  haveSymbols: true,
-                  charsQty: randomInt(12, 25),
-                }),
-                billingZip: 0,
-                cardCvcNumber: 0,
-                cardExpirationDate: '11/22/22',
-                cardNumber: 1234,
-                projectedCost: 22,
-                proxySession: '',
-              },
-            })
-            .finally(() => {
-              data.fulfillmentStatus = 'Queued'
-            })
+          jobPromise = req.payload.jobs.queue({
+            task: 'purchase-task',
+            input: {
+              orderNumber,
+              purchaseLink,
+              parkingLocation,
+              projectedCost,
+              proxySession,
+              account,
+            },
+          })
           break
         case 'Purchased':
-          await req.payload.jobs
-            .queue({
-              task: 'fulfillment-task',
-              input: {
-                orderNotes: '',
-                orderNumber: '',
-                purchasePdf: '',
-                purchasePrice: 1234,
-              },
-            })
-            .finally(() => {
-              data.fulfillmentStatus = 'Queued'
-            })
+          jobPromise = req.payload.jobs.queue({
+            task: 'fulfillment-task',
+            input: {
+              orderNotes,
+              orderNumber,
+              purchasePdf,
+              actualCost,
+            },
+          })
+          break
+        default:
+          return err(new QueueError(`Invalid fulfillment status: ${fulfillmentStatus}`))
       }
-    } catch (error) {
-      console.log(error)
+
+      return ResultAsync.fromPromise(jobPromise, (e) => new QueueError((e as Error).message))
+    })
+
+  jobResult.match(
+    () => {
+      data.fulfillmentStatus = 'Queued'
+    },
+    (error) => {
+      req.payload.logger.error(`${error.name}: ${error.message}`)
       data.fulfillmentStatus = 'Error'
     }
+  )
 }

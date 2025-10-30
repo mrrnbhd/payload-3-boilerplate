@@ -1,19 +1,81 @@
 import csv from 'csvtojson'
-import type { JsonArray } from 'payload'
+import { err, fromPromise, ok, ResultAsync } from 'neverthrow'
+import type { FieldHook, JsonArray } from 'payload'
+import * as R from 'remeda'
 
-export const csvToJson = async (csvDataString: string) => {
-  if (!csvDataString) {
-    return []
+class FileFindError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'FileFindError'
   }
+}
+class FileFetchError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'FileFetchError'
+  }
+}
+class CsvParseError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'CsvParseError'
+  }
+}
 
-  try {
-    const jsonArray: JsonArray = await csv({
-      delimiter: '/',
-    }).fromString(csvDataString)
+const parseCsvToAccounts = (csvDataString: string): ResultAsync<JsonArray, CsvParseError> => {
+  const parserPromise = csv({
+    delimiter: '/',
+    checkType: true,
+    colParser: {
+      card: 'number',
+      cvc: 'number',
+      zip: 'number',
+      exp: 'string',
+    },
+  }).fromString(csvDataString)
 
-    return jsonArray
-  } catch (error) {
-    console.error('Error parsing CSV string:', error)
-    return []
+  return fromPromise(parserPromise, (error) => new CsvParseError((error as Error).message)).map(
+    R.map((account: any) => ({
+      ...account,
+      status: 'available',
+    }))
+  )
+}
+
+export const csvToJson: FieldHook = async ({ siblingData, req, value, previousValue }) => {
+  if (value && value !== previousValue) {
+    const processingResult = await ResultAsync.fromPromise(
+      req.payload.findByID({
+        collection: 'files',
+        id: value,
+      }),
+      (e) => new FileFindError((e as Error).message)
+    )
+      .andThen((csvDocument) => {
+        if (csvDocument?.url) {
+          return ok(csvDocument.url as string)
+        }
+        return err(new FileFindError('Uploaded document or URL not found.'))
+      })
+      .andThen((url) => {
+        return fromPromise(fetch(url), (e) => new FileFetchError((e as Error).message))
+      })
+      .andThen((response) => {
+        if (response.ok) {
+          return fromPromise(response.text(), (e) => new FileFetchError((e as Error).message))
+        }
+        return err(new FileFetchError(`Failed to fetch file: ${response.statusText}`))
+      })
+      .andThen(parseCsvToAccounts)
+
+    processingResult.match(
+      (accountData) => {
+        siblingData.accountData = accountData
+      },
+      (error) => {
+        req.payload.logger.error(`Error processing CSV: ${error.name} - ${error.message}`)
+        throw new Error(`Failed to process CSV: ${error.message}`)
+      }
+    )
   }
 }

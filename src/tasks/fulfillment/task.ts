@@ -11,7 +11,7 @@ export const fullfillmentTask: TaskConfig<'fulfillment-task'> = {
     },
     {
       type: 'number',
-      name: 'purchasePrice',
+      name: 'actualCost',
     },
     {
       type: 'upload',

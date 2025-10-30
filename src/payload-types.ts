@@ -1299,16 +1299,11 @@ export interface Setting {
   /**
    * Upload a CSV of accounts to be used for browser automation, will overwrite any pre-existing list.
    */
-  accountUploader: string | File;
-  accountData:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
+  accountUploader?: (string | null) | File;
+  accountData?: {
+    status: 'available' | 'in-use' | 'error' | 'used';
+    [k: string]: unknown;
+  }[];
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1337,19 +1332,21 @@ export interface TaskPurchaseTask {
     purchaseLink: string;
     parkingLocation: string;
     projectedCost: number;
-    promoCode?: string | null;
-    accountFirstName: string;
-    accountLastName: string;
-    accountEmail: string;
-    accountPassword: string;
-    cardNumber: number;
-    cardCvcNumber: number;
-    cardExpirationDate: string;
-    billingZip: number;
     proxySession: string;
+    account: {
+      first: string;
+      last: string;
+      email: string;
+      pass: string;
+      card: number;
+      cvc: number;
+      exp: string;
+      zip: number;
+      promo?: string | null;
+    };
   };
   output: {
-    purchasePrice?: number | null;
+    actualCost?: number | null;
     purchasePdf?: (string | null) | File;
     orderNotes?: string | null;
   };
@@ -1361,7 +1358,7 @@ export interface TaskPurchaseTask {
 export interface TaskFulfillmentTask {
   input: {
     orderNumber?: string | null;
-    purchasePrice?: number | null;
+    actualCost?: number | null;
     purchasePdf?: (string | null) | File;
     orderNotes?: string | null;
   };

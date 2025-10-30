@@ -6,9 +6,6 @@ export const Settings: GlobalConfig = {
   admin: {
     group: 'Operation',
   },
-  access: {
-    read: () => true,
-  },
   fields: [
     {
       type: 'collapsible',
@@ -60,6 +57,7 @@ export const Settings: GlobalConfig = {
         },
       ],
     },
+
     {
       type: 'collapsible',
       label: 'Account Pool',
@@ -69,52 +67,64 @@ export const Settings: GlobalConfig = {
           relationTo: 'files',
           name: 'accountUploader',
           hasMany: false,
-          required: true,
           admin: {
             description:
               'Upload a CSV of accounts to be used for browser automation, will overwrite any pre-existing list.',
           },
           hooks: {
-            afterChange: [
-              async ({ siblingData, req, value, previousValue }) => {
-                if (value && value !== previousValue) {
-                  const csvDocument = await req.payload.findByID({
-                    collection: 'files',
-                    id: value,
-                  })
-                  if (csvDocument.url) {
-                    try {
-                      const response = await fetch(`${csvDocument.url}`)
-
-                      if (!response.ok) {
-                        req.payload.logger.error(
-                          `Failed to fetch file from S3/MinIO: ${response.statusText}`
-                        )
-                      }
-
-                      const csvDataString = await response.text()
-
-                      const parsedCsv = await csvToJson(csvDataString)
-
-                      siblingData.accountData = parsedCsv
-                    } catch (error) {
-                      req.payload.logger.error(`Error processing file from S3: ${error}`)
-                    }
-                  }
-                }
-              },
-            ],
+            beforeChange: [csvToJson],
           },
         },
         {
-          type: 'json',
-          name: 'accountData',
-          required: true,
-          admin: {
-            hidden: false,
-            readOnly: false,
-            maxHeight: 3000,
-          },
+          type: 'collapsible',
+          label: 'Account Pool',
+          fields: [
+            {
+              type: 'json',
+              name: 'accountData',
+              admin: {
+                hidden: false,
+                readOnly: false,
+                maxHeight: 500,
+              },
+              jsonSchema: {
+                uri: 'a://b/account-schema.json',
+                fileMatch: ['a://b/account-schema.json'],
+                schema: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      status: {
+                        type: 'string',
+                        enum: ['available', 'in-use', 'error', 'used'],
+                      },
+                    },
+                    first: { type: 'string' },
+                    last: { type: 'string' },
+                    pass: { type: 'string' },
+
+                    email: { type: 'string' },
+                    card: { type: 'number' },
+                    exp: { type: 'string' },
+                    cvc: { type: 'number' },
+                    zip: { type: 'number' },
+                    required: [
+                      'first',
+                      'last',
+                      'pass',
+                      'email',
+                      'card',
+                      'exp',
+                      'cvc',
+                      'zip',
+                      'status',
+                    ],
+                  },
+                },
+              },
+            },
+          ],
         },
       ],
     },
