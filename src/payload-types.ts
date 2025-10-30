@@ -1307,6 +1307,14 @@ export interface Setting {
   proxyPort: number;
   accountData?: {
     status: 'available' | 'in-use' | 'error' | 'used';
+    first: string;
+    last: string;
+    pass: string;
+    email: string;
+    card: number;
+    exp: string;
+    cvc: number;
+    zip: number;
     [k: string]: unknown;
   }[];
   /**
