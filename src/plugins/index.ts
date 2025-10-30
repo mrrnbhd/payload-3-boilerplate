@@ -29,6 +29,8 @@ export const plugins: Plugin[] = [
           admin: {
             group: 'Operation',
           },
+          enableQueryPresets: true,
+          folders: true,
           labels: {
             singular: 'Log',
             plural: 'Logs',

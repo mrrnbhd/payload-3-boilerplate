@@ -99,7 +99,8 @@ export interface Config {
         | 'admin-invitations'
         | 'orders'
         | 'files'
-        | 'tags';
+        | 'tags'
+        | 'Audit-log';
     };
   };
   collectionsSelect: {
@@ -286,6 +287,10 @@ export interface FolderInterface {
       | {
           relationTo?: 'tags';
           value: string | Tag;
+        }
+      | {
+          relationTo?: 'Audit-log';
+          value: string | AuditLog;
         }
     )[];
     hasNextPage?: boolean;
@@ -554,6 +559,22 @@ export interface File {
   };
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Audit-log".
+ */
+export interface AuditLog {
+  id: string;
+  operation: string;
+  collection: string;
+  documentId?: string | null;
+  user: string | User;
+  userAgent?: string | null;
+  hook?: string | null;
+  type: 'info' | 'debug' | 'warning' | 'error' | 'audit' | 'security' | 'unknown';
+  createdAt: string;
+  folder?: (string | null) | FolderInterface;
+}
+/**
  * Passkeys are used to authenticate users
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -633,21 +654,6 @@ export interface Export {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "Audit-log".
- */
-export interface AuditLog {
-  id: string;
-  operation: string;
-  collection: string;
-  documentId?: string | null;
-  user: string | User;
-  userAgent?: string | null;
-  hook?: string | null;
-  type: 'info' | 'debug' | 'warning' | 'error' | 'audit' | 'security' | 'unknown';
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -890,7 +896,9 @@ export interface PayloadQueryPreset {
     | 'admin-invitations'
     | 'orders'
     | 'files'
-    | 'tags';
+    | 'tags'
+    | 'Audit-log'
+    | 'payload-jobs';
   /**
    * This is a temporary field used to determine if updating the preset would remove the user's access to it. When `true`, this record will be deleted after running the preset's `validate` function.
    */
@@ -1175,6 +1183,7 @@ export interface AuditLogSelect<T extends boolean = true> {
   hook?: T;
   type?: T;
   createdAt?: T;
+  folder?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
