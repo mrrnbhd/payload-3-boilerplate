@@ -77,7 +77,7 @@ export default buildConfig({
     tasks: taskConfigs,
     autoRun: [
       {
-        cron: '* 0/5 * * * *',
+        cron: `*/1 * * * * *`,
         limit: 5,
         allQueues: true,
       },

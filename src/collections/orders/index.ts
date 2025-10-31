@@ -31,7 +31,7 @@ export const Orders: CollectionConfig = {
     group: 'Operation',
     livePreview: {
       url: ({ data }) => {
-        if (data.enableBrowserView === true) {
+        if (data.enableBrowserView === true && data.fulfillmentStatus === 'Running') {
           return `https://${process.env.STEEL_URL}/ui`
         } else {
           return `${getServerSideURL()}/admin/orders`
