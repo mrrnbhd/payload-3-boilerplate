@@ -43,7 +43,6 @@ export const createBrowserJob: CollectionBeforeChangeHook<Order> = async ({ data
     data.orderNumber &&
     data.parkingLocation &&
     data.projectedCost &&
-    data._status !== 'draft' &&
     ['Pending', 'Purchased'].includes(data.fulfillmentStatus ?? '')
 
   if (!shouldQueue) {

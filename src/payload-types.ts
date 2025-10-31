@@ -240,7 +240,6 @@ export interface User {
   banExpires?: string | null;
   verified?: boolean | null;
   folder?: (string | null) | FolderInterface;
-  deletedAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -334,7 +333,6 @@ export interface Session {
    */
   impersonatedBy?: (string | null) | User;
   folder?: (string | null) | FolderInterface;
-  deletedAt?: string | null;
 }
 /**
  * Accounts are used to store user accounts for authentication providers
@@ -387,7 +385,6 @@ export interface Account {
   createdAt: string;
   updatedAt: string;
   folder?: (string | null) | FolderInterface;
-  deletedAt?: string | null;
 }
 /**
  * Verifications are used to verify authentication requests
@@ -412,7 +409,6 @@ export interface Verification {
   createdAt: string;
   updatedAt: string;
   folder?: (string | null) | FolderInterface;
-  deletedAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -426,7 +422,6 @@ export interface AdminInvitation {
   folder?: (string | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
-  deletedAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -443,10 +438,6 @@ export interface Order {
    * Adds this order to the automated purchase and fulfillment queue.
    */
   purchaseAndFulfill?: boolean | null;
-  /**
-   * Displays the browser automation tool inside the preview panel.
-   */
-  enableBrowserView?: boolean | null;
   purchaseLink: string;
   parkingLocation?: string | null;
   projectedCost?: number | null;
@@ -456,8 +447,6 @@ export interface Order {
   folder?: (string | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
-  deletedAt?: string | null;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -489,7 +478,6 @@ export interface File {
   folder?: (string | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
-  deletedAt?: string | null;
   url?: string | null;
   thumbnailURL?: string | null;
   filename?: string | null;
@@ -928,7 +916,6 @@ export interface UsersSelect<T extends boolean = true> {
   banExpires?: T;
   verified?: T;
   folder?: T;
-  deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -944,7 +931,6 @@ export interface SessionsSelect<T extends boolean = true> {
   user?: T;
   impersonatedBy?: T;
   folder?: T;
-  deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -964,7 +950,6 @@ export interface AccountsSelect<T extends boolean = true> {
   createdAt?: T;
   updatedAt?: T;
   folder?: T;
-  deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -977,7 +962,6 @@ export interface VerificationsSelect<T extends boolean = true> {
   createdAt?: T;
   updatedAt?: T;
   folder?: T;
-  deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1007,7 +991,6 @@ export interface AdminInvitationsSelect<T extends boolean = true> {
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
-  deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1020,7 +1003,6 @@ export interface OrdersSelect<T extends boolean = true> {
   orderNumber?: T;
   tags?: T;
   purchaseAndFulfill?: T;
-  enableBrowserView?: T;
   purchaseLink?: T;
   parkingLocation?: T;
   projectedCost?: T;
@@ -1030,8 +1012,6 @@ export interface OrdersSelect<T extends boolean = true> {
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
-  deletedAt?: T;
-  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1044,7 +1024,6 @@ export interface FilesSelect<T extends boolean = true> {
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
-  deletedAt?: T;
   url?: T;
   thumbnailURL?: T;
   filename?: T;

@@ -4,7 +4,6 @@ import { authenticated } from '@/access/authenticated'
 export const Files: CollectionConfig = {
   slug: 'files',
   enableQueryPresets: true,
-  trash: true,
   folders: true,
   labels: {
     singular: 'File',

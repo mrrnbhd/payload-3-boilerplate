@@ -5,7 +5,6 @@ export const Users: CollectionConfig = {
   slug: 'users',
   auth: true,
   enableQueryPresets: true,
-  trash: true,
   folders: true,
   access: {
     read: isAdmin,

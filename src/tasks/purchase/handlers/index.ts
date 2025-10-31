@@ -55,7 +55,31 @@ export const purchaseHandler: TaskHandler<'purchase-task'> = async ({ input, req
 
         const hostname = new URL(purchaseLink).hostname as VendorHostName
         req.payload.logger.info(`Running purchase automation for ${hostname}`)
+        const { docs: ordersToUpdate } = await req.payload.find({
+          collection: 'orders',
+          where: {
+            orderNumber: {
+              equals: input.orderNumber,
+            },
+          },
+          limit: 1,
+          overrideAccess: true,
+        })
 
+        if (!ordersToUpdate || ordersToUpdate.length === 0) {
+          throw new AutomationError(`Could not find order with orderNumber: ${input.orderNumber}`)
+        }
+
+        const orderId = ordersToUpdate[0].id
+
+        await req.payload.update({
+          collection: 'orders',
+          id: orderId,
+          overrideAccess: true,
+          data: {
+            fulfillmentStatus: 'Running',
+          },
+        })
         const page = await browser.newPage()
 
         const handler = vendorHandlers[hostname]

@@ -157,7 +157,6 @@ export const betterAuthPluginOptions: BetterAuthPluginOptions = {
         },
         enableQueryPresets: true,
         folders: true,
-        trash: true,
         access: {
           read: isAdmin,
           update: isAdmin,
@@ -175,7 +174,6 @@ export const betterAuthPluginOptions: BetterAuthPluginOptions = {
         ...prevConf,
         enableQueryPresets: true,
         folders: true,
-        trash: true,
         access: {
           read: isAdmin,
           update: isAdmin,
@@ -194,7 +192,6 @@ export const betterAuthPluginOptions: BetterAuthPluginOptions = {
 
         enableQueryPresets: true,
         folders: true,
-        trash: true,
         access: {
           read: isAdmin,
           update: isAdmin,
@@ -221,7 +218,6 @@ export const betterAuthPluginOptions: BetterAuthPluginOptions = {
         },
         enableQueryPresets: true,
         folders: true,
-        trash: true,
         access: {
           read: isAdmin,
           update: isAdmin,

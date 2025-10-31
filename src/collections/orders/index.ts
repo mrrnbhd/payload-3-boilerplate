@@ -1,5 +1,3 @@
-import { getServerSideURL } from '@/lib/payload'
-
 import type { CollectionConfig } from 'payload'
 import { authenticated } from '@/access/authenticated'
 import { createBrowserJob } from './hooks/create-browser-job'
@@ -7,7 +5,6 @@ import { createBrowserJob } from './hooks/create-browser-job'
 export const Orders: CollectionConfig = {
   slug: 'orders',
   enableQueryPresets: true,
-  trash: true,
   folders: true,
   access: {
     update: authenticated,
@@ -29,24 +26,8 @@ export const Orders: CollectionConfig = {
     ],
     useAsTitle: 'orderNumber',
     group: 'Operation',
-    livePreview: {
-      url: ({ data }) => {
-        if (data.enableBrowserView === true && data.fulfillmentStatus === 'Running') {
-          return `https://${process.env.STEEL_URL}/ui`
-        } else {
-          return `${getServerSideURL()}/admin/orders`
-        }
-      },
-    },
   },
   hooks: { beforeChange: [createBrowserJob] },
-  versions: {
-    drafts: {
-      autosave: {
-        interval: 275,
-      },
-    },
-  },
   fields: [
     {
       type: 'select',
@@ -106,35 +87,14 @@ export const Orders: CollectionConfig = {
       },
     },
     {
-      type: 'collapsible',
-      label: 'Automation',
-      fields: [
-        {
-          type: 'row',
-          fields: [
-            {
-              type: 'checkbox',
-              name: 'purchaseAndFulfill',
-              label: 'Purchase and Fulfill Order?',
-              admin: {
-                description: 'Adds this order to the automated purchase and fulfillment queue.',
-                readOnly: false,
-                width: '50%',
-              },
-            },
-            {
-              type: 'checkbox',
-              name: 'enableBrowserView',
-              label: 'Enable Browser Monitoring?',
-              admin: {
-                description: 'Displays the browser automation tool inside the preview panel.',
-                readOnly: false,
-                width: '50%',
-              },
-            },
-          ],
-        },
-      ],
+      type: 'checkbox',
+      name: 'purchaseAndFulfill',
+      label: 'Purchase and Fulfill Order?',
+      admin: {
+        description: 'Adds this order to the automated purchase and fulfillment queue.',
+        readOnly: false,
+        width: '50%',
+      },
     },
     {
       type: 'row',
@@ -198,7 +158,6 @@ export const Orders: CollectionConfig = {
       admin: {
         rows: 3,
         readOnly: false,
-        position: 'sidebar',
       },
     },
   ],
